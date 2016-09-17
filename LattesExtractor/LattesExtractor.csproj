@@ -1,0 +1,342 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6C69B42B-89D7-4128-BC57-ABDC4C5D7D9A}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LattesExtractor</RootNamespace>
+    <AssemblyName>LattesExtractor</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>\\andromeda\users\SISTEMAS DE INFORMAÇÃO\lucas.abreu\LattesExtractor\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LattesExtractor.Program</StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>8D3B275A551F6827CF7173DCD7AE10409EB071D9</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>LattesExtractor_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LINQtoCSV, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LINQtoCSV.1.5.0.0\lib\net35\LINQtoCSV.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controller\LoadCurriculumVitaeNumberController.cs" />
+    <Compile Include="Controller\LoadJCRTableController.cs" />
+    <Compile Include="Controller\LoadQualisTableController.cs" />
+    <Compile Include="DAO\JCRDAOService.cs" />
+    <Compile Include="DAO\QualisDAOService.cs" />
+    <Compile Include="Entities\CSV\JCRCSV.cs" />
+    <Compile Include="Entities\CSV\QualisCSV.cs" />
+    <Compile Include="Entities\CurriculoEntry.cs" />
+    <Compile Include="Entities\Database\AgenciaFinanciadora.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\AreaAtuacao.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\AreaConhecimento.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\AtividadeProfissional.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\BancaDeTrabalho.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\BancaJulgadora.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\BaseDeConsulta.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ContatoProfessor.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Curso.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Endereco.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Evento.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ExtratoQualis.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\FormacaoAcademicaTitulacao.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Idioma.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\IdiomasProfessor.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\InstituicaoEmpresa.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\JCR.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\LattesDatabase.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LattesDatabase.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\LattesDatabase.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\LattesDatabase.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LattesDatabase.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\LinhaDePesquisa.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\OrgaoInstituicaoEmpresa.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\OrientacaoSupervisao.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Orientador.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\PalavraChave.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ParticipacaoEmProjeto.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ParticipacaoEvento.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\PatenteRegistro.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\PeriodicoQualis.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\PremioOuTitulo.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ProducaoBibliografica.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\ProducaoTecnica.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Professor.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\Projeto.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\UnidadeInstituicaoEmpresa.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Database\VinculoAtuacaoProfissional.cs">
+      <DependentUpon>LattesDatabase.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Service\DownloadCurriculumVitaeService.cs" />
+    <Compile Include="LattesModule.cs" />
+    <Compile Include="Entities\Xml\LMPLCurriculo.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\CurriculoLattesWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+    <Compile Include="DAO\ProfessorDAOService.cs" />
+    <Compile Include="Controller\CurriculumVitaeProcessorController.cs" />
+    <Compile Include="Controller\DownloadCurriculumVitaeController.cs" />
+    <Compile Include="Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
+    <EntityDeploy Include="Entities\Database\LattesDatabase.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>LattesDatabase.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Entities\Database\LattesDatabase.edmx.diagram">
+      <DependentUpon>LattesDatabase.edmx</DependentUpon>
+    </None>
+    <None Include="LICENSE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
+    <None Include="resources\Consulta_Webqualis.csv" />
+    <None Include="resources\IDs_Curriculos.local.xls">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\JournalHomeGrid.csv" />
+    <None Include="resources\LMPLCurriculo.dtd" />
+    <None Include="Entities\Xml\LMPLCurriculo.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\CurriculoLattesWebService\WSCurriculo.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\CurriculoLattesWebService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CurriculoLattesWebService\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CurriculoLattesWebService\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\CurriculoLattesWebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Entities\Database\LattesDatabase.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>LattesDatabase.edmx</DependentUpon>
+      <LastGenOutput>LattesDatabase.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Entities\Database\LattesDatabase.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>LattesDatabase.edmx</DependentUpon>
+      <LastGenOutput>LattesDatabase.cs</LastGenOutput>
+    </Content>
+    <Content Include="resources\dblattes_creation_script.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="LattesExtractor.log4net">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

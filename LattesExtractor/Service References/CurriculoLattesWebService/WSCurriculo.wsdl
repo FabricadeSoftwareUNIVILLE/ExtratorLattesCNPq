@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://ws.servico.repositorio.cnpq.br/" name="WSCurriculo" targetNamespace="http://ws.servico.repositorio.cnpq.br/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <types />
+  <message name="WSCurriculo_getOcorrenciaCVPorUsuarioResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getCurriculoCompactadoPorUsuarioResponse">
+    <part name="return" type="xsd:base64Binary" />
+  </message>
+  <message name="WSCurriculo_getCurriculoCompactadoPorUsuario">
+    <part name="id" type="xsd:string" />
+    <part name="login" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getIdentificadorCNPqResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getOcorrenciaCV">
+    <part name="id" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getOcorrenciaCVResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getDataAtualizacaoCVPorUsuario">
+    <part name="id" type="xsd:string" />
+    <part name="login" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getCurriculoCompactado">
+    <part name="id" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getIdentificadorCNPqPorUsuario">
+    <part name="cpf" type="xsd:string" />
+    <part name="nomeCompleto" type="xsd:string" />
+    <part name="dataNascimento" type="xsd:string" />
+    <part name="login" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getDataAtualizacaoCVPorUsuarioResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getIdentificadorCNPqPorUsuarioResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getDataAtualizacaoCVResponse">
+    <part name="return" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getIdentificadorCNPq">
+    <part name="cpf" type="xsd:string" />
+    <part name="nomeCompleto" type="xsd:string" />
+    <part name="dataNascimento" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getDataAtualizacaoCV">
+    <part name="id" type="xsd:string" />
+  </message>
+  <message name="WSCurriculo_getCurriculoCompactadoResponse">
+    <part name="return" type="xsd:base64Binary" />
+  </message>
+  <message name="WSCurriculo_getOcorrenciaCVPorUsuario">
+    <part name="id" type="xsd:string" />
+    <part name="login" type="xsd:string" />
+  </message>
+  <portType name="WSCurriculo">
+    <operation name="getCurriculoCompactado" parameterOrder="id">
+      <input message="tns:WSCurriculo_getCurriculoCompactado" />
+      <output message="tns:WSCurriculo_getCurriculoCompactadoResponse" />
+    </operation>
+    <operation name="getCurriculoCompactadoPorUsuario" parameterOrder="id login">
+      <input message="tns:WSCurriculo_getCurriculoCompactadoPorUsuario" />
+      <output message="tns:WSCurriculo_getCurriculoCompactadoPorUsuarioResponse" />
+    </operation>
+    <operation name="getDataAtualizacaoCV" parameterOrder="id">
+      <input message="tns:WSCurriculo_getDataAtualizacaoCV" />
+      <output message="tns:WSCurriculo_getDataAtualizacaoCVResponse" />
+    </operation>
+    <operation name="getDataAtualizacaoCVPorUsuario" parameterOrder="id login">
+      <input message="tns:WSCurriculo_getDataAtualizacaoCVPorUsuario" />
+      <output message="tns:WSCurriculo_getDataAtualizacaoCVPorUsuarioResponse" />
+    </operation>
+    <operation name="getIdentificadorCNPq" parameterOrder="cpf nomeCompleto dataNascimento">
+      <input message="tns:WSCurriculo_getIdentificadorCNPq" />
+      <output message="tns:WSCurriculo_getIdentificadorCNPqResponse" />
+    </operation>
+    <operation name="getIdentificadorCNPqPorUsuario" parameterOrder="cpf nomeCompleto dataNascimento login">
+      <input message="tns:WSCurriculo_getIdentificadorCNPqPorUsuario" />
+      <output message="tns:WSCurriculo_getIdentificadorCNPqPorUsuarioResponse" />
+    </operation>
+    <operation name="getOcorrenciaCV" parameterOrder="id">
+      <input message="tns:WSCurriculo_getOcorrenciaCV" />
+      <output message="tns:WSCurriculo_getOcorrenciaCVResponse" />
+    </operation>
+    <operation name="getOcorrenciaCVPorUsuario" parameterOrder="id login">
+      <input message="tns:WSCurriculo_getOcorrenciaCVPorUsuario" />
+      <output message="tns:WSCurriculo_getOcorrenciaCVPorUsuarioResponse" />
+    </operation>
+  </portType>
+  <binding name="WSCurriculoBinding" type="tns:WSCurriculo">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="rpc" />
+    <operation name="getCurriculoCompactado">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getCurriculoCompactadoPorUsuario">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getDataAtualizacaoCV">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getDataAtualizacaoCVPorUsuario">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getIdentificadorCNPq">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getIdentificadorCNPqPorUsuario">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getOcorrenciaCV">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+    <operation name="getOcorrenciaCVPorUsuario">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </input>
+      <output>
+        <soap:body use="literal" namespace="http://ws.servico.repositorio.cnpq.br/" />
+      </output>
+    </operation>
+  </binding>
+  <service name="WSCurriculo">
+    <port name="WSCurriculoPort" binding="tns:WSCurriculoBinding">
+      <soap:address location="http://10.0.2.29:8080/srvcurriculo/WSCurriculo" />
+    </port>
+  </service>
+</definitions>
