@@ -17,7 +17,9 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Professor()
         {
+            this.AreaAtuacao = new HashSet<AreaAtuacao>();
             this.AtividadeProfissional = new HashSet<AtividadeProfissional>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.ContatoProfessor = new HashSet<ContatoProfessor>();
             this.FormacaoAcademicaTitulacao = new HashSet<FormacaoAcademicaTitulacao>();
             this.IdiomasProfessor = new HashSet<IdiomasProfessor>();
@@ -32,8 +34,6 @@ namespace LattesExtractor.Entities.Database
             this.ProducaoTecnica = new HashSet<ProducaoTecnica>();
             this.BancaDeTrabalho = new HashSet<BancaDeTrabalho>();
             this.BancaJulgadora = new HashSet<BancaJulgadora>();
-            this.AreaAtuacao = new HashSet<AreaAtuacao>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int ProfessorId { get; set; }
@@ -57,7 +57,11 @@ namespace LattesExtractor.Entities.Database
         public string PaisNascionalidadeProfessor { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AreaAtuacao> AreaAtuacao { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AtividadeProfissional> AtividadeProfissional { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ContatoProfessor> ContatoProfessor { get; set; }
         public virtual Endereco EnderecoProfissional { get; set; }
@@ -91,9 +95,5 @@ namespace LattesExtractor.Entities.Database
         public virtual ICollection<BancaDeTrabalho> BancaDeTrabalho { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BancaJulgadora> BancaJulgadora { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AreaAtuacao> AreaAtuacao { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

@@ -26,18 +26,22 @@ namespace LattesExtractor.Entities.Database
         }
     
         public virtual DbSet<AgenciaFinanciadora> AgenciaFinanciadora { get; set; }
+        public virtual DbSet<AreaAtuacao> AreaAtuacao { get; set; }
         public virtual DbSet<AreaConhecimento> AreaConhecimento { get; set; }
         public virtual DbSet<AtividadeProfissional> AtividadeProfissional { get; set; }
         public virtual DbSet<BancaDeTrabalho> BancaDeTrabalho { get; set; }
         public virtual DbSet<BancaJulgadora> BancaJulgadora { get; set; }
+        public virtual DbSet<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual DbSet<ContatoProfessor> ContatoProfessor { get; set; }
         public virtual DbSet<Curso> Curso { get; set; }
         public virtual DbSet<Endereco> Endereco { get; set; }
         public virtual DbSet<Evento> Evento { get; set; }
+        public virtual DbSet<ExtratoQualis> ExtratoQualis { get; set; }
         public virtual DbSet<FormacaoAcademicaTitulacao> FormacaoAcademicaTitulacao { get; set; }
         public virtual DbSet<Idioma> Idioma { get; set; }
         public virtual DbSet<IdiomasProfessor> IdiomasProfessor { get; set; }
         public virtual DbSet<InstituicaoEmpresa> InstituicaoEmpresa { get; set; }
+        public virtual DbSet<JCR> JCR { get; set; }
         public virtual DbSet<LinhaDePesquisa> LinhaDePesquisa { get; set; }
         public virtual DbSet<OrgaoInstituicaoEmpresa> OrgaoInstituicaoEmpresa { get; set; }
         public virtual DbSet<OrientacaoSupervisao> OrientacaoSupervisao { get; set; }
@@ -46,6 +50,7 @@ namespace LattesExtractor.Entities.Database
         public virtual DbSet<ParticipacaoEmProjeto> ParticipacaoEmProjeto { get; set; }
         public virtual DbSet<ParticipacaoEvento> ParticipacaoEvento { get; set; }
         public virtual DbSet<PatenteRegistro> PatenteRegistro { get; set; }
+        public virtual DbSet<PeriodicoQualis> PeriodicoQualis { get; set; }
         public virtual DbSet<PremioOuTitulo> PremioOuTitulo { get; set; }
         public virtual DbSet<ProducaoBibliografica> ProducaoBibliografica { get; set; }
         public virtual DbSet<ProducaoTecnica> ProducaoTecnica { get; set; }
@@ -53,10 +58,5 @@ namespace LattesExtractor.Entities.Database
         public virtual DbSet<Projeto> Projeto { get; set; }
         public virtual DbSet<UnidadeInstituicaoEmpresa> UnidadeInstituicaoEmpresa { get; set; }
         public virtual DbSet<VinculoAtuacaoProfissional> VinculoAtuacaoProfissional { get; set; }
-        public virtual DbSet<AreaAtuacao> AreaAtuacao { get; set; }
-        public virtual DbSet<BaseDeConsulta> BaseDeConsulta { get; set; }
-        public virtual DbSet<ExtratoQualis> ExtratoQualis { get; set; }
-        public virtual DbSet<PeriodicoQualis> PeriodicoQualis { get; set; }
-        public virtual DbSet<JCR> JCR { get; set; }
     }
 }

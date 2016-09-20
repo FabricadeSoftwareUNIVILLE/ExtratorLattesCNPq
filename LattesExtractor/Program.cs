@@ -38,10 +38,10 @@ namespace LattesExtractor
                     lm.UpdateJCRImpactFactorDataBase(options.InputJCRFile);
                     return;
                 }
-            }
 
-            XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
-            lm.Extract();
+                XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
+                lm.Extract();
+            }
 
         }
 
@@ -63,7 +63,7 @@ namespace LattesExtractor
             [Option('v', "verbose", DefaultValue = true,
               HelpText = "Imprime forma de uso.")]
             public bool Verbose { get; set; }
-
+            
             [ParserState]
             public IParserState LastParserState { get; set; }
 

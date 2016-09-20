@@ -18,9 +18,9 @@ namespace LattesExtractor.Entities.Database
         public UnidadeInstituicaoEmpresa()
         {
             this.AtividadeProfissional = new HashSet<AtividadeProfissional>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.Professor = new HashSet<Professor>();
             this.Projeto = new HashSet<Projeto>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int InstituicaoEmpresaId { get; set; }
@@ -30,12 +30,12 @@ namespace LattesExtractor.Entities.Database
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AtividadeProfissional> AtividadeProfissional { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Professor> Professor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Projeto> Projeto { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

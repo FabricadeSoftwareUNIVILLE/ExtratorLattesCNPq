@@ -4,48 +4,76 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="0667c90dac3c445d93cad32b232f9f73" Name="All" ZoomLevel="80">
-        <EntityTypeShape EntityType="LattesDatabaseModel.AgenciaFinanciadora" Width="1.5" PointX="20.25" PointY="67.75" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.AreaConhecimento" Width="1.5" PointX="0.75" PointY="53.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.AtividadeProfissional" Width="1.5" PointX="5.25" PointY="51.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.BancaDeTrabalho" Width="1.5" PointX="5.25" PointY="55.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.BancaJulgadora" Width="1.5" PointX="3" PointY="46.5" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ContatoProfessor" Width="1.5" PointX="20.25" PointY="61.625" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Curso" Width="1.5" PointX="3" PointY="66" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Endereco" Width="1.5" PointX="15.75" PointY="46.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Evento" Width="1.5" PointX="3" PointY="70.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.FormacaoAcademicaTitulacao" Width="2.125" PointX="22.5" PointY="64.625" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Idioma" Width="1.5" PointX="0.75" PointY="43.125" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.IdiomasProfessor" Width="2.375" PointX="20.25" PointY="52.625" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.InstituicaoEmpresa" Width="1.5" PointX="0.75" PointY="47.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.LinhaDePesquisa" Width="1.5" PointX="12.75" PointY="46.75" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.OrgaoInstituicaoEmpresa" Width="1.5" PointX="3" PointY="52.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.OrientacaoSupervisao" Width="1.5" PointX="23.25" PointY="56.375" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Orientador" Width="1.5" PointX="20.25" PointY="81.75" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.PalavraChave" Width="1.5" PointX="10.5" PointY="51.375" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ParticipacaoEmProjeto" Width="1.5" PointX="20.25" PointY="56.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ParticipacaoEvento" Width="1.5" PointX="12.75" PointY="60" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.PatenteRegistro" Width="1.5" PointX="15" PointY="57.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.PremioOuTitulo" Width="1.5" PointX="20.25" PointY="85.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ProducaoBibliografica" Width="1.5" PointX="15.75" PointY="50.375" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ProducaoTecnica" Width="1.5" PointX="12.75" PointY="50.25" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Professor" Width="1.5" PointX="18" PointY="49.5" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.Projeto" Width="1.5" PointX="8.25" PointY="50.875" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.UnidadeInstituicaoEmpresa" Width="1.5" PointX="3" PointY="56.125" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.VinculoAtuacaoProfissional" Width="1.5" PointX="23.25" PointY="48.125" />
+      <Diagram DiagramId="0667c90dac3c445d93cad32b232f9f73" Name="All" ZoomLevel="65">
+        <EntityTypeShape EntityType="LattesDatabaseModel.AgenciaFinanciadora" Width="1.5" PointX="24" PointY="53" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.AreaAtuacao" Width="1.5" PointX="21" PointY="82.875" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.AreaConhecimento" Width="2.375" PointX="3" PointY="46.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.AtividadeProfissional" Width="1.5" PointX="8.25" PointY="53.5" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.BancaDeTrabalho" Width="1.5" PointX="5.25" PointY="60.25" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.BancaJulgadora" Width="1.5" PointX="6" PointY="48" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.BaseDeConsulta" Width="1.5" PointX="10.5" PointY="53.625" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ContatoProfessor" Width="1.5" PointX="21" PointY="86.25" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Curso" Width="1.5" PointX="3" PointY="70.375" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Endereco" Width="1.5" PointX="18.125" PointY="46.875" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Evento" Width="1.5" PointX="3" PointY="42.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ExtratoQualis" Width="1.5" PointX="13.5" PointY="70" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.FormacaoAcademicaTitulacao" Width="3.5" PointX="26.25" PointY="54.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Idioma" Width="1.5" PointX="3.75" PointY="38.125" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.IdiomasProfessor" Width="1.5" PointX="24" PointY="56.5" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.InstituicaoEmpresa" Width="1.5" PointX="0.75" PointY="47.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.JCR" Width="1.5" PointX="11.25" PointY="65.125" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.LinhaDePesquisa" Width="1.5" PointX="13.5" PointY="58.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.OrgaoInstituicaoEmpresa" Width="1.5" PointX="3" PointY="51.875" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.OrientacaoSupervisao" Width="1.5" PointX="24" PointY="60.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Orientador" Width="1.5" PointX="21" PointY="51.25" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.PalavraChave" Width="1.5" PointX="8.25" PointY="58.375" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ParticipacaoEmProjeto" Width="1.5" PointX="21" PointY="59.625" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ParticipacaoEvento" Width="1.5" PointX="10.5" PointY="47.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.PatenteRegistro" Width="1.5" PointX="15.75" PointY="53.25" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.PeriodicoQualis" Width="1.5" PointX="11.25" PointY="70" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.PremioOuTitulo" Width="1.5" PointX="21" PointY="89.75" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ProducaoBibliografica" Width="1.5" PointX="13.5" PointY="62.125" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.ProducaoTecnica" Width="1.5" PointX="13.5" PointY="52.125" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Professor" Width="1.5" PointX="18.75" PointY="53.375" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.Projeto" Width="2.375" PointX="5.25" PointY="54.25" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.UnidadeInstituicaoEmpresa" Width="1.5" PointX="3" PointY="60.5" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.VinculoAtuacaoProfissional" Width="1.5" PointX="21" PointY="55.125" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AgenciaFinanciadora" />
         <AssociationConnector Association="LattesDatabaseModel.FK_FormacaoAcademicaTitulacao_AgenciaFinanciadora" />
         <AssociationConnector Association="LattesDatabaseModel.FK_OrientacaoSupervisao_AgenciaFinanciadora" />
         <AssociationConnector Association="LattesDatabaseModel.FK_ProducaoTecnica_AgenciaFinanciadora" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_AreaAtuacao_Professor" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AreaConhecimento" />
         <AssociationConnector Association="LattesDatabaseModel.FK_AtividadeProfissional_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_AtividadeProfissional_OrgaoInstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_AtividadeProfissional_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_AtividadeProfissional_UnidadeInstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AtividadeProfissional" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaDeTrabalho_Curso" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaDeTrabalho_Idioma1" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaDeTrabalho_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaDeTrabalho_OrgaoInstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_BancaDeTrabalho" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaJulgadora_Idioma1" />
         <AssociationConnector Association="LattesDatabaseModel.FK_BancaJulgadora_InstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_BancaJulgadora" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_BaseDeConsulta" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Curso" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Evento" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_FormacaoAcademicaTitulacao" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Idioma" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_InstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_OrgaoInstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_OrientacaoSupervisao" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_PalavraChave" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ParticipacaoEmProjeto" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ParticipacaoEvento" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_PremioOuTitulo" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ProducaoBibliografica" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ProducaoTecnica" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Professor" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_UnidadeInstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_VinculoAtuacaoProfissional" />
         <AssociationConnector Association="LattesDatabaseModel.FK_ContatoProfessor_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_Curso_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_FormacaoAcademicaTitulacao_Curso" />
@@ -54,6 +82,7 @@
         <AssociationConnector Association="LattesDatabaseModel.FK_Professor_EnderecoResidencial" />
         <AssociationConnector Association="LattesDatabaseModel.FK_Evento_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_ParticipacaoEvento_Evento" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_ExtratoQualis_ClassificacaoQualis" />
         <AssociationConnector Association="LattesDatabaseModel.FK_FormacaoAcademicaTitulacao_CoOrientador" />
         <AssociationConnector Association="LattesDatabaseModel.FK_FormacaoAcademicaTitulacao_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_FormacaoAcademicaTitulacao_InstituicaoEmpresaCoTutela" />
@@ -76,6 +105,7 @@
         <AssociationConnector Association="LattesDatabaseModel.FK_Professor_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_Projeto_InstituicaoEmpresa" />
         <AssociationConnector Association="LattesDatabaseModel.FK_UnidadeInstituicaoEmpresaId_InstituicaoEmpresa" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_ProducaoBibliografica_JCR" />
         <AssociationConnector Association="LattesDatabaseModel.FK_LinhaDePesquisa_PalavraChave" />
         <AssociationConnector Association="LattesDatabaseModel.FK_LinhaDePesquisa_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_OrientacaoSupervisao_OrgaoInstituicaoEmpresa" />
@@ -87,6 +117,7 @@
         <AssociationConnector Association="LattesDatabaseModel.FK_ParticipacaoEmProjeto_Projeto" />
         <AssociationConnector Association="LattesDatabaseModel.FK_ParticipacaoEvento_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_PatenteRegistro_ProducaoTecnica" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_ProducaoBibliografica_PeriodicoQualis" />
         <AssociationConnector Association="LattesDatabaseModel.FK_PremioOuTitulo_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_AtuacaoProfissional_Professor" />
         <AssociationConnector Association="LattesDatabaseModel.FK_Professor_UnidadeInstituicaoEmpresa" />
@@ -106,40 +137,11 @@
         <AssociationConnector Association="LattesDatabaseModel.ParticipacaoBancaJulgadora" />
         <AssociationConnector Association="LattesDatabaseModel.ParticipacaoEventoAreaConhecimento" />
         <AssociationConnector Association="LattesDatabaseModel.ParticipacaoEventoPalavraChave" />
-        <AssociationConnector Association="LattesDatabaseModel.ProducaoBibligraficaPalavraChave" />
         <AssociationConnector Association="LattesDatabaseModel.ProducaoBibliograficaAreaConhecimento" />
+        <AssociationConnector Association="LattesDatabaseModel.ProducaoBibliograficaPalavraChave" />
         <AssociationConnector Association="LattesDatabaseModel.ProducaoTecnicaAreaConhecimento" />
         <AssociationConnector Association="LattesDatabaseModel.ProducaoTecnicaPalavraChave" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.AreaAtuacao" Width="1.5" PointX="20.25" PointY="47.625" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_AreaAtuacao_Professor" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.BaseDeConsulta" Width="4.5" PointX="7.5" PointY="56.125" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AgenciaFinanciadora" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AreaConhecimento" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_AtividadeProfissional" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_BancaDeTrabalho" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_BancaJulgadora" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Curso" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_FormacaoAcademicaTitulacao" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Idioma" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_InstituicaoEmpresa" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_OrgaoInstituicaoEmpresa" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_OrientacaoSupervisao" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_PalavraChave" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ParticipacaoEmProjeto" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ParticipacaoEvento" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_PremioOuTitulo" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ProducaoBibliografica" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_ProducaoTecnica" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Professor" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_UnidadeInstituicaoEmpresa" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_VinculoAtuacaoProfissional" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.ExtratoQualis" Width="1.5" PointX="15.75" PointY="43.625" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.PeriodicoQualis" Width="1.5" PointX="13.5" PointY="43.5" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_ExtratoQualis_ClassificacaoQualis" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_ProducaoBibliografica_PeriodicoQualis" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.JCR" Width="1.5" PointX="0.75" PointY="1" />
-        <AssociationConnector Association="LattesDatabaseModel.FK_ProducaoBibliografica_JCR" />
-        </Diagram>
+      </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>

@@ -24,32 +24,30 @@ namespace LattesExtractor.Entities.Database
         public Nullable<int> PalavraChaveId { get; set; }
         public Nullable<int> IdiomaId { get; set; }
         public Nullable<int> CursoId { get; set; }
+        public Nullable<int> ProjetoId { get; set; }
+        public Nullable<int> EventoId { get; set; }
         public Nullable<int> AgenciaFinanciadoraId { get; set; }
-        public Nullable<int> SequenciaAtividadeProfissional { get; set; }
         public Nullable<int> ProducaoBibliograficaId { get; set; }
         public Nullable<int> ProducaoTecnicaId { get; set; }
         public Nullable<int> BancaDeTrabalhoId { get; set; }
         public Nullable<int> BancaJulgadoraId { get; set; }
-        public Nullable<int> EventoId { get; set; }
-        public Nullable<int> SequenciaParticipacaoEvento { get; set; }
-        public Nullable<int> SequenciaFormacaoAcademicaTitulacao { get; set; }
-        public Nullable<int> SequenciaOrientacaoSupervicao { get; set; }
-        public Nullable<int> ProjetoId { get; set; }
-        public Nullable<int> SequenciaPremioOuTitulo { get; set; }
-        public Nullable<int> SequenciaVinculoAtuacaoProfissional { get; set; }
-        public string AtividadeProfissionalId { get; set; }
-        public string ParticipacaoEventoId { get; set; }
-        public string FormacaoAcademicaTitulacaoId { get; set; }
-        public string OrientacaoSupervicaoId { get; set; }
-        public string PremioOuTituloId { get; set; }
-        public string VinculoAtuacaoProfissionalId { get; set; }
+        public Nullable<int> AtividadeProfissionalId { get; set; }
+        public Nullable<int> ParticipacaoEventoId { get; set; }
+        public Nullable<int> FormacaoAcademicaTitulacaoId { get; set; }
+        public Nullable<int> OrientacaoSupervisaoId { get; set; }
+        public Nullable<int> PremioOuTituloId { get; set; }
+        public Nullable<int> VinculoAtuacaoProfissionalId { get; set; }
+        public Nullable<int> ParticipacaoEmProjetoId { get; set; }
     
         public virtual AgenciaFinanciadora AgenciaFinanciadora { get; set; }
         public virtual AreaConhecimento AreaConhecimento { get; set; }
         public virtual AtividadeProfissional AtividadeProfissional { get; set; }
         public virtual BancaDeTrabalho BancaDeTrabalho { get; set; }
         public virtual BancaJulgadora BancaJulgadora { get; set; }
+        public virtual BaseDeConsulta BaseDeConsulta1 { get; set; }
+        public virtual BaseDeConsulta BaseDeConsulta2 { get; set; }
         public virtual Curso Curso { get; set; }
+        public virtual Evento Evento { get; set; }
         public virtual FormacaoAcademicaTitulacao FormacaoAcademicaTitulacao { get; set; }
         public virtual Idioma Idioma { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }

@@ -14,8 +14,8 @@ namespace LattesExtractor.Entities.Database
     
     public partial class PatenteRegistro
     {
+        public int PatenteRegistroId { get; set; }
         public int ProducaoTecnicaId { get; set; }
-        public int SequenciaPatenteRegistro { get; set; }
         public string TipoPatenteRegistro { get; set; }
         public string CodigoPatenteRegistro { get; set; }
         public string TituloPatenteRegistro { get; set; }

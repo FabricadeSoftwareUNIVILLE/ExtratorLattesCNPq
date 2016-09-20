@@ -14,8 +14,8 @@ namespace LattesExtractor.Entities.Database
     
     public partial class LinhaDePesquisa
     {
+        public int LinhaDePesquisaId { get; set; }
         public int ProfessorId { get; set; }
-        public int SequenciaLinhaDePesquisa { get; set; }
         public int PalavraChaveId { get; set; }
         public string TituloLinhaDePesquisa { get; set; }
         public string ObjetivosLinhaDePesquisa { get; set; }

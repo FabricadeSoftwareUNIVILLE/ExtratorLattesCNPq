@@ -20,13 +20,14 @@ namespace LattesExtractor.Entities.Database
             this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
+        public int ParticipacaoEmProjetoId { get; set; }
         public int ProjetoId { get; set; }
-        public Nullable<bool> ResponsavelParticipacaoEmProjeto { get; set; }
         public int ProfessorId { get; set; }
+        public bool ResponsavelParticipacaoEmProjeto { get; set; }
     
-        public virtual Professor Professor { get; set; }
-        public virtual Projeto Projeto { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        public virtual Professor Professor { get; set; }
+        public virtual Projeto Projeto { get; set; }
     }
 }

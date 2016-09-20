@@ -27,10 +27,31 @@ namespace LattesExtractor.Controller
                 return;
             }
 
-            // cria n threads para tornar ie download mais performático 
+            /*
+            bool exists = false;
+            foreach(string s in Directory.EnumerateFiles(lattesModule.TempDirectory))
+            {
+                String file = s.Substring(lattesModule.TempDirectory.Length + 1);
+                file = file.Substring(0, file.Length - 4);
+
+                lattesModule.AddCurriculumVitaeForProcess(new CurriculoEntry
+                {
+                    NumeroCurriculo = file,
+                });
+
+                exists = true;
+            }
+
+            if (exists)
+            {
+                while (lattesModule.HasNextCurriculumVitaeNumberToDownload)
+                    lattesModule.GetNextCurriculumVitaeNumberToDownload();
+                return;
+            }*/
 
             List<Thread> threads = new List<Thread>();
-
+            
+            // cria n threads para tornar ie download mais performático 
             int i = 0;
             DownloadCurriculumVitaeController rcvt = new DownloadCurriculumVitaeController(lattesModule, i++);
             threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));

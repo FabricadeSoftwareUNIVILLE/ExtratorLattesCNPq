@@ -19,11 +19,11 @@ namespace LattesExtractor.Entities.Database
         {
             this.AtividadeProfissional = new HashSet<AtividadeProfissional>();
             this.BancaDeTrabalho = new HashSet<BancaDeTrabalho>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.FormacaoAcademicaTitulacao = new HashSet<FormacaoAcademicaTitulacao>();
             this.OrientacaoSupervisao = new HashSet<OrientacaoSupervisao>();
             this.Professor = new HashSet<Professor>();
             this.Projeto = new HashSet<Projeto>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int InstituicaoEmpresaId { get; set; }
@@ -35,6 +35,8 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BancaDeTrabalho> BancaDeTrabalho { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FormacaoAcademicaTitulacao> FormacaoAcademicaTitulacao { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -43,7 +45,5 @@ namespace LattesExtractor.Entities.Database
         public virtual ICollection<Professor> Professor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Projeto> Projeto { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

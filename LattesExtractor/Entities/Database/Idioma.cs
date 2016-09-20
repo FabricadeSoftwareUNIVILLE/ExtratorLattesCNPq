@@ -19,12 +19,12 @@ namespace LattesExtractor.Entities.Database
         {
             this.BancaDeTrabalho = new HashSet<BancaDeTrabalho>();
             this.BancaJulgadora = new HashSet<BancaJulgadora>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.IdiomasProfessor = new HashSet<IdiomasProfessor>();
             this.OrientacaoSupervisao = new HashSet<OrientacaoSupervisao>();
             this.ParticipacaoEvento = new HashSet<ParticipacaoEvento>();
             this.ProducaoBibliografica = new HashSet<ProducaoBibliografica>();
             this.ProducaoTecnica = new HashSet<ProducaoTecnica>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public string NomeIdioma { get; set; }
@@ -35,6 +35,8 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BancaJulgadora> BancaJulgadora { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<IdiomasProfessor> IdiomasProfessor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrientacaoSupervisao> OrientacaoSupervisao { get; set; }
@@ -44,7 +46,5 @@ namespace LattesExtractor.Entities.Database
         public virtual ICollection<ProducaoBibliografica> ProducaoBibliografica { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProducaoTecnica> ProducaoTecnica { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }
