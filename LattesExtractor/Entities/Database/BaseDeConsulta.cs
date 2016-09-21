@@ -62,5 +62,6 @@ namespace LattesExtractor.Entities.Database
         public virtual Professor Professor { get; set; }
         public virtual UnidadeInstituicaoEmpresa UnidadeInstituicaoEmpresa { get; set; }
         public virtual VinculoAtuacaoProfissional VinculoAtuacaoProfissional { get; set; }
+        public virtual Projeto Projeto { get; set; }
     }
 }

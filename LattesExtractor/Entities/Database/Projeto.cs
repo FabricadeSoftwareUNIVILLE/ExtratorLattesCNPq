@@ -19,6 +19,7 @@ namespace LattesExtractor.Entities.Database
         {
             this.ParticipacaoEmProjeto = new HashSet<ParticipacaoEmProjeto>();
             this.InstituicaoEmpresaFinanciadora = new HashSet<InstituicaoEmpresa>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int ProjetoId { get; set; }
@@ -42,5 +43,7 @@ namespace LattesExtractor.Entities.Database
         public virtual UnidadeInstituicaoEmpresa UnidadeInstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<InstituicaoEmpresa> InstituicaoEmpresaFinanciadora { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

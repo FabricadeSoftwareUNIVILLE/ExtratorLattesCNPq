@@ -534,6 +534,7 @@ namespace LattesExtractor.DAO
                         bc.Idioma = pe.Idioma;
                         bc.Curso = cursoNP;
                         bc.AgenciaFinanciadora = afNP;
+                        bc.Evento = pe.Evento;
 
                         bc.AreaConhecimento = ac;
                         bc.PalavraChave = pc;
@@ -642,6 +643,7 @@ namespace LattesExtractor.DAO
                                 bc.Idioma = portugues;
                                 bc.Curso = cursoNP;
                                 bc.AgenciaFinanciadora = afNP;
+                                bc.Projeto = pp.Projeto;
 
                                 switch (cp.TipoProducao)
                                 {
