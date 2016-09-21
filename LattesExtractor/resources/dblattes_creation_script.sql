@@ -4466,6 +4466,16 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		 ON DELETE  NO ACTION 
 	
 	ALTER TABLE dbo.BaseDeConsulta ADD CONSTRAINT
+		FK_BaseDeConsulta_Projeto FOREIGN KEY
+		(
+		ProjetoId
+		) REFERENCES dbo.Projeto
+		(
+		ProjetoId
+		) ON UPDATE  NO ACTION 
+		 ON DELETE  NO ACTION 
+	
+	ALTER TABLE dbo.BaseDeConsulta ADD CONSTRAINT
 		FK_BaseDeConsulta_ParticipacaoEvento FOREIGN KEY
 		(
 		ParticipacaoEventoId

@@ -11,7 +11,7 @@
         <EntityTypeShape EntityType="LattesDatabaseModel.AtividadeProfissional" Width="1.5" PointX="8.25" PointY="53.5" />
         <EntityTypeShape EntityType="LattesDatabaseModel.BancaDeTrabalho" Width="1.5" PointX="5.25" PointY="60.25" />
         <EntityTypeShape EntityType="LattesDatabaseModel.BancaJulgadora" Width="1.5" PointX="6" PointY="48" />
-        <EntityTypeShape EntityType="LattesDatabaseModel.BaseDeConsulta" Width="1.5" PointX="10.5" PointY="53.625" />
+        <EntityTypeShape EntityType="LattesDatabaseModel.BaseDeConsulta" Width="1.875" PointX="10.5" PointY="53.625" />
         <EntityTypeShape EntityType="LattesDatabaseModel.ContatoProfessor" Width="1.5" PointX="21" PointY="86.25" />
         <EntityTypeShape EntityType="LattesDatabaseModel.Curso" Width="1.5" PointX="3" PointY="70.375" />
         <EntityTypeShape EntityType="LattesDatabaseModel.Endereco" Width="1.5" PointX="18.125" PointY="46.875" />
@@ -141,6 +141,7 @@
         <AssociationConnector Association="LattesDatabaseModel.ProducaoBibliograficaPalavraChave" />
         <AssociationConnector Association="LattesDatabaseModel.ProducaoTecnicaAreaConhecimento" />
         <AssociationConnector Association="LattesDatabaseModel.ProducaoTecnicaPalavraChave" />
+        <AssociationConnector Association="LattesDatabaseModel.FK_BaseDeConsulta_Projeto" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

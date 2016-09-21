@@ -27,7 +27,6 @@ namespace LattesExtractor.Controller
                 return;
             }
 
-            /*
             bool exists = false;
             foreach(string s in Directory.EnumerateFiles(lattesModule.TempDirectory))
             {
@@ -47,7 +46,7 @@ namespace LattesExtractor.Controller
                 while (lattesModule.HasNextCurriculumVitaeNumberToDownload)
                     lattesModule.GetNextCurriculumVitaeNumberToDownload();
                 return;
-            }*/
+            }
 
             List<Thread> threads = new List<Thread>();
             

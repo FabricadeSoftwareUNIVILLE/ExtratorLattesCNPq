@@ -1198,6 +1198,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_BaseDeConsulta_Projeto">
+          <End Role="Projeto" Type="Self.Projeto" Multiplicity="0..1" />
+          <End Role="BaseDeConsulta" Type="Self.BaseDeConsulta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projeto">
+              <PropertyRef Name="ProjetoId" />
+            </Principal>
+            <Dependent Role="BaseDeConsulta">
+              <PropertyRef Name="ProjetoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_BaseDeConsulta_UnidadeInstituicaoEmpresa">
           <End Role="UnidadeInstituicaoEmpresa" Type="Self.UnidadeInstituicaoEmpresa" Multiplicity="0..1" />
           <End Role="BaseDeConsulta" Type="Self.BaseDeConsulta" Multiplicity="*" />
@@ -2355,6 +2367,10 @@
             <End Role="Professor" EntitySet="Professor" />
             <End Role="BaseDeConsulta" EntitySet="BaseDeConsulta" />
           </AssociationSet>
+          <AssociationSet Name="FK_BaseDeConsulta_Projeto" Association="Self.FK_BaseDeConsulta_Projeto">
+            <End Role="Projeto" EntitySet="Projeto" />
+            <End Role="BaseDeConsulta" EntitySet="BaseDeConsulta" />
+          </AssociationSet>
           <AssociationSet Name="FK_BaseDeConsulta_UnidadeInstituicaoEmpresa" Association="Self.FK_BaseDeConsulta_UnidadeInstituicaoEmpresa">
             <End Role="UnidadeInstituicaoEmpresa" EntitySet="UnidadeInstituicaoEmpresa" />
             <End Role="BaseDeConsulta" EntitySet="BaseDeConsulta" />
@@ -3114,6 +3130,10 @@
             <End Role="PalavraChave" EntitySet="PalavraChave" />
             <End Role="ProducaoTecnica" EntitySet="ProducaoTecnica" />
           </AssociationSet>
+          <AssociationSet Name="FK_BaseDeConsulta_Projeto" Association="LattesDatabaseModel.FK_BaseDeConsulta_Projeto">
+            <End Role="Projeto" EntitySet="Projeto" />
+            <End Role="BaseDeConsulta" EntitySet="BaseDeConsulta" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AgenciaFinanciadora">
           <Key>
@@ -3284,6 +3304,7 @@
           <NavigationProperty Name="Professor" Relationship="LattesDatabaseModel.FK_BaseDeConsulta_Professor" FromRole="BaseDeConsulta" ToRole="Professor" />
           <NavigationProperty Name="UnidadeInstituicaoEmpresa" Relationship="LattesDatabaseModel.FK_BaseDeConsulta_UnidadeInstituicaoEmpresa" FromRole="BaseDeConsulta" ToRole="UnidadeInstituicaoEmpresa" />
           <NavigationProperty Name="VinculoAtuacaoProfissional" Relationship="LattesDatabaseModel.FK_BaseDeConsulta_VinculoAtuacaoProfissional" FromRole="BaseDeConsulta" ToRole="VinculoAtuacaoProfissional" />
+          <NavigationProperty Name="Projeto" Relationship="LattesDatabaseModel.FK_BaseDeConsulta_Projeto" FromRole="BaseDeConsulta" ToRole="Projeto" />
         </EntityType>
         <EntityType Name="ContatoProfessor">
           <Key>
@@ -3784,6 +3805,7 @@
           <NavigationProperty Name="ParticipacaoEmProjeto" Relationship="LattesDatabaseModel.FK_ParticipacaoEmProjeto_Projeto" FromRole="Projeto" ToRole="ParticipacaoEmProjeto" />
           <NavigationProperty Name="UnidadeInstituicaoEmpresa" Relationship="LattesDatabaseModel.FK_Projeto_UnidadeInstituicaoEmpresa" FromRole="Projeto" ToRole="UnidadeInstituicaoEmpresa" />
           <NavigationProperty Name="InstituicaoEmpresaFinanciadora" Relationship="LattesDatabaseModel.FinanciamentoProjeto" FromRole="Projeto" ToRole="InstituicaoEmpresa" />
+          <NavigationProperty Name="BaseDeConsulta" Relationship="LattesDatabaseModel.FK_BaseDeConsulta_Projeto" FromRole="Projeto" ToRole="BaseDeConsulta" />
         </EntityType>
         <EntityType Name="UnidadeInstituicaoEmpresa">
           <Key>
@@ -4905,6 +4927,18 @@
         <Association Name="ProducaoTecnicaPalavraChave">
           <End Type="LattesDatabaseModel.PalavraChave" Role="PalavraChave" Multiplicity="*" />
           <End Type="LattesDatabaseModel.ProducaoTecnica" Role="ProducaoTecnica" Multiplicity="*" />
+        </Association>
+        <Association Name="FK_BaseDeConsulta_Projeto">
+          <End Type="LattesDatabaseModel.Projeto" Role="Projeto" Multiplicity="0..1" />
+          <End Type="LattesDatabaseModel.BaseDeConsulta" Role="BaseDeConsulta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Projeto">
+              <PropertyRef Name="ProjetoId" />
+            </Principal>
+            <Dependent Role="BaseDeConsulta">
+              <PropertyRef Name="ProjetoId" />
+            </Dependent>
+          </ReferentialConstraint>
         </Association>
         </Schema>
     </edmx:ConceptualModels>
