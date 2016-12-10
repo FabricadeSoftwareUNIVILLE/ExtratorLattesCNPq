@@ -85,7 +85,6 @@ namespace LattesExtractor
             }
             catch (Exception ex)
             {
-                    var e1 = ex;
                     Logger.Error("Erros durante a execução:");
                     Logger.Error(ex.Message);
                 

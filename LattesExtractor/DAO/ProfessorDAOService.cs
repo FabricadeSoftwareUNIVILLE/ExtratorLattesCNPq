@@ -98,7 +98,6 @@ namespace LattesExtractor.DAO
         public const string _TP_BJ_OUTRA = "Outra";
 
         private static readonly object logLocker = new object();
-        private static readonly object cacheLocker = new object();
         private static readonly object saveLocker = new object();
 
         private LattesDatabase _lattesDatabase;
@@ -249,7 +248,6 @@ namespace LattesExtractor.DAO
                 {
                     lock (logLocker)
                     {
-                        var e1 = ex;
                         Logger.Error(String.Format("Erros para o Professor {0} - {1}",
                             professor.NumeroCurriculo, professor.NomeProfessor));
                         Logger.Error(ex.Message);
@@ -756,8 +754,6 @@ namespace LattesExtractor.DAO
             var bancas = cvXml.DADOSCOMPLEMENTARES.PARTICIPACAOEMBANCAJULGADORA;
             BancaJulgadora banca;
 
-            var portugues = GetIdioma("Português");
-
             if (bancas.BANCAJULGADORAPARAPROFESSORTITULAR != null)
             {
                 foreach (var profTitular in bancas.BANCAJULGADORAPARAPROFESSORTITULAR)
@@ -1034,7 +1030,6 @@ namespace LattesExtractor.DAO
             var bancas = cvXml.DADOSCOMPLEMENTARES.PARTICIPACAOEMBANCATRABALHOSCONCLUSAO;
             BancaDeTrabalho banca;
 
-            var portugues = GetIdioma("Português");
             InstituicaoEmpresa inst;
 
             if (bancas.PARTICIPACAOEMBANCADEMESTRADO != null)
@@ -3095,7 +3090,6 @@ namespace LattesExtractor.DAO
                 return;
 
             ProducaoBibliografica pb = null;
-            Idioma portugues = GetIdioma("Português");
             var pbXml = cvXml.PRODUCAOBIBLIOGRAFICA;
 
             if (pbXml.TRABALHOSEMEVENTOS != null)

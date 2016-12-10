@@ -2,7 +2,6 @@
 using LattesExtractor.Entities.CSV;
 using LattesExtractor.Entities.Database;
 using LINQtoCSV;
-using log4net;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,8 +11,6 @@ namespace LattesExtractor.Controller
 {
     class LoadQualisTableController
     {
-
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(LoadQualisTableController).Name);
 
         public static void LoadQualisTable(LattesModule lattesModule)
         {
