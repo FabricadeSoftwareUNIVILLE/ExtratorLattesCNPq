@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO.Compression;
-using ICSharpCode.SharpZipLib.Zip;
-using ICSharpCode.SharpZipLib.Core;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using LattesExtractor.Entities.Database;
 using LattesExtractor.Entities;
 using System.Threading;
-using System.Data.Entity.Validation;
 using LattesExtractor.Entities.Xml;
 using LattesExtractor.DAO;
 using log4net;
@@ -66,7 +60,6 @@ namespace LattesExtractor.Controller
 
         public void ThreadRun()
         {
-            byte[] buffer = new byte[4096];
             XmlSerializer curriculumVitaeUnserializer = new XmlSerializer(typeof(CurriculoVitaeXml));
 
             XmlDocument curriculumVitaeXml;

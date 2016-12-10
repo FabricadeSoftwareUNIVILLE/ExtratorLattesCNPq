@@ -1,7 +1,6 @@
 ﻿using LattesExtractor.Entities.Database;
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace LattesExtractor.DAO
 {
