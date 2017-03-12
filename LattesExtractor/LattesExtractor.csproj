@@ -260,6 +260,7 @@
     <None Include="LICENSE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="resources\Consulta_Webqualis.csv" />
     <None Include="resources\IDs_Curriculos.local.xls">

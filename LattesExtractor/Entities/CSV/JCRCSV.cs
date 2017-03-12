@@ -1,4 +1,4 @@
-﻿using LINQtoCSV;
+using LINQtoCSV;
 using System;
 
 namespace LattesExtractor.Entities.CSV

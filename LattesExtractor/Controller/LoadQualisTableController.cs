@@ -1,4 +1,4 @@
-﻿using LattesExtractor.DAO;
+using LattesExtractor.DAO;
 using LattesExtractor.Entities.CSV;
 using LattesExtractor.Entities.Database;
 using LINQtoCSV;

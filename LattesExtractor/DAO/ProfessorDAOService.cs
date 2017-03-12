@@ -1,4 +1,4 @@
-﻿using LattesExtractor.Entities;
+using LattesExtractor.Entities;
 using LattesExtractor.Entities.Database;
 using LattesExtractor.Entities.Xml;
 using log4net;
