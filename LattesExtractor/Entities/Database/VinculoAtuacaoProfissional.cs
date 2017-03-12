@@ -20,6 +20,7 @@ namespace LattesExtractor.Entities.Database
             this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
+        public int VinculoAtuacaoProfissionalId { get; set; }
         public int ProfessorId { get; set; }
         public int SequenciaVinculoAtuacaoProfissional { get; set; }
         public int InstituicaoEmpresaId { get; set; }
@@ -31,9 +32,9 @@ namespace LattesExtractor.Entities.Database
         public string DescricaoVinculoAtuacaoProfissional { get; set; }
         public Nullable<bool> VinculoEmpregaticioVinculoAtuacaoProfissional { get; set; }
     
-        public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
-        public virtual Professor Professor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
+        public virtual Professor Professor { get; set; }
     }
 }

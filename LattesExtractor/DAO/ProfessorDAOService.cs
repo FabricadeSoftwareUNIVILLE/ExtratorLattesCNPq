@@ -364,7 +364,7 @@ namespace LattesExtractor.DAO
                 bc = LattesDatabase.BaseDeConsulta.Create();
                 bc.SequenciaBaseDeConsulta = sequencia++;
                 bc.AtividadeProfissional = ap;
-                bc.AtividadeProfissionalId = String.Format("{0}|{1}", professor.ProfessorId, ap.SequenciaAtividadeProfissional);
+                bc.AtividadeProfissionalId = ap.AtividadeProfissionalId;
 
                 bc.AnoBaseDeConsulta = ap.DataInicioAtividadeProfissional.Year;
 
@@ -396,7 +396,7 @@ namespace LattesExtractor.DAO
                         bc.SequenciaBaseDeConsulta = sequencia++;
                         bc.ProducaoBibliografica = pb;
 
-                        bc.AnoBaseDeConsulta = pb.AnoProducaoBibligrafica;
+                        bc.AnoBaseDeConsulta = pb.AnoProducaoBibliografica;
 
                         bc.InstituicaoEmpresa = ieNP;
                         bc.UnidadeInstituicaoEmpresa = ueNP;
@@ -525,7 +525,6 @@ namespace LattesExtractor.DAO
                         bc = LattesDatabase.BaseDeConsulta.Create();
                         bc.SequenciaBaseDeConsulta = sequencia++;
                         bc.ParticipacaoEvento = pe;
-                        bc.ParticipacaoEventoId = String.Format("{0}|{1}", professor.ProfessorId, pe.SequenciaParticipacaoEvento);
 
                         bc.AnoBaseDeConsulta = pe.Evento.AnoEvento;
 
@@ -559,7 +558,6 @@ namespace LattesExtractor.DAO
                         bc = LattesDatabase.BaseDeConsulta.Create();
                         bc.SequenciaBaseDeConsulta = sequencia++;
                         bc.FormacaoAcademicaTitulacao = fat;
-                        bc.FormacaoAcademicaTitulacaoId = String.Format("{0}|{1}", professor.ProfessorId, fat.SequenciaFormacaoAcademicaTitulacao);
 
                         bc.AnoBaseDeConsulta = fat.AnoInicioFormacaoAcademicaTitulacao;
 
@@ -593,7 +591,6 @@ namespace LattesExtractor.DAO
                         bc = LattesDatabase.BaseDeConsulta.Create();
                         bc.SequenciaBaseDeConsulta = sequencia++;
                         bc.OrientacaoSupervisao = os;
-                        bc.OrientacaoSupervicaoId = String.Format("{0}|{1}", professor.ProfessorId, os.SequenciaOrientacaoSupervicao);
 
                         bc.AnoBaseDeConsulta = os.AnoOrientacaoSupervicao;
 
@@ -668,10 +665,6 @@ namespace LattesExtractor.DAO
                                         break;
                                     case "OS":
                                         bc.OrientacaoSupervisao = ((OrientacaoSupervisao)cp.Producao);
-                                        bc.OrientacaoSupervicaoId = 
-                                            String.Format("{0}|{1}",
-                                                professor.ProfessorId, 
-                                                bc.OrientacaoSupervisao.SequenciaOrientacaoSupervicao);
                                         bc.Idioma = ((OrientacaoSupervisao)cp.Producao).Idioma;
                                         bc.Curso = ((OrientacaoSupervisao)cp.Producao).Curso;
                                         bc.AgenciaFinanciadora = ((OrientacaoSupervisao)cp.Producao).AgenciaFinanciadora;
@@ -713,7 +706,6 @@ namespace LattesExtractor.DAO
                 bc = LattesDatabase.BaseDeConsulta.Create();
                 bc.SequenciaBaseDeConsulta = sequencia++;
                 bc.PremioOuTitulo = pout;
-                bc.PremioOuTituloId = String.Format("{0}|{1}", professor.ProfessorId, pout.SequenciaPremioOuTitulo);
 
                 bc.AnoBaseDeConsulta = pout.AnoPremioOuTitulo;
 
@@ -735,7 +727,6 @@ namespace LattesExtractor.DAO
                 bc = LattesDatabase.BaseDeConsulta.Create();
                 bc.SequenciaBaseDeConsulta = sequencia++;
                 bc.VinculoAtuacaoProfissional = vap;
-                bc.VinculoAtuacaoProfissionalId = String.Format("{0}|{1}", professor.ProfessorId, vap.SequenciaVinculoAtuacaoProfissional);
 
                 bc.AnoBaseDeConsulta = vap.DataInicioVinculoAtuacaoProfissional.Year;
 
@@ -3112,8 +3103,8 @@ namespace LattesExtractor.DAO
                     pb = GetProducaoBibliografica(_TP_PB_TRABALHO_EVENTOS,
                                                   trabalhoEvento.DADOSBASICOSDOTRABALHO.TITULODOTRABALHO,
                                                   trabalhoEvento.DADOSBASICOSDOTRABALHO.ANODOTRABALHO);
-                    if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                    if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                     ComplementarProducaoBibliografica(pb,
                                                       trabalhoEvento.DADOSBASICOSDOTRABALHO.TITULODOTRABALHOINGLES,
                                                       trabalhoEvento.INFORMACOESADICIONAIS,
@@ -3145,8 +3136,8 @@ namespace LattesExtractor.DAO
                     pb = GetProducaoBibliografica(_TP_PB_ARTIGO_PUBLICADO,
                                                   artigoPublicado.DADOSBASICOSDOARTIGO.TITULODOARTIGO,
                                                   artigoPublicado.DADOSBASICOSDOARTIGO.ANODOARTIGO);
-                    if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                    if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                     ComplementarProducaoBibliografica(pb,
                                                       artigoPublicado.DADOSBASICOSDOARTIGO.TITULODOARTIGOINGLES,
                                                       artigoPublicado.INFORMACOESADICIONAIS,
@@ -3178,8 +3169,8 @@ namespace LattesExtractor.DAO
                     pb = GetProducaoBibliografica(_TP_PB_ARTIGO_ACEITO_PUBLICACAO,
                                                   artigoAceitoPub.DADOSBASICOSDOARTIGO.TITULODOARTIGO,
                                                   artigoAceitoPub.DADOSBASICOSDOARTIGO.ANODOARTIGO);
-                    if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                    if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                        professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                     ComplementarProducaoBibliografica(pb,
                                                       artigoAceitoPub.DADOSBASICOSDOARTIGO.TITULODOARTIGOINGLES,
                                                       artigoAceitoPub.INFORMACOESADICIONAIS,
@@ -3213,8 +3204,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_LIVRO_PUBLICADO_ORGANIZADO,
                                                       livro.DADOSBASICOSDOLIVRO.TITULODOLIVRO,
                                                       livro.DADOSBASICOSDOLIVRO.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                         ComplementarProducaoBibliografica(pb,
                                                           livro.DADOSBASICOSDOLIVRO.TITULODOLIVROINGLES,
                                                           livro.INFORMACOESADICIONAIS,
@@ -3246,8 +3237,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_CAPTIULO_PUBLICADO_ORGANIZADO,
                                                       capitulo.DADOSBASICOSDOCAPITULO.TITULODOCAPITULODOLIVRO,
                                                       capitulo.DADOSBASICOSDOCAPITULO.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                         ComplementarProducaoBibliografica(pb,
                                                           capitulo.DADOSBASICOSDOCAPITULO.TITULODOCAPITULODOLIVROINGLES,
                                                           capitulo.INFORMACOESADICIONAIS,
@@ -3286,8 +3277,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_OUTRA,
                                                       outra.DADOSBASICOSDEOUTRAPRODUCAO.TITULO,
                                                       outra.DADOSBASICOSDEOUTRAPRODUCAO.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
 
                         if (outra.DETALHAMENTODEOUTRAPRODUCAO != null) // outra produção pode não ter detalhamento
                         {
@@ -3331,8 +3322,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_PARTITURA_MUSICAL,
                                                       partitura.DADOSBASICOSDAPARTITURA.TITULO,
                                                       partitura.DADOSBASICOSDAPARTITURA.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                         ComplementarProducaoBibliografica(pb,
                                                           partitura.DADOSBASICOSDAPARTITURA.TITULOINGLES,
                                                           partitura.INFORMACOESADICIONAIS,
@@ -3364,8 +3355,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_PREFACIO_POSFACIO,
                                                       preposfacio.DADOSBASICOSDOPREFACIOPOSFACIO.TITULO,
                                                       preposfacio.DADOSBASICOSDOPREFACIOPOSFACIO.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                         ComplementarProducaoBibliografica(pb,
                                                           preposfacio.DADOSBASICOSDOPREFACIOPOSFACIO.TITULOINGLES,
                                                           preposfacio.INFORMACOESADICIONAIS,
@@ -3397,8 +3388,8 @@ namespace LattesExtractor.DAO
                         pb = GetProducaoBibliografica(_TP_PB_TRADUCAO,
                                                       traducao.DADOSBASICOSDATRADUCAO.TITULO,
                                                       traducao.DADOSBASICOSDATRADUCAO.ANO);
-                        if (pb.AnoProducaoBibligrafica > professor.DataUltimaPublicacaoCurriculo.Year)
-                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibligrafica, 01, 01);
+                        if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
+                            professor.DataUltimaPublicacaoCurriculo = new DateTime((int)pb.AnoProducaoBibliografica, 01, 01);
                         ComplementarProducaoBibliografica(pb,
                                                           traducao.DADOSBASICOSDATRADUCAO.TITULOINGLES,
                                                           traducao.INFORMACOESADICIONAIS,
@@ -3432,41 +3423,41 @@ namespace LattesExtractor.DAO
         {
             lock (saveLocker)
             {
-                if (producaoBibliografica.TituloEmInglesProducaoBibligrafica == null || producaoBibliografica.TituloEmInglesProducaoBibligrafica == "")
-                    producaoBibliografica.TituloEmInglesProducaoBibligrafica = tituloEmIngles;
+                if (producaoBibliografica.TituloEmInglesProducaoBibliografica == null || producaoBibliografica.TituloEmInglesProducaoBibliografica == "")
+                    producaoBibliografica.TituloEmInglesProducaoBibliografica = tituloEmIngles;
 
                 if (informacoesAdicionais != null)
                 {
-                    if (producaoBibliografica.InformacoesAdicionaisProducaoBibligrafica == null || producaoBibliografica.InformacoesAdicionaisProducaoBibligrafica == "")
-                        producaoBibliografica.InformacoesAdicionaisProducaoBibligrafica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS;
+                    if (producaoBibliografica.InformacoesAdicionaisProducaoBibliografica == null || producaoBibliografica.InformacoesAdicionaisProducaoBibliografica == "")
+                        producaoBibliografica.InformacoesAdicionaisProducaoBibliografica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS;
 
-                    if (producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibligrafica == null || producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibligrafica == "")
-                        producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibligrafica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAISINGLES;
+                    if (producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica == null || producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica == "")
+                        producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAISINGLES;
                 }
 
-                if (!producaoBibliografica.DivulgacaoCeTProducaoBibligrafica)
-                    producaoBibliografica.DivulgacaoCeTProducaoBibligrafica = divulgacaoCeT;
+                if (!producaoBibliografica.DivulgacaoCeTProducaoBibliografica)
+                    producaoBibliografica.DivulgacaoCeTProducaoBibliografica = divulgacaoCeT;
 
                 if (producaoBibliografica.Idioma == null)
                     producaoBibliografica.Idioma = idioma;
 
-                if (producaoBibliografica.PaisProducaoBibligrafica == null || producaoBibliografica.PaisProducaoBibligrafica == "")
-                    producaoBibliografica.PaisProducaoBibligrafica = pais;
+                if (producaoBibliografica.PaisProducaoBibliografica == null || producaoBibliografica.PaisProducaoBibliografica == "")
+                    producaoBibliografica.PaisProducaoBibliografica = pais;
 
-                if (producaoBibliografica.HomePageProducaoBibligrafica == null || producaoBibliografica.HomePageProducaoBibligrafica == _NAO_INFORMADO)
-                    producaoBibliografica.HomePageProducaoBibligrafica = Utils.SetMaxLength(homePage, 300);
+                if (producaoBibliografica.HomePageProducaoBibliografica == null || producaoBibliografica.HomePageProducaoBibliografica == _NAO_INFORMADO)
+                    producaoBibliografica.HomePageProducaoBibliografica = Utils.SetMaxLength(homePage, 300);
 
-                if (producaoBibliografica.DOIProducaoBibligrafica == null || producaoBibliografica.DOIProducaoBibligrafica == "")
-                    producaoBibliografica.DOIProducaoBibligrafica = doi;
+                if (producaoBibliografica.DOIProducaoBibliografica == null || producaoBibliografica.DOIProducaoBibliografica == "")
+                    producaoBibliografica.DOIProducaoBibliografica = doi;
 
-                if (producaoBibliografica.ISBNProducaoBibligrafica == null || producaoBibliografica.ISBNProducaoBibligrafica == "")
+                if (producaoBibliografica.ISBNProducaoBibliografica == null || producaoBibliografica.ISBNProducaoBibliografica == "")
                 {
-                    producaoBibliografica.ISBNProducaoBibligrafica = isnbIssn;
+                    producaoBibliografica.ISBNProducaoBibliografica = isnbIssn;
                     producaoBibliografica.NomePeriodicoProducaoBibliografica = nomePeriodico;
                 }
 
-                if (producaoBibliografica.NaturezaProducaoBibligrafica == "" || producaoBibliografica.NaturezaProducaoBibligrafica == null
-                    || producaoBibliografica.NaturezaProducaoBibligrafica == _NAO_POSSUI || producaoBibliografica.NaturezaProducaoBibligrafica == _NAO_INFORMADO)
+                if (producaoBibliografica.NaturezaProducaoBibliografica == "" || producaoBibliografica.NaturezaProducaoBibliografica == null
+                    || producaoBibliografica.NaturezaProducaoBibliografica == _NAO_POSSUI || producaoBibliografica.NaturezaProducaoBibliografica == _NAO_INFORMADO)
                 {
                     switch (natureza)
                     {
@@ -3557,11 +3548,11 @@ namespace LattesExtractor.DAO
                         }
                     }
 
-                    producaoBibliografica.NaturezaProducaoBibligrafica = natureza;
+                    producaoBibliografica.NaturezaProducaoBibliografica = natureza;
                 }
 
-                if (producaoBibliografica.MeioDivulgacaoProducaoBibligrafica == null || producaoBibliografica.MeioDivulgacaoProducaoBibligrafica == _NAO_INFORMADO)
-                    producaoBibliografica.MeioDivulgacaoProducaoBibligrafica = TraduzirMeioDivulgacao(meioDivulgacao);
+                if (producaoBibliografica.MeioDivulgacaoProducaoBibliografica == null || producaoBibliografica.MeioDivulgacaoProducaoBibliografica == _NAO_INFORMADO)
+                    producaoBibliografica.MeioDivulgacaoProducaoBibliografica = TraduzirMeioDivulgacao(meioDivulgacao);
 
                 if (areas.Length > 0 && areas[0].GrandeAreaConhecimento != _NAO_POSSUI)
                 {
@@ -3648,19 +3639,19 @@ namespace LattesExtractor.DAO
             {
 
                 ProducaoBibliografica producaoBibliografica = LattesDatabase.ProducaoBibliografica.FirstOrDefault(pb =>
-                    pb.TipoProducaoBibligrafica == tipo
-                    && pb.TituloProducaoBibligrafica == titulo
-                    && pb.AnoProducaoBibligrafica == anoTrabalho);
+                    pb.TipoProducaoBibliografica == tipo
+                    && pb.TituloProducaoBibliografica == titulo
+                    && pb.AnoProducaoBibliografica == anoTrabalho);
 
                 if (producaoBibliografica == null)
                 {
                     producaoBibliografica = LattesDatabase.ProducaoBibliografica.Create();
 
-                    producaoBibliografica.TipoProducaoBibligrafica = tipo;
-                    producaoBibliografica.TituloProducaoBibligrafica = titulo;
-                    producaoBibliografica.TituloEmInglesProducaoBibligrafica = "";
-                    producaoBibliografica.AnoProducaoBibligrafica = anoTrabalho;
-                    producaoBibliografica.NaturezaProducaoBibligrafica = "";
+                    producaoBibliografica.TipoProducaoBibliografica = tipo;
+                    producaoBibliografica.TituloProducaoBibliografica = titulo;
+                    producaoBibliografica.TituloEmInglesProducaoBibliografica = "";
+                    producaoBibliografica.AnoProducaoBibliografica = anoTrabalho;
+                    producaoBibliografica.NaturezaProducaoBibliografica = "";
 
                     LattesDatabase.ProducaoBibliografica.Add(producaoBibliografica);
                     LattesDatabase.SaveChanges();
@@ -4667,14 +4658,7 @@ namespace LattesExtractor.DAO
                 if (registrosXml != null)
                 {
                     producaoTecnica.PatentiadoOuRegistradoProducaoTecnica = true;
-                    int sequencia = 1;
-
-                    foreach (var p in producaoTecnica.PatenteRegistro)
-                    {
-                        if (sequencia <= p.SequenciaPatenteRegistro)
-                            sequencia = p.SequenciaPatenteRegistro + 1;
-                    }
-
+                    
                     PatenteRegistro patente = null;
                     string tipoPatente;
                     foreach (var regPat in registrosXml)
@@ -4690,7 +4674,6 @@ namespace LattesExtractor.DAO
                             patente = LattesDatabase.PatenteRegistro.Create();
 
                             patente.TipoPatenteRegistro = tipoPatente;
-                            patente.SequenciaPatenteRegistro = sequencia++;
                             patente.CodigoPatenteRegistro = regPat.CODIGODOREGISTROOUPATENTE;
                             patente.NumeroDepositoPCTPatenteRegistro = regPat.NUMERODEPOSITOPCT;
                             patente.TituloPatenteRegistro = regPat.TITULOPATENTE;
@@ -5285,7 +5268,6 @@ namespace LattesExtractor.DAO
         {
             LinhaDePesquisa linhaPesquisa = null;
 
-
             if (linhasXml != null)
             {
                 foreach (LINHADEPESQUISA lpXml in linhasXml)
@@ -5294,7 +5276,6 @@ namespace LattesExtractor.DAO
                     {
                         linhaPesquisa = LattesDatabase.LinhaDePesquisa.Create();
 
-                        linhaPesquisa.SequenciaLinhaDePesquisa = sequencia++;
                         linhaPesquisa.AtivaLinhaDePesquisa = TraduzirFlags(lpXml.FLAGLINHADEPESQUISAATIVA.ToString());
                         linhaPesquisa.TituloLinhaDePesquisa = lpXml.TITULODALINHADEPESQUISA;
                         linhaPesquisa.ObjetivosLinhaDePesquisa = lpXml.OBJETIVOSLINHADEPESQUISA;
@@ -5329,7 +5310,6 @@ namespace LattesExtractor.DAO
                 aa.SubAreaAtuacao = ac.SubAreaConhecimento;
                 aa.Especialidade = ac.Especialidade;
                 aa.TermoCompleto = ac.TermoCompleto;
-                aa.SequenciaAreaAtuacao = professor.AreaAtuacao.Count + 1;
 
                 professor.AreaAtuacao.Add(aa);
             }
@@ -7030,7 +7010,9 @@ namespace LattesExtractor.DAO
 
                 var areasAtuacao = professor.AreaAtuacao.ToArray();
                 foreach (var ac in areasAtuacao)
-                    professor.AreaAtuacao.Remove(ac); // remove relacionamento
+                {
+                    LattesDatabase.AreaAtuacao.Remove(ac);
+                }
 
                 var contatos = professor.ContatoProfessor.ToArray();
                 foreach (var contato in contatos)
@@ -7099,7 +7081,6 @@ namespace LattesExtractor.DAO
                         LattesDatabase.Evento.Remove(e); // eu não houverem participantes, eliminar evento
                 }
 
-                // TODO Conversar sobre ie problema das autorias e participações, outro curriculo pode afirmar que um professor foi bt ou participante de algo, sem que ie curriculo deste segundo afirme ie mesmo
                 var bancasTrabalho = professor.BancaDeTrabalho.ToArray();
                 foreach (var bt in bancasTrabalho)
                 {

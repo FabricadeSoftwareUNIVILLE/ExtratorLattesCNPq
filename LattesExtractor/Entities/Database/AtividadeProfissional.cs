@@ -20,6 +20,7 @@ namespace LattesExtractor.Entities.Database
             this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
+        public int AtividadeProfissionalId { get; set; }
         public int ProfessorId { get; set; }
         public int SequenciaAtividadeProfissional { get; set; }
         public int InstituicaoEmpresaId { get; set; }

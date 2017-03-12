@@ -17,41 +17,41 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public ProducaoBibliografica()
         {
-            this.Professor = new HashSet<Professor>();
-            this.PalavraChave = new HashSet<PalavraChave>();
-            this.AreaConhecimento = new HashSet<AreaConhecimento>();
             this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
+            this.Professor = new HashSet<Professor>();
+            this.AreaConhecimento = new HashSet<AreaConhecimento>();
+            this.PalavraChave = new HashSet<PalavraChave>();
         }
     
         public int ProducaoBibliograficaId { get; set; }
-        public string NaturezaProducaoBibligrafica { get; set; }
-        public string TipoProducaoBibligrafica { get; set; }
-        public string TituloProducaoBibligrafica { get; set; }
-        public decimal AnoProducaoBibligrafica { get; set; }
-        public string PaisProducaoBibligrafica { get; set; }
+        public string NaturezaProducaoBibliografica { get; set; }
+        public string TipoProducaoBibliografica { get; set; }
+        public string TituloProducaoBibliografica { get; set; }
+        public decimal AnoProducaoBibliografica { get; set; }
+        public string PaisProducaoBibliografica { get; set; }
         public Nullable<int> IdiomaId { get; set; }
-        public string MeioDivulgacaoProducaoBibligrafica { get; set; }
-        public string HomePageProducaoBibligrafica { get; set; }
-        public string DOIProducaoBibligrafica { get; set; }
-        public string ISBNProducaoBibligrafica { get; set; }
-        public string InformacoesAdicionaisProducaoBibligrafica { get; set; }
-        public bool DivulgacaoCeTProducaoBibligrafica { get; set; }
-        public string InformacoesAdicionaisEmInglesProducaoBibligrafica { get; set; }
-        public string TituloEmInglesProducaoBibligrafica { get; set; }
+        public string MeioDivulgacaoProducaoBibliografica { get; set; }
+        public string HomePageProducaoBibliografica { get; set; }
+        public string DOIProducaoBibliografica { get; set; }
+        public string ISBNProducaoBibliografica { get; set; }
+        public string InformacoesAdicionaisProducaoBibliografica { get; set; }
+        public bool DivulgacaoCeTProducaoBibliografica { get; set; }
+        public string InformacoesAdicionaisEmInglesProducaoBibliografica { get; set; }
+        public string TituloEmInglesProducaoBibliografica { get; set; }
         public Nullable<int> PeriodicoQualisId { get; set; }
         public Nullable<int> JCRId { get; set; }
         public string NomePeriodicoProducaoBibliografica { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual Idioma Idioma { get; set; }
+        public virtual JCR JCR { get; set; }
+        public virtual PeriodicoQualis PeriodicoQualis { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Professor> Professor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<PalavraChave> PalavraChave { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AreaConhecimento> AreaConhecimento { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
-        public virtual PeriodicoQualis PeriodicoQualis { get; set; }
-        public virtual JCR JCR { get; set; }
+        public virtual ICollection<PalavraChave> PalavraChave { get; set; }
     }
 }

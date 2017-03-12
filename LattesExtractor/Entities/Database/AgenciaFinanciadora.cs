@@ -17,22 +17,22 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public AgenciaFinanciadora()
         {
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.FormacaoAcademicaTitulacao = new HashSet<FormacaoAcademicaTitulacao>();
             this.OrientacaoSupervisao = new HashSet<OrientacaoSupervisao>();
             this.ProducaoTecnica = new HashSet<ProducaoTecnica>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int AgenciaFinanciadoraId { get; set; }
         public string NomeAgenciaFinanciadora { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FormacaoAcademicaTitulacao> FormacaoAcademicaTitulacao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrientacaoSupervisao> OrientacaoSupervisao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProducaoTecnica> ProducaoTecnica { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

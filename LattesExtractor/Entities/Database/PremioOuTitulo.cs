@@ -20,6 +20,7 @@ namespace LattesExtractor.Entities.Database
             this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
+        public int PremioOuTituloId { get; set; }
         public int ProfessorId { get; set; }
         public int SequenciaPremioOuTitulo { get; set; }
         public string NomePremioOuTitulo { get; set; }
@@ -27,8 +28,8 @@ namespace LattesExtractor.Entities.Database
         public decimal AnoPremioOuTitulo { get; set; }
         public string NomePremioOuTituloEmIngles { get; set; }
     
-        public virtual Professor Professor { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        public virtual Professor Professor { get; set; }
     }
 }

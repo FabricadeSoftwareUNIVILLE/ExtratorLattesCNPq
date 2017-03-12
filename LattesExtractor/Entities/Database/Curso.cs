@@ -18,9 +18,9 @@ namespace LattesExtractor.Entities.Database
         public Curso()
         {
             this.BancaDeTrabalho = new HashSet<BancaDeTrabalho>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.FormacaoAcademicaTitulacao = new HashSet<FormacaoAcademicaTitulacao>();
             this.OrientacaoSupervisao = new HashSet<OrientacaoSupervisao>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
         public int InstituicaoEmpresaId { get; set; }
@@ -37,12 +37,12 @@ namespace LattesExtractor.Entities.Database
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BancaDeTrabalho> BancaDeTrabalho { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<FormacaoAcademicaTitulacao> FormacaoAcademicaTitulacao { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<OrientacaoSupervisao> OrientacaoSupervisao { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

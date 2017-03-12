@@ -14,8 +14,8 @@ namespace LattesExtractor.Entities.Database
     
     public partial class AreaAtuacao
     {
+        public int AreaAtuacaoId { get; set; }
         public int ProfessorId { get; set; }
-        public int SequenciaAreaAtuacao { get; set; }
         public string GrandeAreaAtuacao { get; set; }
         public string NomeAreaAtuacao { get; set; }
         public string SubAreaAtuacao { get; set; }

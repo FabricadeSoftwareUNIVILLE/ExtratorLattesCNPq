@@ -17,6 +17,7 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Evento()
         {
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.ParticipacaoEvento = new HashSet<ParticipacaoEvento>();
         }
     
@@ -28,6 +29,8 @@ namespace LattesExtractor.Entities.Database
         public string CidadeEvento { get; set; }
         public string NaturezaEvento { get; set; }
     
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ParticipacaoEvento> ParticipacaoEvento { get; set; }

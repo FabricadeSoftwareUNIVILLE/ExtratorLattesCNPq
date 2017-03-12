@@ -17,11 +17,12 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public OrientacaoSupervisao()
         {
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.AreaConhecimento = new HashSet<AreaConhecimento>();
             this.PalavraChave = new HashSet<PalavraChave>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
         }
     
+        public int OrientacaoSupervisaoId { get; set; }
         public int ProfessorId { get; set; }
         public int SequenciaOrientacaoSupervicao { get; set; }
         public string TipoOrientacaoSupervicao { get; set; }
@@ -44,6 +45,8 @@ namespace LattesExtractor.Entities.Database
         public Nullable<int> OrgaoInstituicaoEmpresaId { get; set; }
     
         public virtual AgenciaFinanciadora AgenciaFinanciadora { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         public virtual Curso Curso { get; set; }
         public virtual Idioma Idioma { get; set; }
         public virtual InstituicaoEmpresa InstituicaoEmpresa { get; set; }
@@ -53,7 +56,5 @@ namespace LattesExtractor.Entities.Database
         public virtual ICollection<AreaConhecimento> AreaConhecimento { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PalavraChave> PalavraChave { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
     }
 }

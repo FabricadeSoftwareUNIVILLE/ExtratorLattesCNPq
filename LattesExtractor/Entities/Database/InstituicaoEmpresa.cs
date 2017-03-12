@@ -20,6 +20,7 @@ namespace LattesExtractor.Entities.Database
             this.AtividadeProfissional = new HashSet<AtividadeProfissional>();
             this.BancaDeTrabalho = new HashSet<BancaDeTrabalho>();
             this.BancaJulgadora = new HashSet<BancaJulgadora>();
+            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
             this.Curso = new HashSet<Curso>();
             this.Evento = new HashSet<Evento>();
             this.FormacaoAcademicaTitulacao = new HashSet<FormacaoAcademicaTitulacao>();
@@ -32,8 +33,7 @@ namespace LattesExtractor.Entities.Database
             this.Professor = new HashSet<Professor>();
             this.Projeto = new HashSet<Projeto>();
             this.UnidadeInstituicaoEmpresa = new HashSet<UnidadeInstituicaoEmpresa>();
-            this.ProjetoFinanciado = new HashSet<Projeto>();
-            this.BaseDeConsulta = new HashSet<BaseDeConsulta>();
+            this.Projeto1 = new HashSet<Projeto>();
         }
     
         public int InstituicaoEmpresaId { get; set; }
@@ -48,6 +48,8 @@ namespace LattesExtractor.Entities.Database
         public virtual ICollection<BancaDeTrabalho> BancaDeTrabalho { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<BancaJulgadora> BancaJulgadora { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Curso> Curso { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -73,8 +75,6 @@ namespace LattesExtractor.Entities.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UnidadeInstituicaoEmpresa> UnidadeInstituicaoEmpresa { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Projeto> ProjetoFinanciado { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<BaseDeConsulta> BaseDeConsulta { get; set; }
+        public virtual ICollection<Projeto> Projeto1 { get; set; }
     }
 }
