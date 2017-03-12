@@ -1,4 +1,4 @@
-﻿using LattesExtractor.Entities.Database;
+using LattesExtractor.Entities.Database;
 using System;
 using System.Linq;
 
