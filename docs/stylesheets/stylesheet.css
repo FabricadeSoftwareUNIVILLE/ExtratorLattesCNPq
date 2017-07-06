@@ -780,7 +780,7 @@ footer {
   font-size: 13px;
   color: #fff;
   background: #00562b;
-  border-top: 2px dotted #fff;
+  border-top: 2px dashed #fff;
   padding-left: calc((100% - 940px)/2);
   padding-right: calc((100% - 940px)/2);
 }
@@ -806,7 +806,12 @@ footer a {
 ================================================== */
 
 /* Smaller than standard 960 (devices and browsers) */
-@media only screen and (max-width: 959px) { }
+@media only screen and (max-width: 959px) {
+  footer {
+    padding: 1rem;
+    border-width: .3rem;
+  }
+}
 
 /* Tablet Portrait size to standard 960 (devices and browsers) */
 @media only screen and (min-width: 768px) and (max-width: 959px) {
@@ -902,10 +907,6 @@ footer a {
     padding-right: 0;
     margin-left: 0;
     content: none;
-  }
-  footer {
-    padding: 1rem;
-    border-width: .3rem;
   }
 }
 
