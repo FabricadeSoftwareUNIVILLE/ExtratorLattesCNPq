@@ -40,6 +40,11 @@ namespace LattesExtractor
                 }
 
                 XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
+
+                if (options.FromFolder != null) {
+                    lm.ImportFromFolder(options.FromFolder);
+                    return;
+                }
                 lm.Extract();
             }
 
@@ -54,6 +59,9 @@ namespace LattesExtractor
 
         class Options
         {
+            [Option('f', "fromfolder", Required = false, HelpText = "Directório contendo os arquivos XML (caso seja informado serão considerados apenas os curriculos já existentes na pasta, não será feita busca no Lattes)")]
+            public string FromFolder { get; set; }
+
             [Option('q', "importqualis", Required = false, HelpText = "Planilha CSV com a base Qualis a ser importada")]
             public string InputQualisFile { get; set; }
 

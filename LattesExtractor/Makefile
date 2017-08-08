@@ -3,3 +3,4 @@ build:
 	rm -rf obj
 	nuget install -OutputDirectory ../packages
 	xbuild LattesExtractor.csproj /verbosity:minimal /property:Configuration=Release
+	chmod +x ./bin/Release/LattesExtractor.exe

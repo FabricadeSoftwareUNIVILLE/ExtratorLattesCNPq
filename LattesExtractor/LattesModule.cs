@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LattesExtractor.Controller;
 using log4net;
 using LattesExtractor.Entities;
+using System.IO;
 
 namespace LattesExtractor
 {
@@ -69,6 +70,23 @@ namespace LattesExtractor
 
         public CurriculoLattesWebService.WSCurriculoClient WSCurriculoClient { get { return this.wscc; } }
 
+        public void ImportFromFolder(string directory) 
+        {
+            try {
+                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", directory));
+                ImportCurriculumVitaeFromFolderController.LoadCurriculums(this, directory);
+
+                Logger.Info("Iniciando Processamento dos Currículos...");
+                CurriculumVitaeProcessorController.ProcessCurriculumVitaes(this);
+            }
+            catch (Exception ex)
+            {
+                ShowException(ex);
+            }
+
+            Logger.Info("Encerrando Execução...");
+        }
+
         public void Extract()
         {
             try {
@@ -85,24 +103,29 @@ namespace LattesExtractor
             }
             catch (Exception ex)
             {
-                    Logger.Error("Erros durante a execução:");
-                    Logger.Error(ex.Message);
-                
-                    Logger.Error(ex.StackTrace);
-                    if (ex.InnerException != null)
-                    {
-                        Logger.Error("Excessão Interna:");
-                        int sequencia = 1;
-                        while (ex.InnerException != null)
-                        {
-                            Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
-                            Logger.Error(ex.StackTrace);
-                            ex = ex.InnerException;
-                        }
-                    }
+                ShowException(ex);
             }
 
             Logger.Info("Encerrando Execução...");
+        }
+
+        private void ShowException(Exception ex) {
+
+            Logger.Error("Erros durante a execução:");
+            Logger.Error(ex.Message);
+        
+            Logger.Error(ex.StackTrace);
+            if (ex.InnerException != null)
+            {
+                Logger.Error("Excessão Interna:");
+                int sequencia = 1;
+                while (ex.InnerException != null)
+                {
+                    Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
+                    Logger.Error(ex.StackTrace);
+                    ex = ex.InnerException;
+                }
+            }
         }
 
         public void UpdateQualisDataBase (string csvQualis)
@@ -121,7 +144,7 @@ namespace LattesExtractor
 
         public string GetCurriculumVitaeFileName(string curriculumVitaeNumber)
         {
-            return String.Format("{0}\\{1}.xml", this.TempDirectory, curriculumVitaeNumber);
+            return String.Format("{0}{1}{2}.xml", this.TempDirectory, Path.DirectorySeparatorChar, curriculumVitaeNumber);
         }
 
         /// <summary>

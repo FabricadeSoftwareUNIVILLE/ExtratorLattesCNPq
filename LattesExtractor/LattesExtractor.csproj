@@ -244,6 +244,7 @@
     <Compile Include="DAO\ProfessorDAOService.cs" />
     <Compile Include="Controller\CurriculumVitaeProcessorController.cs" />
     <Compile Include="Controller\DownloadCurriculumVitaeController.cs" />
+    <Compile Include="Controller\ImportCurriculumVitaeFromFolderController.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
