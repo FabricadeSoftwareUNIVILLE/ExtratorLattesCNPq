@@ -269,6 +269,9 @@
     </None>
     <None Include="resources\JournalHomeGrid.csv" />
     <None Include="resources\LMPLCurriculo.dtd" />
+    <None Include="resources\sample\9107715221927474.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Entities\Xml\LMPLCurriculo.xsd">
       <SubType>Designer</SubType>
     </None>

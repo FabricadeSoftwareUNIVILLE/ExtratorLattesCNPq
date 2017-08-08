@@ -18,6 +18,10 @@ namespace LattesExtractor
             lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
             lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
 
+            if (config.AppSettings.Settings["ImportFolder"] != null) {
+                lm.ImportFolder = config.AppSettings.Settings["ImportFolder"].Value;
+            }
+
             var options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
@@ -42,9 +46,9 @@ namespace LattesExtractor
                 XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
 
                 if (options.FromFolder != null) {
-                    lm.ImportFromFolder(options.FromFolder);
-                    return;
+                    lm.ImportFolder = options.FromFolder;
                 }
+
                 lm.Extract();
             }
 

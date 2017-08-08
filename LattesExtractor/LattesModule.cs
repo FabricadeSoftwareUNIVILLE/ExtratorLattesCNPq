@@ -24,6 +24,7 @@ namespace LattesExtractor
         private string _lattesCurriculumValueQuery = null;
         private string _lattesCurriculumValueConnection = null;
 
+
         private static LattesModule _instance;
 
         public static LattesModule GetInstance()
@@ -38,6 +39,8 @@ namespace LattesExtractor
         {
             this.wscc = new CurriculoLattesWebService.WSCurriculoClient();
         }
+
+        public String ImportFolder { get; set; }
 
         public String TempDirectory
         {
@@ -70,21 +73,19 @@ namespace LattesExtractor
 
         public CurriculoLattesWebService.WSCurriculoClient WSCurriculoClient { get { return this.wscc; } }
 
-        public void ImportFromFolder(string directory) 
+        private void LoadCurriculums() 
         {
-            try {
-                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", directory));
-                ImportCurriculumVitaeFromFolderController.LoadCurriculums(this, directory);
-
-                Logger.Info("Iniciando Processamento dos Currículos...");
-                CurriculumVitaeProcessorController.ProcessCurriculumVitaes(this);
-            }
-            catch (Exception ex)
-            {
-                ShowException(ex);
+            if (this.ImportFolder != null) {
+                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", this.ImportFolder));
+                ImportCurriculumVitaeFromFolderController.LoadCurriculums(this, this.ImportFolder);
+                return;
             }
 
-            Logger.Info("Encerrando Execução...");
+            Logger.Info("Iniciando Carga dos Números de Currículo da Instituição...");
+            LoadCurriculumVitaeNumberController.LoadCurriculumVitaeNumbers(this);
+
+            Logger.Info("Iniciando Download dos Currículos Atualizados...");
+            DownloadCurriculumVitaeController.DownloadUpdatedCurriculums(this);
         }
 
         public void Extract()
@@ -92,11 +93,7 @@ namespace LattesExtractor
             try {
                 Logger.Info("Começando Processamento...");
 
-                Logger.Info("Iniciando Carga dos Números de Currículo da Instituição...");
-                LoadCurriculumVitaeNumberController.LoadCurriculumVitaeNumbers(this);
-
-                Logger.Info("Iniciando Download dos Currículos Atualizados...");
-                DownloadCurriculumVitaeController.DownloadUpdatedCurriculums(this);
+                LoadCurriculums();
 
                 Logger.Info("Iniciando Processamento dos Currículos...");
                 CurriculumVitaeProcessorController.ProcessCurriculumVitaes(this);
