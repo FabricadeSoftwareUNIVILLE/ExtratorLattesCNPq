@@ -23,7 +23,7 @@ namespace LattesExtractor
         private String _jcrFile = "";
         private string _lattesCurriculumValueQuery = null;
         private string _lattesCurriculumValueConnection = null;
-
+        private string _importFolder = null;
 
         private static LattesModule _instance;
 
@@ -40,12 +40,33 @@ namespace LattesExtractor
             this.wscc = new CurriculoLattesWebService.WSCurriculoClient();
         }
 
-        public String ImportFolder { get; set; }
+        public string ImportFolder
+        {
+            get { return this._importFolder; }
+            set
+            {
+                this._importFolder = value;
+
+                if (this._importFolder != null)
+                {
+                    this._importFolder = this._importFolder
+                        .Replace('\\', Path.DirectorySeparatorChar)
+                        .Replace('/', Path.DirectorySeparatorChar);
+                }
+            }
+        }
+
+        public bool IgnorePendingLastExecution { get; set; }
 
         public String TempDirectory
         {
             get { return this._tempDir; }
-            set { this._tempDir = value; }
+            set
+            {
+                this._tempDir = value
+                    .Replace('\\', Path.DirectorySeparatorChar)
+                    .Replace('/', Path.DirectorySeparatorChar);
+            }
         }
 
         public String QualisFileName
@@ -53,9 +74,11 @@ namespace LattesExtractor
             get { return this._qualisFile; }
             set { this._qualisFile = value; }
         }
-        public string JCRFileName {
+        public string JCRFileName
+        {
             get { return this._jcrFile; }
-            set { this._jcrFile = value; } }
+            set { this._jcrFile = value; }
+        }
 
         public string LattesCurriculumVitaeQuery
         {
@@ -63,19 +86,27 @@ namespace LattesExtractor
             set { this._lattesCurriculumValueQuery = value; }
         }
 
-
         public string LattesCurriculumVitaeODBCConnection
         {
             get { return this._lattesCurriculumValueConnection; }
             set { this._lattesCurriculumValueConnection = value; }
         }
 
-
         public CurriculoLattesWebService.WSCurriculoClient WSCurriculoClient { get { return this.wscc; } }
 
-        private void LoadCurriculums() 
+        private void LoadCurriculums()
         {
-            if (this.ImportFolder != null) {
+            if (this.IgnorePendingLastExecution == false)
+            {
+                LoadFromTempDirectory.LoadCurriculums(this);
+                if (this.HasNextCurriculumVitaeForProcess)
+                {
+                    return;
+                }
+            }
+
+            if (this.ImportFolder != null)
+            {
                 Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", this.ImportFolder));
                 ImportCurriculumVitaeFromFolderController.LoadCurriculums(this, this.ImportFolder);
                 return;
@@ -90,7 +121,8 @@ namespace LattesExtractor
 
         public void Extract()
         {
-            try {
+            try
+            {
                 Logger.Info("Começando Processamento...");
 
                 LoadCurriculums();
@@ -104,13 +136,14 @@ namespace LattesExtractor
             }
 
             Logger.Info("Encerrando Execução...");
+            Console.ReadKey();
         }
 
-        private void ShowException(Exception ex) {
-
+        private void ShowException(Exception ex)
+        {
             Logger.Error("Erros durante a execução:");
             Logger.Error(ex.Message);
-        
+
             Logger.Error(ex.StackTrace);
             if (ex.InnerException != null)
             {
@@ -125,7 +158,7 @@ namespace LattesExtractor
             }
         }
 
-        public void UpdateQualisDataBase (string csvQualis)
+        public void UpdateQualisDataBase(string csvQualis)
         {
             QualisFileName = csvQualis;
             Logger.Info("Iniciando Processamento do Qualis...");
@@ -148,7 +181,7 @@ namespace LattesExtractor
         /// Adiciona um curriculo para curriculumVitaeUnserializer verificado para download
         /// </summary>
         /// <param name="curriculumVitaeNumber"></param>
-        public void AddCurriculumVitaeNumberToDownload (CurriculoEntry curriculumVitaeNumber)
+        public void AddCurriculumVitaeNumberToDownload(CurriculoEntry curriculumVitaeNumber)
         {
             _curriculumVitaeNumbersToDownload.Push(curriculumVitaeNumber);
         }

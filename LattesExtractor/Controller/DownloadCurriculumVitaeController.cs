@@ -19,35 +19,6 @@ namespace LattesExtractor.Controller
 
         public static void DownloadUpdatedCurriculums(LattesModule lattesModule)
         {
-            // verifica a pasta de download para adicionar os curriculos que estejam na pasta no momento que o metodo é executado
-
-            if (!Directory.Exists(lattesModule.TempDirectory))
-            {
-                Logger.Info(String.Format("Pasta de trabalho não foi encontrado ({0})", lattesModule.TempDirectory));
-                return;
-            }
-
-            bool exists = false;
-            foreach(string s in Directory.EnumerateFiles(lattesModule.TempDirectory))
-            {
-                String file = s.Substring(lattesModule.TempDirectory.Length + 1);
-                file = file.Substring(0, file.Length - 4);
-
-                lattesModule.AddCurriculumVitaeForProcess(new CurriculoEntry
-                {
-                    NumeroCurriculo = file,
-                });
-
-                exists = true;
-            }
-
-            if (exists)
-            {
-                while (lattesModule.HasNextCurriculumVitaeNumberToDownload)
-                    lattesModule.GetNextCurriculumVitaeNumberToDownload();
-                return;
-            }
-
             List<Thread> threads = new List<Thread>();
             
             // cria n threads para tornar ie download mais performático 

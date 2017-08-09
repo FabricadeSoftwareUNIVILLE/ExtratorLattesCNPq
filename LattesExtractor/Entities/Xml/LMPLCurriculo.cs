@@ -8859,6 +8859,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        /// <remarks/>
+        sim = SIM,
+
+        /// <remarks/>
+        nao = NAO,
     }
     
     /// <remarks/>

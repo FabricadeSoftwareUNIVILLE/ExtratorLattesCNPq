@@ -93,7 +93,27 @@ namespace LattesExtractor.Controller
 
                 curriculumVitaeXDocument = XDocument.Parse(curriculumVitaeXml.InnerXml);
 
-                curriculumVitae = (CurriculoVitaeXml)curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader());
+                try
+                {
+                    curriculumVitae = (CurriculoVitaeXml)curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader());
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(String.Format("Erro durante a leitura do XML:", ex.Message));
+                    Logger.Error(ex.StackTrace);
+                    if (ex.InnerException != null)
+                    {
+                        Logger.Error("Excessão Interna:");
+                        int sequencia = 1;
+                        while (ex.InnerException != null)
+                        {
+                            ex = ex.InnerException;
+                            Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.Message));
+                            Logger.Error(ex.StackTrace);
+                        }
+                    }
+                    continue;
+                }
 
                 // limpa ponteiros
                 curriculumVitaeXDocument = null;
