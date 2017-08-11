@@ -10,6 +10,7 @@ namespace LattesExtractor
     {
         static void Main(string[] args)
         {
+            XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             LattesModule lm = LattesModule.GetInstance();
@@ -17,6 +18,16 @@ namespace LattesExtractor
             lm.TempDirectory = config.AppSettings.Settings["TempDir"].Value;
             lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
             lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
+
+            if (config.AppSettings.Settings["IgnorePedingLastExecution"] != null)
+            {
+                lm.IgnorePendingLastExecution = config.AppSettings.Settings["IgnorePedingLastExecution"].Value.Equals("true");
+            }
+
+            if (config.AppSettings.Settings["ImportFolder"] != null)
+            {
+                lm.ImportFolder = config.AppSettings.Settings["ImportFolder"].Value;
+            }
 
             var options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
@@ -39,12 +50,16 @@ namespace LattesExtractor
                     return;
                 }
 
-                XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
-
-                if (options.FromFolder != null) {
-                    lm.ImportFromFolder(options.FromFolder);
-                    return;
+                if (options.IgnorePendingLastExecution)
+                {
+                    lm.IgnorePendingLastExecution = options.IgnorePendingLastExecution;
                 }
+
+                if (options.FromFolder != null)
+                {
+                    lm.ImportFolder = options.FromFolder;
+                }
+
                 lm.Extract();
             }
 
@@ -68,10 +83,13 @@ namespace LattesExtractor
             [Option('j', "importjcr", Required = false, HelpText = "Planilha CSV com a base JCR Impact Factor a ser importada")]
             public string InputJCRFile { get; set; }
 
+            [Option('i', "ignoreLastExecution", DefaultValue = false, HelpText = "Deve ignorar curriculos pendentes de processamento da última execução")]
+            public bool IgnorePendingLastExecution { get; set; }
+
             [Option('v', "verbose", DefaultValue = true,
               HelpText = "Imprime forma de uso.")]
             public bool Verbose { get; set; }
-            
+
             [ParserState]
             public IParserState LastParserState { get; set; }
 

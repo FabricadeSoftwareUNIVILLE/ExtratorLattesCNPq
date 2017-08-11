@@ -90,9 +90,8 @@
       <HintPath>..\packages\LinqToCsv.1.5.0.0\lib\net35\LINQtoCSV.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -245,6 +244,7 @@
     <Compile Include="Controller\CurriculumVitaeProcessorController.cs" />
     <Compile Include="Controller\DownloadCurriculumVitaeController.cs" />
     <Compile Include="Controller\ImportCurriculumVitaeFromFolderController.cs" />
+    <Compile Include="Controller\LoadFromTempDirectory.cs" />
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -269,6 +269,9 @@
     </None>
     <None Include="resources\JournalHomeGrid.csv" />
     <None Include="resources\LMPLCurriculo.dtd" />
+    <None Include="resources\sample\9107715221927474.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Entities\Xml\LMPLCurriculo.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -333,6 +336,7 @@
   <ItemGroup>
     <Content Include="Makefile" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

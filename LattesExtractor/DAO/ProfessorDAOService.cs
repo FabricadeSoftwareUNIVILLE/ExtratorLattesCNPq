@@ -249,7 +249,7 @@ namespace LattesExtractor.DAO
                     lock (logLocker)
                     {
                         Logger.Error(String.Format("Erros para o Professor {0} - {1}",
-                            professor.NumeroCurriculo, professor.NomeProfessor));
+                            curriculumVitae.NumeroCurriculo, cvXml.DADOSGERAIS.NOMECOMPLETO));
                         Logger.Error(ex.Message);
 
                         if (LattesDatabase.GetValidationErrors() != null)
