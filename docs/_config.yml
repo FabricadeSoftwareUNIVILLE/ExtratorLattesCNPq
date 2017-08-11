@@ -1,0 +1,25 @@
+theme: jekyll-theme-architect
+title: [Extractor Lattes CNPq]
+defaults:
+  -
+    values:
+      navbarLinks:
+        - url: "#conceito"
+          label: CONCEITO
+        - url: "#execução"
+          label: EXECUÇÃO
+        - url: "#instalação-e-configuração"
+          label: INSTALAÇÃO E CONFIGURAÇÃO
+        - url: "#licença-e-distribuição"
+          label: LICENÇA
+        - url: ARTIGO_VERSAO_POS_BANCA.pdf
+          label: ARTIGO (Banca)
+        - url: https://pt.slideshare.net/lucassabreu/extrator-lattes-cnpq
+          label: APRESENTAÇÃO (Banca)
+          external: true
+plugins:
+  - jekyll-mentions
+  - jemoji
+  - jekyll-redirect-from
+  - jekyll-sitemap
+  - jekyll-feed
