@@ -136,7 +136,6 @@ namespace LattesExtractor
             }
 
             Logger.Info("Encerrando Execução...");
-            Console.ReadKey();
         }
 
         private void ShowException(Exception ex)
