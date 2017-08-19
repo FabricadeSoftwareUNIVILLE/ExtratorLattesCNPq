@@ -1,0 +1,273 @@
+---
+---
+
+@import "{{ site.theme }}";
+
+$headerBackground: #73bf3a;
+$darkenBackground: #00562b;
+$bigWidth: 940px;
+$mediumWidth: 740px;
+$smallWidth: 93%;
+
+body, html {
+  background: white;
+}
+
+a.button {
+  width: 12rem;
+  height: auto;
+  padding: 1rem 1rem 1rem 3rem;
+  font-family: monospace;
+  border: 2px solid #fff;
+  text-align: center;
+  &:hover {
+    background-color: #00562b;
+  }
+}
+
+h1 {
+  margin: 1.60em 0;
+}
+
+p {
+  text-align: justify;
+}
+
+a {
+    color: darken($headerBackground, 10%);
+}
+
+img {
+  display: block;
+  margin: auto;
+}
+
+table {
+  td, th {
+    padding: .5rem;
+  }
+}
+
+pre, pre.hightlight, code {
+  &, code {
+    color: #222;
+  }
+}
+
+pre, pre.highlight {
+  white-space: pre-line;
+  padding: .5rem;
+  &, code {
+    background-color: lighten($headerBackground, 45%);
+  }
+  code {
+    padding: 0;
+  }
+}
+
+.inner {
+  width: 100%;
+}
+
+header .inner, .inner #main-content {
+  position: relative;
+  width: $bigWidth;
+  margin: 0 auto;
+}
+
+header {
+  padding-bottom: 10px;
+  font-family: monospace;
+  background: $headerBackground;
+  border: none;
+
+  h1 {
+    width: auto;
+    padding-top: 1.5rem;
+    margin-bottom: 3.5rem;
+    font-size: 50px;
+  }
+
+  a.button {
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    transition: background-color 0.5s ease;
+  }
+
+  h2 {
+    width: auto;
+    color: #d0ffda;
+  }
+
+  nav {
+    margin: 0;
+    margin-top: 1.5rem;
+    padding-top: .5rem;
+    height: 2rem;
+    background-color: $darkenBackground;
+
+    ul {
+      width: $bigWidth;
+      margin: 0 auto 0 auto;
+      padding: 0;
+      word-spacing: -1ex;
+
+      li:first-child {
+        border: 0px;
+      }
+
+      li {
+        word-spacing: 0;
+        display: inline-block;
+        border-left: 1px solid $headerBackground;
+        padding-right: .5rem;
+        padding-left: .5rem;
+      }
+    }
+
+    a {
+      color: $headerBackground;
+
+      &:hover {
+        color: #fff;
+      }
+    }
+  }
+}
+
+#main-content {
+  box-sizing: border-box;
+  float: none;
+  width: auto;
+  padding-left: 2rem;
+
+  h1, h2, h3, h4, h5 {
+    font-family: monospace;
+    letter-spacing: 0;
+    text-indent: 0;
+    &:before {
+      position: absolute;
+      padding: 0;
+      margin: 0;
+      right: 0;
+      margin-right: calc(100% + 1ex - 2.5rem);
+      color: $headerBackground;
+    }
+  }
+}
+
+aside#sidebar {
+  box-sizing: border-box;
+
+  background: $darkenBackground;
+  color: #fff;
+  font-size: 13px;
+  border-top: 4px dashed #fff;
+
+  margin: 0;
+  position: absolute;
+  float: none;
+
+  width: 100%;
+  min-height: auto;
+  padding: 1.5rem calc(50% - #{$bigWidth / 2});
+  margin-top: 2rem;
+
+  a {
+    color: #fff;
+  }
+
+  p.repo-owner {
+    &, a {
+      font-weight: bold;
+    }
+  }
+}
+
+/* #Media Queries
+================================================== */
+
+/* Smaller than standard 960 (devices and browsers) */
+@media only screen and (max-width: 959px) {
+  header {
+    a.button {
+      position: relative;
+      display: inline-block;
+      width: auto;
+      height: auto;
+      padding: 5px 10px;
+      margin-top: 15px;
+      font-size: 13px;
+      line-height: 1;
+      color: #ffffff;
+      text-align: center;
+      background-color: darken($headerBackground, 10%);
+      background-image: none;
+      border-radius: 0;
+      -moz-border-radius: 0;
+      -webkit-border-radius: 0;
+      small {
+        display: inline;
+        font-size: 13px;
+      }
+    }
+
+    nav {
+      padding-left: calc((100% - #{$mediumWidth})/2);
+      padding-right: calc((100% - #{$mediumWidth})/2);
+    }
+  }
+}
+
+/* Tablet Portrait size to standard 960 (devices and browsers) */
+@media only screen and (min-width: 768px) and (max-width: 959px) {
+  header .inner, .inner #main-content {
+    width: $mediumWidth;
+  }
+  .inner {
+    width: 100%;
+    aside#sidebar {
+     padding: 1.5rem calc(50% - #{$mediumWidth / 2});
+    }
+  }
+}
+
+/* All Mobile Sizes (devices and browser) */
+@media only screen and (max-width: 767px) {
+  header .inner, .inner #main-content {
+    width: $smallWidth !important;
+    padding: 0;
+  }
+  .inner {
+    width: 100%;
+    aside#sidebar {
+     padding: 1.5rem calc(50% - #{$smallWidth / 2});
+    }
+  }
+
+  header nav {
+    height: auto; 
+    padding: 0;
+    ul {
+      width: auto;
+      word-spacing: 0;
+      li {
+        display: block;
+        border-left: 0px;
+        border-top: 1px solid #fff;
+        padding: .2rem 1rem; 
+        a {
+          display: block;
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+}
+
+/* Mobile Landscape Size to Tablet Portrait (devices and browsers) */
+@media only screen and (min-width: 480px) and (max-width: 767px) { }
+
+/* Mobile Portrait Size to Mobile Landscape Size (devices and browsers) */
+@media only screen and (max-width: 479px) { }
