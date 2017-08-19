@@ -16,8 +16,13 @@ namespace LattesExtractor
             LattesModule lm = LattesModule.GetInstance();
 
             lm.TempDirectory = config.AppSettings.Settings["TempDir"].Value;
-            lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
-            lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
+
+            if (config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"] != null &&
+                config.AppSettings.Settings["LattesCurriculumVitaeQuery"] != null)
+            {
+                lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
+                lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
+            }
 
             if (config.AppSettings.Settings["IgnorePedingLastExecution"] != null)
             {
@@ -27,6 +32,17 @@ namespace LattesExtractor
             if (config.AppSettings.Settings["ImportFolder"] != null)
             {
                 lm.ImportFolder = config.AppSettings.Settings["ImportFolder"].Value;
+            }
+
+            if (config.AppSettings.Settings["UseNewCNPqRestService"] != null)
+            {
+                lm.UseNewCNPqRestService = config.AppSettings.Settings["UseNewCNPqRestService"].Value.Equals("true") ||
+                    config.AppSettings.Settings["UseNewCNPqRestService"].Value.Equals("1");
+            }
+
+            if (config.AppSettings.Settings["CSVCurriculumVitaeNumber"] != null)
+            {
+                lm.CSVCurriculumVitaeNumberList = config.AppSettings.Settings["CSVCurriculumValueNumberList"].Value;
             }
 
             var options = new Options();
@@ -60,6 +76,16 @@ namespace LattesExtractor
                     lm.ImportFolder = options.FromFolder;
                 }
 
+                if (options.UseNewRestService)
+                {
+                    lm.UseNewCNPqRestService = options.UseNewRestService;
+                }
+
+                if (options.CSVCurriculumVitaeNumberList != null)
+                {
+                    lm.CSVCurriculumVitaeNumberList = options.CSVCurriculumVitaeNumberList;
+                }
+
                 lm.Extract();
             }
 
@@ -74,6 +100,12 @@ namespace LattesExtractor
 
         class Options
         {
+            [Option('\0', "usenewrestservice", DefaultValue = false, HelpText = "Será utilizado o serviço REST do CNPq no lugar do WebService")]
+            public bool UseNewRestService { get; set; }
+
+            [Option('\0', "cvcsvlist", Required = false, HelpText = "Arquivo CSV para importar a lista de currículos para download")]
+            public string CSVCurriculumVitaeNumberList { get; set; }
+
             [Option('f', "fromfolder", Required = false, HelpText = "Directório contendo os arquivos XML (caso seja informado serão considerados apenas os curriculos já existentes na pasta, não será feita busca no Lattes)")]
             public string FromFolder { get; set; }
 

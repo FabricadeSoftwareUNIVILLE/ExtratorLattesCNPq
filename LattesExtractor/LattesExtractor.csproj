@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LattesExtractor</RootNamespace>
     <AssemblyName>LattesExtractor</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <Install>true</Install>
@@ -28,6 +28,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -108,7 +109,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\LoadCurriculumVitaeNumberController.cs" />
+    <Compile Include="Controller\DownloadFromRestServiceCurriculumVitaeController.cs" />
+    <Compile Include="Controller\LoadCurriculumVitaeNumberFromCSVController.cs" />
+    <Compile Include="Controller\LoadCurriculumVitaeNumberFromOleDbController.cs" />
     <Compile Include="Controller\LoadJCRTableController.cs" />
     <Compile Include="Controller\LoadQualisTableController.cs" />
     <Compile Include="DAO\JCRDAOService.cs" />
@@ -230,6 +233,7 @@
     <Compile Include="Entities\Database\VinculoAtuacaoProfissional.cs">
       <DependentUpon>LattesDatabase.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\Channel.cs" />
     <Compile Include="Service\DownloadCurriculumVitaeService.cs" />
     <Compile Include="LattesModule.cs" />
     <Compile Include="Entities\Xml\LMPLCurriculo.cs" />
@@ -242,7 +246,7 @@
     </Compile>
     <Compile Include="DAO\ProfessorDAOService.cs" />
     <Compile Include="Controller\CurriculumVitaeProcessorController.cs" />
-    <Compile Include="Controller\DownloadCurriculumVitaeController.cs" />
+    <Compile Include="Controller\DownloadFromWebServiceCurriculumVitaeController.cs" />
     <Compile Include="Controller\ImportCurriculumVitaeFromFolderController.cs" />
     <Compile Include="Controller\LoadFromTempDirectory.cs" />
     <Compile Include="Utils.cs" />

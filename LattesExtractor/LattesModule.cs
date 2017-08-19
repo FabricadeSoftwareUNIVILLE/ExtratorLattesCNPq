@@ -4,6 +4,8 @@ using LattesExtractor.Controller;
 using log4net;
 using LattesExtractor.Entities;
 using System.IO;
+using LattesExtractor.Collections;
+using System.Threading;
 
 namespace LattesExtractor
 {
@@ -15,8 +17,11 @@ namespace LattesExtractor
 
         private static readonly object locker = new object();
 
-        private Stack<CurriculoEntry> _curriculumVitaesForProcess = new Stack<CurriculoEntry>();
-        private Stack<CurriculoEntry> _curriculumVitaeNumbersToDownload = new Stack<CurriculoEntry>();
+        private Channel<CurriculoEntry> _cvForDownload = new Channel<CurriculoEntry>();
+        private Channel<CurriculoEntry> _cvForProcess = new Channel<CurriculoEntry>();
+
+        public Channel<CurriculoEntry> ResumesForDownload { get { return this._cvForDownload; } }
+        public Channel<CurriculoEntry> ResumesForProcess { get { return this._cvForProcess; } }
 
         private String _tempDir = "";
         private String _qualisFile = "";
@@ -24,6 +29,8 @@ namespace LattesExtractor
         private string _lattesCurriculumValueQuery = null;
         private string _lattesCurriculumValueConnection = null;
         private string _importFolder = null;
+        private string _csvCurriculumValueNumberList = null;
+        private List<ManualResetEvent> _doneEvents = new List<ManualResetEvent>();
 
         private static LattesModule _instance;
 
@@ -57,6 +64,7 @@ namespace LattesExtractor
         }
 
         public bool IgnorePendingLastExecution { get; set; }
+        public bool UseNewCNPqRestService { get; set; }
 
         public String TempDirectory
         {
@@ -66,6 +74,20 @@ namespace LattesExtractor
                 this._tempDir = value
                     .Replace('\\', Path.DirectorySeparatorChar)
                     .Replace('/', Path.DirectorySeparatorChar);
+            }
+        }
+
+        public string CSVCurriculumVitaeNumberList { get { return _csvCurriculumValueNumberList;  }
+            set
+            {
+                this._csvCurriculumValueNumberList = value;
+
+                if (this._csvCurriculumValueNumberList != null)
+                {
+                    this._importFolder = this._csvCurriculumValueNumberList
+                        .Replace('\\', Path.DirectorySeparatorChar)
+                        .Replace('/', Path.DirectorySeparatorChar);
+                }
             }
         }
 
@@ -94,13 +116,22 @@ namespace LattesExtractor
 
         public CurriculoLattesWebService.WSCurriculoClient WSCurriculoClient { get { return this.wscc; } }
 
+        private void QueueThread(WaitCallback waitCallback)
+        {
+            var doneEvent = new ManualResetEvent(false);
+            ThreadPool.QueueUserWorkItem(waitCallback, doneEvent);
+            _doneEvents.Add(doneEvent);
+        }
+
         private void LoadCurriculums()
         {
             if (this.IgnorePendingLastExecution == false)
             {
-                LoadFromTempDirectory.LoadCurriculums(this);
-                if (this.HasNextCurriculumVitaeForProcess)
+                var loadFromTempDirectory = new LoadFromTempDirectory(this.TempDirectory, this.ResumesForProcess);
+                if (loadFromTempDirectory.HasPendingResumes())
                 {
+                    Logger.Info(String.Format("Foram encontrados XMLs pendentes na pasta '{0}' !'", this.TempDirectory));
+                    this.QueueThread(loadFromTempDirectory.LoadCurriculums);
                     return;
                 }
             }
@@ -108,15 +139,43 @@ namespace LattesExtractor
             if (this.ImportFolder != null)
             {
                 Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", this.ImportFolder));
-                ImportCurriculumVitaeFromFolderController.LoadCurriculums(this, this.ImportFolder);
+                var importFromFolder = new ImportCurriculumVitaeFromFolderController(
+                    this, 
+                    ImportFolder, 
+                    ResumesForProcess
+                );
+                this.QueueThread(importFromFolder.LoadCurriculums);
                 return;
             }
 
             Logger.Info("Iniciando Carga dos Números de Currículo da Instituição...");
-            LoadCurriculumVitaeNumberController.LoadCurriculumVitaeNumbers(this);
+            if (this.CSVCurriculumVitaeNumberList != null)
+            {
+                var csvListController = new LoadCurriculumVitaeNumberFromCSVController(
+                    CSVCurriculumVitaeNumberList, 
+                    ResumesForDownload
+                );
+                this.QueueThread(csvListController.LoadCurriculumVitaeNumbers);
+            }
 
-            Logger.Info("Iniciando Download dos Currículos Atualizados...");
-            DownloadCurriculumVitaeController.DownloadUpdatedCurriculums(this);
+            if (this.CSVCurriculumVitaeNumberList == null)
+            {
+                var oleDbController = new LoadCurriculumVitaeNumberFromOleDbController(
+                    LattesCurriculumVitaeODBCConnection,
+                    LattesCurriculumVitaeQuery,
+                    ResumesForDownload
+                );
+                this.QueueThread(oleDbController.LoadCurriculumVitaeNumbers);
+            }
+
+            if (this.UseNewCNPqRestService)
+            {
+                Logger.Info("Iniciando Download dos Currículos Atualizados (REST Service)...");
+                DownloadFromRestServiceCurriculumVitaeController.DownloadUpdatedCurriculums(this);
+            }
+
+            Logger.Info("Iniciando Download dos Currículos Atualizados (WebService)...");
+            DownloadFromWebServiceCurriculumVitaeController.DownloadUpdatedCurriculums(this);
         }
 
         public void Extract()
@@ -129,6 +188,8 @@ namespace LattesExtractor
 
                 Logger.Info("Iniciando Processamento dos Currículos...");
                 CurriculumVitaeProcessorController.ProcessCurriculumVitaes(this);
+
+                WaitHandle.WaitAll(_doneEvents.ToArray());
             }
             catch (Exception ex)
             {
@@ -136,7 +197,6 @@ namespace LattesExtractor
             }
 
             Logger.Info("Encerrando Execução...");
-            Console.ReadKey();
         }
 
         private void ShowException(Exception ex)
@@ -176,76 +236,5 @@ namespace LattesExtractor
         {
             return String.Format("{0}{1}{2}.xml", this.TempDirectory, Path.DirectorySeparatorChar, curriculumVitaeNumber);
         }
-
-        /// <summary>
-        /// Adiciona um curriculo para curriculumVitaeUnserializer verificado para download
-        /// </summary>
-        /// <param name="curriculumVitaeNumber"></param>
-        public void AddCurriculumVitaeNumberToDownload(CurriculoEntry curriculumVitaeNumber)
-        {
-            _curriculumVitaeNumbersToDownload.Push(curriculumVitaeNumber);
-        }
-
-        /// <summary>
-        /// Retorna eu ainda existem curriculos para download
-        /// </summary>
-        public bool HasNextCurriculumVitaeNumberToDownload
-        {
-            get
-            {
-                return _curriculumVitaeNumbersToDownload.Count > 0;
-            }
-        }
-
-        /// <summary>
-        /// Remove e retorna o ultimo registro da pilha de curriculos pendente para download
-        /// </summary>
-        /// <returns></returns>
-        public CurriculoEntry GetNextCurriculumVitaeNumberToDownload()
-        {
-            lock (locker)
-            {
-                if (_curriculumVitaeNumbersToDownload.Count > 0)
-                    return _curriculumVitaeNumbersToDownload.Pop();
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Adiciona um curriculo para curriculumVitaeUnserializer processado
-        /// </summary>
-        /// <param name="curriculumVitaeNumber"></param>
-        public void AddCurriculumVitaeForProcess(CurriculoEntry curriculumVitaeNumber)
-        {
-            _curriculumVitaesForProcess.Push(curriculumVitaeNumber);
-        }
-
-        /// <summary>
-        /// Retorna eu ainda existem curriculos para processar
-        /// </summary>
-        public bool HasNextCurriculumVitaeForProcess
-        {
-            get
-            {
-                return _curriculumVitaesForProcess.Count > 0;
-            }
-        }
-
-        /// <summary>
-        /// Remove e retorna o ultimo registro da pilha de curriculos pendente para processamento
-        /// </summary>
-        /// <returns></returns>
-        public CurriculoEntry GetNextCurriculumVitaeForProcess()
-        {
-            lock (locker)
-            {
-                if (_curriculumVitaesForProcess.Count > 0)
-                    return _curriculumVitaesForProcess.Pop();
-            }
-
-            return null;
-        }
     }
-
 }

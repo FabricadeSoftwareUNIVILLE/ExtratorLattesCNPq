@@ -8,68 +8,105 @@ using log4net;
 using LattesExtractor.Entities;
 using ICSharpCode.SharpZipLib.Core;
 using ICSharpCode.SharpZipLib.Zip;
+using LattesExtractor.Collections;
 
 namespace LattesExtractor.Controller
 {
     class ImportCurriculumVitaeFromFolderController
     {
-        private LattesModule lattesModule;
-
         private static readonly ILog Logger = LogManager.GetLogger(typeof(ImportCurriculumVitaeFromFolderController).Name);
 
-        public static void LoadCurriculums(LattesModule lattesModule, string folder)
+        private LattesModule _lattesModule;
+        private string _importFolder;
+        private Channel<CurriculoEntry> _channel;
+
+        public ImportCurriculumVitaeFromFolderController(
+            LattesModule lattesModule,
+            string importFolder,
+            Channel<CurriculoEntry> channel
+        )
         {
-            int read;
-            byte[] buffer = new byte[4096];
-            MemoryStream ms;
-            CurriculoEntry curriculumVitae;
+            _lattesModule = lattesModule;
+            _importFolder = importFolder;
+            _channel = channel;
+        }
 
-            if (!Directory.Exists(folder))
+        public void LoadCurriculums(object threadContext)
+        {
+            var doneEvent = (ManualResetEvent)threadContext;
+            var unzipDoneEvents = new List<ManualResetEvent>();
+            try
             {
-                Logger.Info(String.Format("Pasta de trabalho não foi encontrado ({0})", folder));
-                return;
-            }
-
-            bool exists = false;
-            foreach(string filename in Directory.EnumerateFiles(folder))
-            {
-                exists = true;
-                String numeroCurriculo = filename.Substring(folder.Length + 1);
-                numeroCurriculo = numeroCurriculo.Substring(0, numeroCurriculo.Length - 4);
-                curriculumVitae = new CurriculoEntry
+                if (!Directory.Exists(_importFolder))
                 {
-                    NumeroCurriculo = numeroCurriculo,
-                };
-                
-                if (File.Exists(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
-                    File.Delete(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
-
-                if (filename.EndsWith(".xml")) {
-                    File.Copy(filename, lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
-                    lattesModule.AddCurriculumVitaeForProcess(curriculumVitae);
-                    continue;
+                    Logger.Info(String.Format("Pasta de trabalho não foi encontrado ({0})", _importFolder));
+                    return;
                 }
+
+                if (Directory.GetFiles(_importFolder).Length == 0)
+                {
+                    throw new Exception(String.Format("Não foram encontrados currículos na pasta {0} !", _importFolder));
+                }
+
+                CurriculoEntry curriculumVitae;
+
+                foreach (string filename in Directory.EnumerateFiles(_importFolder))
+                {
+                    string numeroCurriculo = filename.Substring(_importFolder.Length + 1);
+                    numeroCurriculo = numeroCurriculo.Substring(0, numeroCurriculo.Length - 4);
+                    curriculumVitae = new CurriculoEntry { NumeroCurriculo = numeroCurriculo };
+
+                    if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
+                        File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
+
+                    if (filename.EndsWith(".xml"))
+                    {
+                        File.Copy(filename, _lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
+                        _channel.Send(curriculumVitae);
+                        continue;
+                    }
+
+                    var unzipDoneEvent = new ManualResetEvent(false);
+                    ThreadPool.QueueUserWorkItem(this.UnzipAndCopy(
+                        doneEvent,
+                        filename,
+                        curriculumVitae
+                    ));
+                    unzipDoneEvents.Add(unzipDoneEvent);
+                }
+            }
+            finally
+            {
+                WaitHandle.WaitAll(unzipDoneEvents.ToArray());
+                doneEvent.Set();
+            }
+        }
+
+        private WaitCallback UnzipAndCopy (ManualResetEvent doneEvent, string filename, CurriculoEntry curriculumVitae)
+        {
+            return (object threadContext) =>
+            {
+                int read;
+                byte[] buffer = new byte[4096];
+                MemoryStream ms;
 
                 ms = UnzipCurriculumVitae(filename);
 
-                FileStream wc = new FileStream(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo), FileMode.CreateNew);
+                FileStream wc = new FileStream(
+                    _lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo),
+                    FileMode.CreateNew
+                );
                 while ((read = ms.Read(buffer, 0, buffer.Length)) > 0)
                 {
                     wc.Write(buffer, 0, read);
                 }
                 ms.Close();
 
-                lattesModule.AddCurriculumVitaeForProcess(curriculumVitae);
-
-            }
-
-            if (exists == false)
-            {
-                throw new Exception(String.Format("Não foram encontrados currículos na pasta {0} !", folder));
-            }
+                _channel.Send(curriculumVitae);
+            };
         }
 
-        private static MemoryStream UnzipCurriculumVitae(string filename)
+        private MemoryStream UnzipCurriculumVitae(string filename)
         {
             ZipInputStream zis;
             MemoryStream xml;

@@ -9,13 +9,13 @@ using LattesExtractor.Entities;
 
 namespace LattesExtractor.Controller
 {
-    class DownloadCurriculumVitaeController
+    class DownloadFromWebServiceCurriculumVitaeController
     {
         private LattesModule lattesModule;
         private LattesDatabase db;
         private int _sequence;
 
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(DownloadCurriculumVitaeController).Name);
+        private static readonly ILog Logger = LogManager.GetLogger(typeof(DownloadFromWebServiceCurriculumVitaeController).Name);
 
         public static void DownloadUpdatedCurriculums(LattesModule lattesModule)
         {
@@ -23,16 +23,16 @@ namespace LattesExtractor.Controller
             
             // cria n threads para tornar ie download mais performático 
             int i = 0;
-            DownloadCurriculumVitaeController rcvt = new DownloadCurriculumVitaeController(lattesModule, i++);
+            DownloadFromWebServiceCurriculumVitaeController rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
             threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
 
-            rcvt = new DownloadCurriculumVitaeController(lattesModule, i++);
+            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
             threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
 
-            rcvt = new DownloadCurriculumVitaeController(lattesModule, i++);
+            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
             threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
 
-            rcvt = new DownloadCurriculumVitaeController(lattesModule, i++);
+            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
             threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
 
             // inicia as threads
@@ -50,7 +50,7 @@ namespace LattesExtractor.Controller
             }
         }
 
-        private DownloadCurriculumVitaeController(LattesModule lattesModule, int sequence)
+        private DownloadFromWebServiceCurriculumVitaeController(LattesModule lattesModule, int sequence)
         {
             this.lattesModule = lattesModule;
             this._sequence = sequence;
