@@ -39,7 +39,7 @@ namespace LattesExtractor
         private static LattesModule _instance;
 
         private ProgressBar _progressBar;
-        private ProgressBar _downloadProgresBar;
+        private IProgressBar _downloadProgresBar;
         private int _downloadCount;
         private int _processCount;
 
@@ -236,13 +236,6 @@ namespace LattesExtractor
                 LoadCurriculums();
 
                 Logger.Info("Iniciando Processamento dos Currículos...");
-                var processor = new CurriculumVitaeProcessorController(
-                    this,
-                    CurriculumVitaeForProcess
-                );
-
-                var processorCount = Environment.ProcessorCount > 0 ? Environment.ProcessorCount : 1;
-                QueueThreadProcessCurriculumVitae(processor.ProcessCurriculumVitaes);
 
                 if (_doneEventsListCurriculumVitae.Count > 0)
                 {
@@ -254,6 +247,12 @@ namespace LattesExtractor
                 WaitHandle.WaitAll(_doneEventsGetCurriculumVitae.ToArray());
                 Logger.Info("Todos os Currículos Foram Adicionados para Processamento...");
                 CurriculumVitaeForProcess.Close();
+
+                var processor = new CurriculumVitaeProcessorController(
+                    this,
+                    CurriculumVitaeForProcess
+                );
+                QueueThreadProcessCurriculumVitae(processor.ProcessCurriculumVitaes);
 
                 WaitHandle.WaitAll(_doneEventsProcessCurriculumVitae.ToArray());
                 Logger.Info("Todos os Currículos Foram Processados...");
@@ -272,7 +271,7 @@ namespace LattesExtractor
 
             if (ShowProgressBar && _downloadProgresBar == null)
             {
-                _downloadProgresBar = new ProgressBar(1, "Baixando...", ConsoleColor.White);
+                _downloadProgresBar = _progressBar.Spawn(1, "Baixando Currículos...");
             }
 
             IncrementProcessCount();
@@ -300,7 +299,7 @@ namespace LattesExtractor
         {
             if (ShowProgressBar && _downloadProgresBar != null)
             {
-                _downloadProgresBar.Tick("Baixando Currículos...");
+                _downloadProgresBar.Tick();
             }
         }
 

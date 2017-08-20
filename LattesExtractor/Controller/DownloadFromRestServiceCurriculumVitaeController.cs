@@ -23,6 +23,8 @@ namespace LattesExtractor.Controller
         private Channel<CurriculoEntry> _curriculumVitaesForDownload;
         private Channel<CurriculoEntry> _curriculumVitaesForProcess;
 
+        private int _workItemCount = 0;
+
         private string _urlMetadata = "http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/{0}";
         private string _urlDownloadXml = "http://buscacv.cnpq.br/buscacv/rest/download/curriculo/{0}";
 
@@ -42,9 +44,27 @@ namespace LattesExtractor.Controller
         {
             try
             {
+                var doneDownloadEvent = new ManualResetEvent(false);
+                var wc = new WebClient();
                 foreach (var curriculumVitae in _curriculumVitaesForDownload.Range())
                 {
-                    DownloadCurriculumVitae(curriculumVitae);
+                    Interlocked.Increment(ref _workItemCount);
+                    Logger.Info(String.Format("Curriculo {0} adicionado para download...", curriculumVitae.NumeroCurriculo));
+                    //ThreadPool.QueueUserWorkItem(o => 
+                    DownloadCurriculumVitae(curriculumVitae, doneDownloadEvent, wc)
+                    //)
+                    ;
+                    //if (_workItemCount > 10)
+                    //{
+                    //    Logger.Info(String.Format("Will wait now..."));
+                    //    doneDownloadEvent.WaitOne();
+                    //    doneDownloadEvent = new ManualResetEvent(false);
+                    //}
+                }
+                if (_workItemCount > 0)
+                {
+                    Logger.Info(String.Format("Last ones..."));
+                    doneDownloadEvent.WaitOne();
                 }
             }
             finally
@@ -54,80 +74,83 @@ namespace LattesExtractor.Controller
             }
         }
 
-        private void DownloadCurriculumVitae(CurriculoEntry curriculumVitae)
+        private void DownloadCurriculumVitae(CurriculoEntry curriculumVitae, ManualResetEvent doneDownloadEvent, WebClient wc)
         {
             try
             {
-                using (var wc = new WebClient())
+                var stream = wc.OpenRead(String.Format(_urlMetadata, curriculumVitae.NumeroCurriculo));
+
+                DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(MetadataResponse));
+                var response = ser.ReadObject(stream) as MetadataResponse;
+
+                if (response.CodRhCript == null || response.CodRhCript.Trim().Length == 0)
                 {
-                    var stream = wc.OpenRead(String.Format(_urlMetadata, curriculumVitae.NumeroCurriculo));
-
-                    DataContractJsonSerializer ser = new DataContractJsonSerializer(typeof(MetadataResponse));
-                    var response = ser.ReadObject(stream) as MetadataResponse;
-
-                    if (response.CodRhCript == null || response.CodRhCript.Trim().Length == 0)
-                    {
-                        Logger.Error(String.Format(
-                            "Não foi possível baixar o currículo de número {0}",
-                            curriculumVitae.NumeroCurriculo
-                        ));
-                        _lattesModule.DecrementProcessCount();
-                        return;
-                    }
-
-                    curriculumVitae.NomeProfessor = response.Document.NomeCompleto;
-
-                    if (NeedsToBeUpdated(curriculumVitae, response) == false)
-                    {
-                        _lattesModule.DecrementProcessCount();
-                        return;
-                    }
-
-                    DownloadXml(curriculumVitae, response);
-
-                    if (curriculumVitae.NomeProfessor == null || curriculumVitae.NomeProfessor.Trim().Length == 0)
-                    {
-                        Logger.Info(String.Format("Curriculo {0} baixado", curriculumVitae.NumeroCurriculo));
-                        return;
-                    }
-
-                    Logger.Info(String.Format("Curriculo {0} - {1} baixado", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
+                    Logger.Error(String.Format(
+                        "Não foi possível baixar o currículo de número {0}",
+                        curriculumVitae.NumeroCurriculo
+                    ));
+                    _lattesModule.DecrementProcessCount();
+                    return;
                 }
+
+                curriculumVitae.NomeProfessor = response.Document.NomeCompleto;
+
+                if (NeedsToBeUpdated(curriculumVitae, response) == false)
+                {
+                    _lattesModule.DecrementProcessCount();
+                    return;
+                }
+
+                DownloadXml(curriculumVitae, response, wc);
+
+                if (curriculumVitae.NomeProfessor == null || curriculumVitae.NomeProfessor.Trim().Length == 0)
+                {
+                    Logger.Info(String.Format("Curriculo {0} baixado", curriculumVitae.NumeroCurriculo));
+                    return;
+                }
+
+                Logger.Info(String.Format("Curriculo {0} - {1} baixado", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
             }
             catch (WebException exception)
             {
                 Logger.Error(String.Format("Erro ao realizar requisão: {0}\n{1}", exception.Message, exception.StackTrace));
                 _lattesModule.DecrementProcessCount();
+                Thread.Sleep(30000);
             }
             finally
             {
+                if (Interlocked.Decrement(ref _workItemCount) == 0)
+                {
+                    doneDownloadEvent.Set();
+                }
+
                 _lattesModule.TickDownloadBar();
             }
         }
 
-        private void DownloadXml(CurriculoEntry curriculumVitae, MetadataResponse response)
+        private void DownloadXml(CurriculoEntry curriculumVitae, MetadataResponse response, WebClient wc)
         {
-            using (var wc = new WebClient())
+            var link = String.Format(_urlDownloadXml, response.CodRhCript);
+            var stream = wc.OpenRead(link);
+
+            if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
             {
-                var link = String.Format(_urlDownloadXml, response.CodRhCript);
-                var stream = wc.OpenRead(link);
-
-                if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
-                {
-                    File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
-                }
-
-                var zis = new ZipInputStream(stream);
-                zis.GetNextEntry();
-                FileStream xml = new FileStream(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo), FileMode.CreateNew);
-                using (xml)
-                {
-                    StreamUtils.Copy(zis, xml, new byte[4096]);
-                    xml.Seek(0, SeekOrigin.Begin);
-                }
-
-                _curriculumVitaesForProcess.Send(curriculumVitae);
+                File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
             }
+
+            var zis = new ZipInputStream(stream);
+            zis.GetNextEntry();
+            FileStream xml = new FileStream(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo), FileMode.CreateNew);
+
+            var buffer = new byte[4096];
+            int read;
+            while ((read = zis.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                xml.Write(buffer, 0, read);
+            }
+            xml.Close();
+
+            _curriculumVitaesForProcess.Send(curriculumVitae);
         }
 
         private bool NeedsToBeUpdated(CurriculoEntry curriculumVitae, MetadataResponse response)

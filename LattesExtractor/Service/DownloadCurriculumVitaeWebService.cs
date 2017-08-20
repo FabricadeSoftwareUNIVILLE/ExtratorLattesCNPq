@@ -73,12 +73,9 @@ namespace LattesExtractor.Service
 
         private MemoryStream ProcessarRetornoCurriculo(byte[] curriculo)
         {
-            ZipInputStream zis;
-            MemoryStream xml;
-
-            zis = new ZipInputStream(new MemoryStream(curriculo));
+            var zis = new ZipInputStream(new MemoryStream(curriculo));
             zis.GetNextEntry();
-            xml = new MemoryStream();
+            var xml = new MemoryStream();
 
             StreamUtils.Copy(zis, xml, new byte[4096]);
             xml.Seek(0, SeekOrigin.Begin);
