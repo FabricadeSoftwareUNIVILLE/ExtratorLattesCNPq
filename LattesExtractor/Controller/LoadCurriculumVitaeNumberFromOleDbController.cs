@@ -8,12 +8,14 @@ namespace LattesExtractor.Controller
 {
     class LoadCurriculumVitaeNumberFromOleDbController
     {
+        private LattesModule _lattesModule;
         private Channel<CurriculoEntry> _channel;
         private string _query;
         private string _connectionString;
 
-        public LoadCurriculumVitaeNumberFromOleDbController(string connectionString, string query, Channel<CurriculoEntry> channel)
+        public LoadCurriculumVitaeNumberFromOleDbController(LattesModule lattesModule, string connectionString, string query, Channel<CurriculoEntry> channel)
         {
+            _lattesModule = lattesModule;
             _connectionString = connectionString;
             _query = query;
             _channel = channel;
@@ -100,6 +102,7 @@ namespace LattesExtractor.Controller
                 )
             )
             {
+                _lattesModule.IncrementDownloadCount();
                 _channel.Send(ce);
             }
         }

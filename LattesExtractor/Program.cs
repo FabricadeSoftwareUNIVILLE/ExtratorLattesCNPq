@@ -13,7 +13,7 @@ namespace LattesExtractor
             XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-            LattesModule lm = LattesModule.GetInstance();
+            var lm = LattesModule.GetInstance();
 
             lm.TempDirectory = config.AppSettings.Settings["TempDir"].Value;
 
@@ -40,7 +40,7 @@ namespace LattesExtractor
                     config.AppSettings.Settings["UseNewCNPqRestService"].Value.Equals("1");
             }
 
-            if (config.AppSettings.Settings["CSVCurriculumVitaeNumber"] != null)
+            if (config.AppSettings.Settings["CSVCurriculumValueNumberList"] != null)
             {
                 lm.CSVCurriculumVitaeNumberList = config.AppSettings.Settings["CSVCurriculumValueNumberList"].Value;
             }
@@ -50,18 +50,20 @@ namespace LattesExtractor
             {
                 if (options.InputQualisFile != null && options.InputQualisFile != "")
                 {
-                    // Values are available here
                     if (options.Verbose)
+                    {
                         Console.WriteLine("Arquivo Qualis: {0}", options.InputQualisFile);
+                    }
                     lm.UpdateQualisDataBase(options.InputQualisFile);
                     return;
                 }
 
                 if (options.InputJCRFile != null && options.InputJCRFile != "")
                 {
-                    // Values are available here
                     if (options.Verbose)
+                    {
                         Console.WriteLine("Arquivo JCR Impact Factor: {0}", options.InputJCRFile);
+                    }
                     lm.UpdateJCRImpactFactorDataBase(options.InputJCRFile);
                     return;
                 }
@@ -86,9 +88,10 @@ namespace LattesExtractor
                     lm.CSVCurriculumVitaeNumberList = options.CSVCurriculumVitaeNumberList;
                 }
 
+                lm.ShowProgressBar = options.ShowProgressBar;
+
                 lm.Extract();
             }
-
         }
 
         public static void AddValue(string key, string value)
@@ -100,10 +103,13 @@ namespace LattesExtractor
 
         class Options
         {
-            [Option('\0', "usenewrestservice", DefaultValue = false, HelpText = "Será utilizado o serviço REST do CNPq no lugar do WebService")]
+            [Option('p', "progressbar", DefaultValue = false, HelpText = "Mostra uma barra de progresso para acompanhamento")]
+            public bool ShowProgressBar { get; set; }
+
+            [Option('n', "usenewrestservice", DefaultValue = false, HelpText = "Será utilizado o serviço REST do CNPq no lugar do WebService")]
             public bool UseNewRestService { get; set; }
 
-            [Option('\0', "cvcsvlist", Required = false, HelpText = "Arquivo CSV para importar a lista de currículos para download")]
+            [Option('c', "cvcsvlist", Required = false, HelpText = "Arquivo CSV para importar a lista de currículos para download")]
             public string CSVCurriculumVitaeNumberList { get; set; }
 
             [Option('f', "fromfolder", Required = false, HelpText = "Directório contendo os arquivos XML (caso seja informado serão considerados apenas os curriculos já existentes na pasta, não será feita busca no Lattes)")]

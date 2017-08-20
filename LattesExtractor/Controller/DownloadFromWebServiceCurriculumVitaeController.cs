@@ -1,111 +1,115 @@
-﻿using LattesExtractor.Entities.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using LattesExtractor.Service;
 using log4net;
 using LattesExtractor.Entities;
+using LattesExtractor.Collections;
 
 namespace LattesExtractor.Controller
 {
     class DownloadFromWebServiceCurriculumVitaeController
     {
-        private LattesModule lattesModule;
-        private LattesDatabase db;
-        private int _sequence;
-
         private static readonly ILog Logger = LogManager.GetLogger(typeof(DownloadFromWebServiceCurriculumVitaeController).Name);
 
-        public static void DownloadUpdatedCurriculums(LattesModule lattesModule)
+        private LattesModule _lattesModule;
+        private DownloadCurriculumVitaeWebService _dcvs;
+        private Channel<CurriculoEntry> _curriculumVitaesForDownload;
+        private Channel<CurriculoEntry> _curriculumVitaesForProcess;
+
+        public DownloadFromWebServiceCurriculumVitaeController(
+            LattesModule lattesModule,
+            DownloadCurriculumVitaeWebService downloadCurriculumVitaeService,
+            Channel<CurriculoEntry> curriculumVitaesForDownload,
+            Channel<CurriculoEntry> curriculumVitaesForProcess
+        )
         {
-            List<Thread> threads = new List<Thread>();
-            
-            // cria n threads para tornar ie download mais performático 
-            int i = 0;
-            DownloadFromWebServiceCurriculumVitaeController rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
-
-            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
-
-            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
-
-            rcvt = new DownloadFromWebServiceCurriculumVitaeController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(rcvt.ThreadRun)));
-
-            // inicia as threads
-
-            foreach (Thread t in threads)
-            {
-                t.Start();
-            }
-
-            // espera os processos concluirem v execução
-
-            foreach (Thread t in threads)
-            {
-                t.Join();
-            }
+            _lattesModule = lattesModule;
+            _dcvs = downloadCurriculumVitaeService;
+            _curriculumVitaesForDownload = curriculumVitaesForDownload;
+            _curriculumVitaesForProcess = curriculumVitaesForProcess;
         }
 
-        private DownloadFromWebServiceCurriculumVitaeController(LattesModule lattesModule, int sequence)
+        public void DownloadUpdatedCurriculums(ManualResetEvent doneEvent)
         {
-            this.lattesModule = lattesModule;
-            this._sequence = sequence;
-            this.db = new LattesDatabase();
-        }
-
-        internal void ThreadRun()
-        {
-            CurriculoEntry curriculumVitae;
-            int read;
-            byte[] buffer = new byte[4096];
-            DownloadCurriculumVitaeService dcvs = new DownloadCurriculumVitaeService(this.db, this.lattesModule.WSCurriculoClient);
-
-            while (lattesModule.HasNextCurriculumVitaeNumberToDownload)
+            try
             {
-                curriculumVitae = lattesModule.GetNextCurriculumVitaeNumberToDownload();
-
-                // verifica eu ie processo conseguiu pegar ie utimo registro na pilha
-                if (curriculumVitae == null)
-                    continue;
-
-                MemoryStream ms = dcvs.GetCurriculumVitaeIfUpdated(curriculumVitae);
-
-                if (ms != null)
+                foreach (var curriculumVitae in _curriculumVitaesForDownload.Range())
                 {
-                    if (File.Exists(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
-                        File.Delete(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
-
-                    FileStream wc = new FileStream(lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo), FileMode.CreateNew);
-                    while ((read = ms.Read(buffer, 0, buffer.Length)) > 0)
-                    {
-                        wc.Write(buffer, 0, read);
-                    }
-                    ms.Close();
-
-                    lattesModule.AddCurriculumVitaeForProcess(curriculumVitae);
-
-                    wc.Flush();
-                    wc.Close();
-                    if (curriculumVitae.NomeProfessor == null)
-                        Logger.Info(String.Format("Curriculo {0} baixado - Thread {1}", curriculumVitae.NumeroCurriculo, this._sequence));
-                    else
-                        Logger.Info(String.Format("Curriculo {0} - {1} baixado - Thread {2}", 
-                            curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor, this._sequence));
-                } else
-                {
-                    if (curriculumVitae.NumeroCurriculo == null || curriculumVitae.NumeroCurriculo == "")
-                    {
-                        Logger.Error(String.Format("O número do curríuculo Lattes do professor {0} não foi encontrado - Thread {1}",
-                            curriculumVitae.NomeProfessor, this._sequence));
-                    }
+                    DownloadCurriculumVitae(curriculumVitae);
                 }
             }
+            finally
+            {
+                doneEvent.Set();
+                Logger.Info(String.Format("Download terminou"));
+            }
+        }
 
-            Logger.Info(String.Format("Download Thread {0} terminou", this._sequence));
+        private void DownloadCurriculumVitae(CurriculoEntry curriculumVitae)
+        {
+            try
+            {
+                if (curriculumVitae.NumeroCurriculo == null || curriculumVitae.NumeroCurriculo.Trim().Length == 0)
+                {
+                    Logger.Error(String.Format(
+                        "O número do curríuculo Lattes do professor {0} não foi encontrado",
+                        curriculumVitae.NomeProfessor
+                    ));
+                    _lattesModule.DecrementProcessCount();
+                    return;
+                }
+
+                int read;
+                byte[] buffer = new byte[4096];
+                MemoryStream ms = _dcvs.GetCurriculumVitaeIfUpdated(curriculumVitae);
+
+                if (ms == null)
+                {
+                    _lattesModule.DecrementProcessCount();
+                    return;
+                }
+
+                if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
+                {
+                    File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
+                }
+
+                FileStream wc = new FileStream(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo), FileMode.CreateNew);
+                while ((read = ms.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    wc.Write(buffer, 0, read);
+                }
+                ms.Close();
+
+                _curriculumVitaesForProcess.Send(curriculumVitae);
+
+                wc.Flush();
+                wc.Close();
+
+                if (curriculumVitae.NomeProfessor == null || curriculumVitae.NomeProfessor.Trim().Length == 0)
+                {
+                    Logger.Info(String.Format("Curriculo {0} baixado", curriculumVitae.NumeroCurriculo));
+                    return;
+                }
+
+                Logger.Info(String.Format("Curriculo {0} - {1} baixado", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(String.Format(
+                    "Erro ao buscar o currículo {0}, mensagem: {1}\n{2}",
+                    curriculumVitae.NumeroCurriculo,
+                    exception.Message,
+                    exception.StackTrace
+                ));
+                _lattesModule.DecrementProcessCount();
+            }
+            finally
+            {
+                _lattesModule.TickDownloadBar();
+            }
         }
     }
 }

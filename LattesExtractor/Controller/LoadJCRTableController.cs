@@ -31,7 +31,7 @@ namespace LattesExtractor.Controller
                 FileCultureName = "pt-BR" // default is the current culture
             };
 
-            IEnumerable<CSVResume> jcrFile = cc.Read<CSVResume>(
+            IEnumerable<JCRCSV> jcrFile = cc.Read<JCRCSV>(
                 new StreamReader(File.Open(lattesModule.JCRFileName, FileMode.Open),
                 Encoding.GetEncoding("iso-8859-15")), inputFileDescription);
 

@@ -19,6 +19,7 @@ namespace LattesExtractor.Controller
         private LattesModule _lattesModule;
         private string _importFolder;
         private Channel<CurriculoEntry> _channel;
+        private int _workItemCount = 0;
 
         public ImportCurriculumVitaeFromFolderController(
             LattesModule lattesModule,
@@ -31,10 +32,8 @@ namespace LattesExtractor.Controller
             _channel = channel;
         }
 
-        public void LoadCurriculums(object threadContext)
+        public void LoadCurriculums(ManualResetEvent doneEvent)
         {
-            var doneEvent = (ManualResetEvent)threadContext;
-            var unzipDoneEvents = new List<ManualResetEvent>();
             try
             {
                 if (!Directory.Exists(_importFolder))
@@ -49,6 +48,7 @@ namespace LattesExtractor.Controller
                 }
 
                 CurriculoEntry curriculumVitae;
+                var unzipDoneEvent = new ManualResetEvent(false);
 
                 foreach (string filename in Directory.EnumerateFiles(_importFolder))
                 {
@@ -57,53 +57,60 @@ namespace LattesExtractor.Controller
                     curriculumVitae = new CurriculoEntry { NumeroCurriculo = numeroCurriculo };
 
                     if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
+                    {
                         File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
+                    }
 
                     if (filename.EndsWith(".xml"))
                     {
                         File.Copy(filename, _lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
                         _channel.Send(curriculumVitae);
+                        _lattesModule.IncrementProcessCount();
                         continue;
                     }
 
-                    var unzipDoneEvent = new ManualResetEvent(false);
-                    ThreadPool.QueueUserWorkItem(this.UnzipAndCopy(
-                        doneEvent,
-                        filename,
-                        curriculumVitae
-                    ));
-                    unzipDoneEvents.Add(unzipDoneEvent);
+                    Interlocked.Increment(ref _workItemCount);
+                    ThreadPool.QueueUserWorkItem(o => UnzipAndCopy(unzipDoneEvent, filename, curriculumVitae));
+                }
+                if (_workItemCount > 0)
+                {
+                    unzipDoneEvent.WaitOne();
                 }
             }
             finally
             {
-                WaitHandle.WaitAll(unzipDoneEvents.ToArray());
                 doneEvent.Set();
             }
         }
 
-        private WaitCallback UnzipAndCopy (ManualResetEvent doneEvent, string filename, CurriculoEntry curriculumVitae)
+        private void UnzipAndCopy (ManualResetEvent doneEvent, string filename, CurriculoEntry curriculumVitae)
         {
-            return (object threadContext) =>
+            int read;
+            byte[] buffer = new byte[4096];
+            MemoryStream ms;
+
+            ms = UnzipCurriculumVitae(filename);
+
+            if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
             {
-                int read;
-                byte[] buffer = new byte[4096];
-                MemoryStream ms;
+                File.Delete(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo));
+            }
+            FileStream wc = new FileStream(
+                _lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo),
+                FileMode.CreateNew
+            );
+            while ((read = ms.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                wc.Write(buffer, 0, read);
+            }
+            ms.Close();
+            _channel.Send(curriculumVitae);
+            _lattesModule.IncrementProcessCount();
 
-                ms = UnzipCurriculumVitae(filename);
-
-                FileStream wc = new FileStream(
-                    _lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo),
-                    FileMode.CreateNew
-                );
-                while ((read = ms.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    wc.Write(buffer, 0, read);
-                }
-                ms.Close();
-
-                _channel.Send(curriculumVitae);
-            };
+            if (Interlocked.Decrement(ref _workItemCount) == 0)
+            {
+                doneEvent.Set();
+            }
         }
 
         private MemoryStream UnzipCurriculumVitae(string filename)

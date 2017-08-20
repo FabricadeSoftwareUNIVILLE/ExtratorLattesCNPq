@@ -6,6 +6,8 @@ using LattesExtractor.Entities;
 using System.IO;
 using LattesExtractor.Collections;
 using System.Threading;
+using LattesExtractor.Entities.Database;
+using ShellProgressBar;
 
 namespace LattesExtractor
 {
@@ -20,8 +22,8 @@ namespace LattesExtractor
         private Channel<CurriculoEntry> _cvForDownload = new Channel<CurriculoEntry>();
         private Channel<CurriculoEntry> _cvForProcess = new Channel<CurriculoEntry>();
 
-        public Channel<CurriculoEntry> ResumesForDownload { get { return this._cvForDownload; } }
-        public Channel<CurriculoEntry> ResumesForProcess { get { return this._cvForProcess; } }
+        public Channel<CurriculoEntry> CurriculumVitaeForDownload { get { return this._cvForDownload; } }
+        public Channel<CurriculoEntry> CurriculumVitaeForProcess { get { return this._cvForProcess; } }
 
         private String _tempDir = "";
         private String _qualisFile = "";
@@ -30,14 +32,23 @@ namespace LattesExtractor
         private string _lattesCurriculumValueConnection = null;
         private string _importFolder = null;
         private string _csvCurriculumValueNumberList = null;
-        private List<ManualResetEvent> _doneEvents = new List<ManualResetEvent>();
+        private List<ManualResetEvent> _doneEventsGetCurriculumVitae = new List<ManualResetEvent>();
+        private List<ManualResetEvent> _doneEventsListCurriculumVitae = new List<ManualResetEvent>();
+        private List<ManualResetEvent> _doneEventsProcessCurriculumVitae = new List<ManualResetEvent>();
 
         private static LattesModule _instance;
+
+        private ProgressBar _progressBar;
+        private ProgressBar _downloadProgresBar;
+        private int _downloadCount;
+        private int _processCount;
 
         public static LattesModule GetInstance()
         {
             if (_instance == null)
+            {
                 _instance = new LattesModule();
+            }
 
             return _instance;
         }
@@ -65,6 +76,7 @@ namespace LattesExtractor
 
         public bool IgnorePendingLastExecution { get; set; }
         public bool UseNewCNPqRestService { get; set; }
+        public bool ShowProgressBar { get; internal set; }
 
         public String TempDirectory
         {
@@ -84,7 +96,7 @@ namespace LattesExtractor
 
                 if (this._csvCurriculumValueNumberList != null)
                 {
-                    this._importFolder = this._csvCurriculumValueNumberList
+                    this._csvCurriculumValueNumberList = this._csvCurriculumValueNumberList
                         .Replace('\\', Path.DirectorySeparatorChar)
                         .Replace('/', Path.DirectorySeparatorChar);
                 }
@@ -116,80 +128,135 @@ namespace LattesExtractor
 
         public CurriculoLattesWebService.WSCurriculoClient WSCurriculoClient { get { return this.wscc; } }
 
-        private void QueueThread(WaitCallback waitCallback)
+        private void QueueThreadListCurriculumVitae(Action<ManualResetEvent> workItem)
         {
             var doneEvent = new ManualResetEvent(false);
-            ThreadPool.QueueUserWorkItem(waitCallback, doneEvent);
-            _doneEvents.Add(doneEvent);
+            ThreadPool.QueueUserWorkItem((object threadContext) => workItem(doneEvent));
+            _doneEventsListCurriculumVitae.Add(doneEvent);
+        }
+
+        private void QueueThreadGetCurriculumVitae(Action<ManualResetEvent> workItem)
+        {
+            var doneEvent = new ManualResetEvent(false);
+            ThreadPool.QueueUserWorkItem((object threadContext) => workItem(doneEvent));
+            _doneEventsGetCurriculumVitae.Add(doneEvent);
+        }
+
+        private void QueueThreadProcessCurriculumVitae(Action<ManualResetEvent> workItem)
+        {
+            var doneEvent = new ManualResetEvent(false);
+            ThreadPool.QueueUserWorkItem((object threadContext) => workItem(doneEvent));
+            _doneEventsProcessCurriculumVitae.Add(doneEvent);
         }
 
         private void LoadCurriculums()
         {
-            if (this.IgnorePendingLastExecution == false)
+            if (IgnorePendingLastExecution == false)
             {
-                var loadFromTempDirectory = new LoadFromTempDirectory(this.TempDirectory, this.ResumesForProcess);
+                var loadFromTempDirectory = new LoadFromTempDirectory(this, TempDirectory, CurriculumVitaeForProcess);
                 if (loadFromTempDirectory.HasPendingResumes())
                 {
-                    Logger.Info(String.Format("Foram encontrados XMLs pendentes na pasta '{0}' !'", this.TempDirectory));
-                    this.QueueThread(loadFromTempDirectory.LoadCurriculums);
+                    Logger.Info(String.Format("Foram encontrados XMLs pendentes na pasta '{0}' !'", TempDirectory));
+                    QueueThreadGetCurriculumVitae(loadFromTempDirectory.LoadCurriculums);
                     return;
                 }
             }
 
-            if (this.ImportFolder != null)
+            if (ImportFolder != null)
             {
-                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", this.ImportFolder));
+                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", ImportFolder));
                 var importFromFolder = new ImportCurriculumVitaeFromFolderController(
-                    this, 
+                    this,
                     ImportFolder, 
-                    ResumesForProcess
+                    CurriculumVitaeForProcess
                 );
-                this.QueueThread(importFromFolder.LoadCurriculums);
+                QueueThreadGetCurriculumVitae(importFromFolder.LoadCurriculums);
                 return;
             }
 
             Logger.Info("Iniciando Carga dos Números de Currículo da Instituição...");
-            if (this.CSVCurriculumVitaeNumberList != null)
+            if (CSVCurriculumVitaeNumberList != null)
             {
                 var csvListController = new LoadCurriculumVitaeNumberFromCSVController(
+                    this,
                     CSVCurriculumVitaeNumberList, 
-                    ResumesForDownload
+                    CurriculumVitaeForDownload
                 );
-                this.QueueThread(csvListController.LoadCurriculumVitaeNumbers);
+                QueueThreadListCurriculumVitae(csvListController.LoadCurriculumVitaeNumbers);
             }
 
-            if (this.CSVCurriculumVitaeNumberList == null)
+            if (CSVCurriculumVitaeNumberList == null)
             {
                 var oleDbController = new LoadCurriculumVitaeNumberFromOleDbController(
+                    this,
                     LattesCurriculumVitaeODBCConnection,
                     LattesCurriculumVitaeQuery,
-                    ResumesForDownload
+                    CurriculumVitaeForDownload
                 );
-                this.QueueThread(oleDbController.LoadCurriculumVitaeNumbers);
+                QueueThreadListCurriculumVitae(oleDbController.LoadCurriculumVitaeNumbers);
             }
 
-            if (this.UseNewCNPqRestService)
+            if (UseNewCNPqRestService)
             {
                 Logger.Info("Iniciando Download dos Currículos Atualizados (REST Service)...");
-                DownloadFromRestServiceCurriculumVitaeController.DownloadUpdatedCurriculums(this);
+                var downloadRestService = new DownloadFromRestServiceCurriculumVitaeController(
+                    this,
+                    new LattesDatabase(),
+                    CurriculumVitaeForDownload,
+                    CurriculumVitaeForProcess
+                );
+                QueueThreadGetCurriculumVitae(downloadRestService.DownloadUpdatedCurriculums);
+                return;
             }
 
             Logger.Info("Iniciando Download dos Currículos Atualizados (WebService)...");
-            DownloadFromWebServiceCurriculumVitaeController.DownloadUpdatedCurriculums(this);
+            var downloadWebService = new DownloadFromWebServiceCurriculumVitaeController(
+                this,
+                new Service.DownloadCurriculumVitaeWebService(
+                    new LattesDatabase(),
+                    WSCurriculoClient
+                ),
+                CurriculumVitaeForDownload,
+                CurriculumVitaeForProcess
+            );
+            QueueThreadGetCurriculumVitae(downloadWebService.DownloadUpdatedCurriculums);
         }
 
         public void Extract()
         {
             try
             {
+                if (ShowProgressBar)
+                {
+                    _progressBar = new ProgressBar(1, "Aguardando Currículos...", ConsoleColor.White);
+                }
+
                 Logger.Info("Começando Processamento...");
 
                 LoadCurriculums();
 
                 Logger.Info("Iniciando Processamento dos Currículos...");
-                CurriculumVitaeProcessorController.ProcessCurriculumVitaes(this);
+                var processor = new CurriculumVitaeProcessorController(
+                    this,
+                    CurriculumVitaeForProcess
+                );
 
-                WaitHandle.WaitAll(_doneEvents.ToArray());
+                var processorCount = Environment.ProcessorCount > 0 ? Environment.ProcessorCount : 1;
+                QueueThreadProcessCurriculumVitae(processor.ProcessCurriculumVitaes);
+
+                if (_doneEventsListCurriculumVitae.Count > 0)
+                {
+                    WaitHandle.WaitAll(_doneEventsListCurriculumVitae.ToArray());
+                    Logger.Info("Todos os Currículos Foram Listados...");
+                }
+                CurriculumVitaeForDownload.Close();
+
+                WaitHandle.WaitAll(_doneEventsGetCurriculumVitae.ToArray());
+                Logger.Info("Todos os Currículos Foram Adicionados para Processamento...");
+                CurriculumVitaeForProcess.Close();
+
+                WaitHandle.WaitAll(_doneEventsProcessCurriculumVitae.ToArray());
+                Logger.Info("Todos os Currículos Foram Processados...");
             }
             catch (Exception ex)
             {
@@ -199,21 +266,62 @@ namespace LattesExtractor
             Logger.Info("Encerrando Execução...");
         }
 
+        public void IncrementDownloadCount()
+        {
+            Interlocked.Increment(ref _downloadCount);
+
+            if (ShowProgressBar && _downloadProgresBar == null)
+            {
+                _downloadProgresBar = new ProgressBar(1, "Baixando...", ConsoleColor.White);
+            }
+
+            IncrementProcessCount();
+        }
+
+        public void DecrementProcessCount()
+        {
+            Interlocked.Decrement(ref _processCount);
+            if (ShowProgressBar)
+            {
+                _progressBar.UpdateMaxTicks(_processCount);
+            }
+        }
+
+        public void IncrementProcessCount()
+        {
+            Interlocked.Increment(ref _processCount);
+            if (ShowProgressBar)
+            {
+                _progressBar.UpdateMaxTicks(_processCount);
+            }
+        }
+
+        public void TickDownloadBar()
+        {
+            if (ShowProgressBar && _downloadProgresBar != null)
+            {
+                _downloadProgresBar.Tick("Baixando Currículos...");
+            }
+        }
+
+        public void TickProcessBar()
+        {
+            if (ShowProgressBar && _progressBar != null)
+            {
+                _progressBar.Tick("Progressando Currículos...");
+            }
+        }
+
         private void ShowException(Exception ex)
         {
-            Logger.Error("Erros durante a execução:");
-            Logger.Error(ex.Message);
-
-            Logger.Error(ex.StackTrace);
+            Logger.Error(String.Format("Erros durante a execução: {0}\n{2}", ex.Message, ex.StackTrace));
             if (ex.InnerException != null)
             {
-                Logger.Error("Excessão Interna:");
                 int sequencia = 1;
                 while (ex.InnerException != null)
                 {
-                    Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
-                    Logger.Error(ex.StackTrace);
                     ex = ex.InnerException;
+                    Logger.Error(String.Format("Excessão Interna [{0}]: {1}\n{2}", sequencia++, ex.Message, ex.StackTrace));
                 }
             }
         }

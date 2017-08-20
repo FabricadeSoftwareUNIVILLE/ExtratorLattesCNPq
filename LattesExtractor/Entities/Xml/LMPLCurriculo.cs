@@ -5912,9 +5912,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -5928,6 +5931,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -6514,6 +6520,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -8574,6 +8583,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -8846,6 +8858,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -9304,6 +9319,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -9748,6 +9766,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -9761,6 +9782,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -10456,6 +10480,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -10469,6 +10496,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11025,6 +11055,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11038,6 +11071,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11462,6 +11498,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11475,6 +11514,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11967,6 +12009,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -11980,6 +12025,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -12494,6 +12542,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -12899,6 +12950,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -13348,6 +13402,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -13815,6 +13872,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -14457,6 +14517,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -14470,6 +14533,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -15150,6 +15216,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -15163,6 +15232,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -15176,6 +15248,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -15582,6 +15657,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -15595,6 +15673,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16006,6 +16087,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16019,6 +16103,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16303,6 +16390,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16316,6 +16406,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16600,6 +16693,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -16613,6 +16709,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -17073,6 +17172,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -17086,6 +17188,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -17538,6 +17643,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -17551,6 +17659,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -17996,6 +18107,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -18565,6 +18679,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -18578,6 +18695,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -18999,6 +19119,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -19445,6 +19568,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -19458,6 +19584,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -19927,6 +20056,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -19940,6 +20072,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -20328,6 +20463,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -20714,6 +20852,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -21118,6 +21259,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -21600,6 +21744,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -21613,6 +21760,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -22028,6 +22178,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -22075,6 +22228,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -22475,6 +22631,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -22843,6 +23002,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -22856,6 +23018,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -23228,6 +23393,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -23241,6 +23409,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -23864,6 +24035,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -24407,6 +24581,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -24420,6 +24597,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -24829,6 +25009,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -25247,6 +25430,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -25652,6 +25838,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -26109,6 +26298,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -26595,6 +26787,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -26608,6 +26803,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -27016,6 +27214,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -27375,6 +27576,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -27422,6 +27626,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -27990,6 +28197,9 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -28034,9 +28244,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -28482,9 +28695,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -28495,9 +28711,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -29076,9 +29295,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -29540,9 +29762,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -30004,9 +30229,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -30501,9 +30729,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -31014,9 +31245,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -36344,9 +36578,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -36357,9 +36594,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -36869,9 +37109,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -36882,9 +37125,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -37319,9 +37565,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -37332,9 +37581,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -37769,9 +38021,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -37782,9 +38037,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -38219,9 +38477,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -38232,9 +38493,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -38669,9 +38933,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -38682,9 +38949,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -39119,9 +39389,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -39132,9 +39405,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -39569,9 +39845,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -39582,9 +39861,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -40019,9 +40301,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -40032,9 +40317,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -43153,9 +43441,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>
@@ -43166,9 +43457,12 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         SIM,
-        
+
         /// <remarks/>
         NAO,
+
+        sim = SIM,
+        nao = NAO,
     }
     
     /// <remarks/>

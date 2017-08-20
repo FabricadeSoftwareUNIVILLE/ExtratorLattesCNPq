@@ -55,8 +55,7 @@ namespace LattesExtractor.Collections
 
         public IEnumerable<T> Range()
         {
-            T val;
-            while (Receive(out val))
+            while (Receive(out T val))
             {
                 yield return val;
             }
