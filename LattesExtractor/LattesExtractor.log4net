@@ -18,8 +18,8 @@
   </appender>
 
   <root>
-    <level value="ERROR" />
-    <appender-ref ref="Console" />
+    <level value="INFO" />
+    <!--<appender-ref ref="Console" />-->
     <appender-ref ref="RollingFile" />
   </root>
 </log4net>
