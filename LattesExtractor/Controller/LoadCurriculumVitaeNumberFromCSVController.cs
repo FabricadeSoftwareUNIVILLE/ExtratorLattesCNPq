@@ -49,7 +49,6 @@ namespace LattesExtractor.Controller
 
                 foreach (var row in rows)
                 {
-                    _lattesModule.IncrementDownloadCount();
                     _channel.Send(
                         new CurriculoEntry
                         {
@@ -70,6 +69,7 @@ namespace LattesExtractor.Controller
 
     class CSVResume
     {
+#pragma warning disable CS0649
         [CsvColumn(FieldIndex = 1, CanBeNull = true, Name = "NumeroCurriculo")]
         public String NumeroCurriculo;
         [CsvColumn(FieldIndex = 2, CanBeNull = true, Name = "NomeProfessor")]
@@ -78,5 +78,6 @@ namespace LattesExtractor.Controller
         public String DataNascimento;
         [CsvColumn(FieldIndex = 4, CanBeNull = true, Name = "CPF")]
         public String CPF;
+#pragma warning restore CS0649
     }
 }

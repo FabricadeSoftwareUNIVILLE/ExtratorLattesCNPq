@@ -33,7 +33,6 @@ namespace LattesExtractor.Controller
                     string numeroCurriculo = filename.Substring(this._tempDirectory.Length + 1);
                     numeroCurriculo = numeroCurriculo.Substring(0, numeroCurriculo.Length - 4);
                     _channel.Send(new CurriculoEntry { NumeroCurriculo = numeroCurriculo });
-                    _lattesModule.IncrementProcessCount();
                 }
             }
             finally

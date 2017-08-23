@@ -5,7 +5,7 @@ namespace LattesExtractor.Entities.CSV
 {
     class JCRCSV
     {
-
+#pragma warning disable CS0649
         [CsvColumn(FieldIndex = 1, Name = "Rank")]
         public String Rank;
         [CsvColumn(FieldIndex = 2, Name = "Full Journal Title")]
@@ -42,6 +42,6 @@ namespace LattesExtractor.Entities.CSV
         public String AverageJournalImpactFactorPercentile;
         [CsvColumn(FieldIndex = 18, Name = "Normalized Eigenfactor")]
         public String NormalizedEigenfactor;
-
+#pragma warning restore CS0649
     }
 }

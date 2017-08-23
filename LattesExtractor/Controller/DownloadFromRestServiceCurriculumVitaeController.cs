@@ -23,7 +23,9 @@ namespace LattesExtractor.Controller
         private Channel<CurriculoEntry> _curriculumVitaesForDownload;
         private Channel<CurriculoEntry> _curriculumVitaesForProcess;
 
-        private int _workItemCount = 0;
+        private Channel<RetryMessage> _retryDownload = new Channel<RetryMessage>();
+
+        private int _pendingCurriculums = 0;
 
         private string _urlMetadata = "http://buscacv.cnpq.br/buscacv/rest/espelhocurriculo/{0}";
         private string _urlDownloadXml = "http://buscacv.cnpq.br/buscacv/rest/download/curriculo/{0}";
@@ -44,38 +46,51 @@ namespace LattesExtractor.Controller
         {
             try
             {
-                var doneDownloadEvent = new ManualResetEvent(false);
-                var wc = new WebClient();
-                foreach (var curriculumVitae in _curriculumVitaesForDownload.Range())
+                ThreadPool.QueueUserWorkItem(o => RetryQueueProcessing(doneEvent));
+
+                foreach (var c in _curriculumVitaesForDownload.Range())
                 {
-                    Interlocked.Increment(ref _workItemCount);
-                    Logger.Info(String.Format("Curriculo {0} adicionado para download...", curriculumVitae.NumeroCurriculo));
-                    //ThreadPool.QueueUserWorkItem(o => 
-                    DownloadCurriculumVitae(curriculumVitae, doneDownloadEvent, wc)
-                    //)
-                    ;
-                    //if (_workItemCount > 10)
-                    //{
-                    //    Logger.Info(String.Format("Will wait now..."));
-                    //    doneDownloadEvent.WaitOne();
-                    //    doneDownloadEvent = new ManualResetEvent(false);
-                    //}
+                    Interlocked.Increment(ref _pendingCurriculums);
+                    _retryDownload.Send(
+                        new RetryMessage
+                        {
+                            CurriculumVitae = c,
+                            PendingRetries = 5,
+                        }
+                    );
                 }
-                if (_workItemCount > 0)
+
+                if (_pendingCurriculums > 0)
                 {
-                    Logger.Info(String.Format("Last ones..."));
-                    doneDownloadEvent.WaitOne();
+                    doneEvent.WaitOne();
+                    doneEvent = null;
                 }
             }
             finally
             {
-                doneEvent.Set();
+                if (doneEvent != null)
+                {
+                    doneEvent.Set();
+                }
                 Logger.Info(String.Format("Download terminou"));
             }
         }
 
-        private void DownloadCurriculumVitae(CurriculoEntry curriculumVitae, ManualResetEvent doneDownloadEvent, WebClient wc)
+        private void RetryQueueProcessing(ManualResetEvent doneDownloadEvent)
         {
+            foreach (var rm in _retryDownload.Range())
+            {
+                //ThreadPool.QueueUserWorkItem(o => 
+                DownloadCurriculumVitae(rm, doneDownloadEvent)
+                //)
+                ;
+            }
+        }
+
+        private void DownloadCurriculumVitae(RetryMessage retryMessage, ManualResetEvent doneDownloadEvent)
+        {
+            var curriculumVitae = retryMessage.CurriculumVitae;
+            var wc = new WebClient();
             try
             {
                 var stream = wc.OpenRead(String.Format(_urlMetadata, curriculumVitae.NumeroCurriculo));
@@ -89,7 +104,6 @@ namespace LattesExtractor.Controller
                         "Não foi possível baixar o currículo de número {0}",
                         curriculumVitae.NumeroCurriculo
                     ));
-                    _lattesModule.DecrementProcessCount();
                     return;
                 }
 
@@ -97,7 +111,7 @@ namespace LattesExtractor.Controller
 
                 if (NeedsToBeUpdated(curriculumVitae, response) == false)
                 {
-                    _lattesModule.DecrementProcessCount();
+                    Logger.Info(String.Format("Currículo {0} - {1} já esta atualizado.", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
                     return;
                 }
 
@@ -113,24 +127,40 @@ namespace LattesExtractor.Controller
             }
             catch (WebException exception)
             {
-                Logger.Error(String.Format("Erro ao realizar requisão: {0}\n{1}", exception.Message, exception.StackTrace));
-                _lattesModule.DecrementProcessCount();
-                Thread.Sleep(30000);
+                Logger.Error(String.Format(
+                    "Erro ao realizar requisão do Currículo {2} (Tentativas Sobrando {3}): {0}\n{1}",
+                    exception.Message,
+                    exception.StackTrace,
+                    curriculumVitae.NumeroCurriculo,
+                    retryMessage.PendingRetries
+                ));
+                retryMessage.PendingRetries--;
+                if (retryMessage.PendingRetries > 0)
+                {
+                    Thread.Sleep(10000);
+                    Interlocked.Increment(ref _pendingCurriculums);
+                    _retryDownload.Send(retryMessage);
+                }
             }
             finally
             {
-                if (Interlocked.Decrement(ref _workItemCount) == 0)
+                wc.Dispose();
+                if (Interlocked.Decrement(ref _pendingCurriculums) == 0)
                 {
                     doneDownloadEvent.Set();
+                    _retryDownload.Close();
                 }
-
-                _lattesModule.TickDownloadBar();
             }
         }
 
         private void DownloadXml(CurriculoEntry curriculumVitae, MetadataResponse response, WebClient wc)
         {
             var link = String.Format(_urlDownloadXml, response.CodRhCript);
+            Logger.Debug(String.Format(
+                "Currículo {0} marcado para download ({1})...",
+                curriculumVitae.NumeroCurriculo,
+                link
+            ));
             var stream = wc.OpenRead(link);
 
             if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
@@ -205,6 +235,33 @@ namespace LattesExtractor.Controller
         }
     }
 
+    class TimeoutWebClient : WebClient
+    {
+        public int Timeout = 0;
+
+        public TimeoutWebClient(int timeout) : base ()
+        {
+            Timeout = timeout;
+        }
+
+        protected override WebRequest GetWebRequest(Uri uri)
+        {
+            WebRequest w = base.GetWebRequest(uri);
+            if (Timeout > 0)
+            {
+                w.Timeout = Timeout;
+            }
+            return w;
+        }
+    }
+
+    internal class RetryMessage
+    {
+        public CurriculoEntry CurriculumVitae;
+        public int PendingRetries = 5;
+    }
+
+#pragma warning disable CS0649
     [DataContract]
     internal class MetadataResponse
     {
@@ -240,4 +297,5 @@ namespace LattesExtractor.Controller
         [DataMember(Name = "nomeCompleto")]
         public string NomeCompleto;
     }
+#pragma warning restore CS0649
 }

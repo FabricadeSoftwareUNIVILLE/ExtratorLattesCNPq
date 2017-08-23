@@ -21666,15 +21666,18 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         FEIRA,
-        
+
         /// <remarks/>
         OLIMPÍADA,
-        
+
         /// <remarks/>
         OUTRO,
         
         /// <remarks/>
         NAO_INFORMADO,
+
+        /// <remarks/>
+        OLIMPIADA = OLIMPÍADA,
     }
     
     /// <remarks/>
@@ -22215,6 +22218,8 @@ namespace LattesExtractor.Entities.Xml {
         
         /// <remarks/>
         NAO_INFORMADO,
+
+        nao_informado = NAO_INFORMADO,
     }
     
     /// <remarks/>

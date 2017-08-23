@@ -57,7 +57,6 @@ namespace LattesExtractor.Controller
                         "O número do curríuculo Lattes do professor {0} não foi encontrado",
                         curriculumVitae.NomeProfessor
                     ));
-                    _lattesModule.DecrementProcessCount();
                     return;
                 }
 
@@ -67,7 +66,6 @@ namespace LattesExtractor.Controller
 
                 if (ms == null)
                 {
-                    _lattesModule.DecrementProcessCount();
                     return;
                 }
 
@@ -104,11 +102,6 @@ namespace LattesExtractor.Controller
                     exception.Message,
                     exception.StackTrace
                 ));
-                _lattesModule.DecrementProcessCount();
-            }
-            finally
-            {
-                _lattesModule.TickDownloadBar();
             }
         }
     }

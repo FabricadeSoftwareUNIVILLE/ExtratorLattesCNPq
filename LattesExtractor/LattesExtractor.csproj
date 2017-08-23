@@ -236,7 +236,7 @@
     <Compile Include="Entities\Database\VinculoAtuacaoProfissional.cs">
       <DependentUpon>LattesDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Helpers\Channel.cs" />
+    <Compile Include="Collections\Channel.cs" />
     <Compile Include="Service\DownloadCurriculumVitaeWebService.cs" />
     <Compile Include="LattesModule.cs" />
     <Compile Include="Entities\Xml\LMPLCurriculo.cs" />
@@ -274,6 +274,7 @@
     <None Include="resources\csv_list_sample.csv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="resources\help.csv" />
     <None Include="resources\IDs_Curriculos.local.xls">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

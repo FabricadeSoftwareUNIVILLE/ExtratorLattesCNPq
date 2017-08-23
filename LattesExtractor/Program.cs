@@ -88,8 +88,6 @@ namespace LattesExtractor
                     lm.CSVCurriculumVitaeNumberList = options.CSVCurriculumVitaeNumberList;
                 }
 
-                lm.ShowProgressBar = options.ShowProgressBar;
-
                 lm.Extract();
             }
         }
@@ -103,9 +101,6 @@ namespace LattesExtractor
 
         class Options
         {
-            [Option('p', "progressbar", DefaultValue = false, HelpText = "Mostra uma barra de progresso para acompanhamento")]
-            public bool ShowProgressBar { get; set; }
-
             [Option('n', "usenewrestservice", DefaultValue = false, HelpText = "Será utilizado o serviço REST do CNPq no lugar do WebService")]
             public bool UseNewRestService { get; set; }
 

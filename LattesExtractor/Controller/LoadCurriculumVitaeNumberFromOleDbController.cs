@@ -102,7 +102,6 @@ namespace LattesExtractor.Controller
                 )
             )
             {
-                _lattesModule.IncrementDownloadCount();
                 _channel.Send(ce);
             }
         }

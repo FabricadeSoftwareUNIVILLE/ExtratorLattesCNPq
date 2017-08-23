@@ -18,7 +18,7 @@
   </appender>
 
   <root>
-    <level value="INFO" />
+    <level value="ERROR" />
     <appender-ref ref="Console" />
     <appender-ref ref="RollingFile" />
   </root>

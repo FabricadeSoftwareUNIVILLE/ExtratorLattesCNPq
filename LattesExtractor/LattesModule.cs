@@ -38,11 +38,6 @@ namespace LattesExtractor
 
         private static LattesModule _instance;
 
-        private ProgressBar _progressBar;
-        private IProgressBar _downloadProgresBar;
-        private int _downloadCount;
-        private int _processCount;
-
         public static LattesModule GetInstance()
         {
             if (_instance == null)
@@ -226,12 +221,10 @@ namespace LattesExtractor
         {
             try
             {
-                if (ShowProgressBar)
-                {
-                    _progressBar = new ProgressBar(1, "Aguardando Currículos...", ConsoleColor.White);
-                }
-
                 Logger.Info("Começando Processamento...");
+
+                var processor = new CurriculumVitaeProcessorController(this, CurriculumVitaeForProcess);
+                QueueThreadProcessCurriculumVitae(processor.ProcessCurriculumVitaes);
 
                 LoadCurriculums();
 
@@ -248,12 +241,6 @@ namespace LattesExtractor
                 Logger.Info("Todos os Currículos Foram Adicionados para Processamento...");
                 CurriculumVitaeForProcess.Close();
 
-                var processor = new CurriculumVitaeProcessorController(
-                    this,
-                    CurriculumVitaeForProcess
-                );
-                QueueThreadProcessCurriculumVitae(processor.ProcessCurriculumVitaes);
-
                 WaitHandle.WaitAll(_doneEventsProcessCurriculumVitae.ToArray());
                 Logger.Info("Todos os Currículos Foram Processados...");
             }
@@ -263,52 +250,6 @@ namespace LattesExtractor
             }
 
             Logger.Info("Encerrando Execução...");
-        }
-
-        public void IncrementDownloadCount()
-        {
-            Interlocked.Increment(ref _downloadCount);
-
-            if (ShowProgressBar && _downloadProgresBar == null)
-            {
-                _downloadProgresBar = _progressBar.Spawn(1, "Baixando Currículos...");
-            }
-
-            IncrementProcessCount();
-        }
-
-        public void DecrementProcessCount()
-        {
-            Interlocked.Decrement(ref _processCount);
-            if (ShowProgressBar)
-            {
-                _progressBar.UpdateMaxTicks(_processCount);
-            }
-        }
-
-        public void IncrementProcessCount()
-        {
-            Interlocked.Increment(ref _processCount);
-            if (ShowProgressBar)
-            {
-                _progressBar.UpdateMaxTicks(_processCount);
-            }
-        }
-
-        public void TickDownloadBar()
-        {
-            if (ShowProgressBar && _downloadProgresBar != null)
-            {
-                _downloadProgresBar.Tick();
-            }
-        }
-
-        public void TickProcessBar()
-        {
-            if (ShowProgressBar && _progressBar != null)
-            {
-                _progressBar.Tick("Progressando Currículos...");
-            }
         }
 
         private void ShowException(Exception ex)

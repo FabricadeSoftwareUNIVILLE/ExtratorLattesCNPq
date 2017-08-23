@@ -13,9 +13,7 @@ namespace LattesExtractor.Collections
     {
         private BlockingCollection<T> _buffer;
 
-        public Channel() {
-            _buffer = new BlockingCollection<T>(new ConcurrentQueue<T>());
-        }
+        public Channel() : this(1) { }
 
         public Channel(int size)
         {
