@@ -260,33 +260,29 @@ namespace LattesExtractor.DAO
 
                     return true;
                 }
+                catch (DbEntityValidationException ex)
+                {
+                    lock (logLocker)
+                    {
+                        Logger.Error($"Erros de Validação para o Professor {curriculumVitae.NumeroCurriculo} - {cvXml.DADOSGERAIS.NOMECOMPLETO}: {ex.Message}");
+                        foreach (var err in ex.EntityValidationErrors)
+                        {
+                            Logger.Error($" * {string.Join("\r\n", err.ValidationErrors.Select(v => v.PropertyName + "-" + v.ErrorMessage).ToArray())}");
+                        }
+                        return false;
+                    }
+                }
                 catch (Exception ex)
                 {
                     lock (logLocker)
                     {
-                        Logger.Error(String.Format(
-                            "Erros para o Professor {0} - {1}",
-                            curriculumVitae.NumeroCurriculo,
-                            cvXml.DADOSGERAIS.NOMECOMPLETO
-                        ));
-                        Logger.Error(String.Format("Exceção: {0}\n{1}", ex.Message, ex.StackTrace));
+                        Logger.Error($"Erros para o Professor {curriculumVitae.NumeroCurriculo} - {cvXml.DADOSGERAIS.NOMECOMPLETO}");
+                        Logger.Error($"Exceção: {ex.Message}\n{ex.StackTrace}");
                         int sequencia = 1;
                         while (ex.InnerException != null)
                         {
                             ex = ex.InnerException;
-                            Logger.Error(String.Format("Exceção Interna [{2}]: {0}\n{1}", ex.Message, ex.StackTrace, sequencia++));
-                        }
-
-                        if (LattesDatabase.GetValidationErrors() != null)
-                        {
-                            Logger.Error("Erros de Validação:");
-                            foreach (DbEntityValidationResult e in LattesDatabase.GetValidationErrors())
-                            {
-                                foreach (DbValidationError err in e.ValidationErrors)
-                                {
-                                    Logger.Error(" * " + err.ErrorMessage);
-                                }
-                            }
+                            Logger.Error($"Exceção Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                         }
 
                         return false;
@@ -297,19 +293,12 @@ namespace LattesExtractor.DAO
             {
                 lock (logLocker)
                 {
-                    Logger.Error(String.Format("Erros para o Currículo {0}:", curriculumVitae));
-                    Logger.Error(ex.Message);
-                    Logger.Error(ex.StackTrace);
-                    if (ex.InnerException != null)
+                    Logger.Error($"Erros para o Currículo {curriculumVitae}: {ex.Message}\n{ex.StackTrace}");
+                    int sequencia = 1;
+                    while (ex.InnerException != null)
                     {
-                        Logger.Error("Excessão Interna:");
-                        int sequencia = 1;
-                        while (ex.InnerException != null)
-                        {
-                            Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
-                            Logger.Error(ex.StackTrace);
-                            ex = ex.InnerException;
-                        }
+                        ex = ex.InnerException;
+                        Logger.Error($"Exceção Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                     }
                 }
             }

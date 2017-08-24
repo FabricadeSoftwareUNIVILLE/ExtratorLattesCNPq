@@ -79,11 +79,7 @@ namespace LattesExtractor.Controller
 
                 if (professorDAOService.ProcessCurriculumVitaeXML(curriculumVitae, curriculoEntry))
                 {
-                    Logger.Info(String.Format(
-                        "Currículo {0} do Professor {1} processado com sucesso !", 
-                        curriculoEntry.NumeroCurriculo, 
-                        curriculumVitae.DADOSGERAIS.NOMECOMPLETO
-                    ));
+                    Logger.Info($"Currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO} processado com sucesso !");
                     File.Delete(filename);
                 }
 
