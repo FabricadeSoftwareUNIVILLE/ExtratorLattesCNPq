@@ -221,6 +221,11 @@ namespace LattesExtractor
         {
             try
             {
+                if (UseNewCNPqRestService)
+                {
+                    Logger.Error("A opção de utilizar o serviço \"buscacv\" do CNPq esta temporáriamente indisponível até se tornar estável");
+                }
+
                 Logger.Info("Começando Processamento...");
 
                 var processor = new CurriculumVitaeProcessorController(this, CurriculumVitaeForProcess);
