@@ -7,7 +7,6 @@ using System.IO;
 using LattesExtractor.Collections;
 using System.Threading;
 using LattesExtractor.Entities.Database;
-using ShellProgressBar;
 
 namespace LattesExtractor
 {
