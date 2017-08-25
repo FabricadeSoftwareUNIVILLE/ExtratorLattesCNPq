@@ -13,11 +13,16 @@ namespace LattesExtractor
             XmlConfigurator.Configure(new System.IO.FileInfo("LattesExtractor.log4net"));
             var config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
-            LattesModule lm = LattesModule.GetInstance();
+            var lm = LattesModule.GetInstance();
 
             lm.TempDirectory = config.AppSettings.Settings["TempDir"].Value;
-            lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
-            lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
+
+            if (config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"] != null &&
+                config.AppSettings.Settings["LattesCurriculumVitaeQuery"] != null)
+            {
+                lm.LattesCurriculumVitaeODBCConnection = config.AppSettings.Settings["LattesCurriculumVitaeODBCConnection"].Value;
+                lm.LattesCurriculumVitaeQuery = config.AppSettings.Settings["LattesCurriculumVitaeQuery"].Value;
+            }
 
             if (config.AppSettings.Settings["IgnorePedingLastExecution"] != null)
             {
@@ -29,23 +34,36 @@ namespace LattesExtractor
                 lm.ImportFolder = config.AppSettings.Settings["ImportFolder"].Value;
             }
 
+            if (config.AppSettings.Settings["UseNewCNPqRestService"] != null)
+            {
+                lm.UseNewCNPqRestService = config.AppSettings.Settings["UseNewCNPqRestService"].Value.Equals("true") ||
+                    config.AppSettings.Settings["UseNewCNPqRestService"].Value.Equals("1");
+            }
+
+            if (config.AppSettings.Settings["CSVCurriculumValueNumberList"] != null)
+            {
+                lm.CSVCurriculumVitaeNumberList = config.AppSettings.Settings["CSVCurriculumValueNumberList"].Value;
+            }
+
             var options = new Options();
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
                 if (options.InputQualisFile != null && options.InputQualisFile != "")
                 {
-                    // Values are available here
                     if (options.Verbose)
+                    {
                         Console.WriteLine("Arquivo Qualis: {0}", options.InputQualisFile);
+                    }
                     lm.UpdateQualisDataBase(options.InputQualisFile);
                     return;
                 }
 
                 if (options.InputJCRFile != null && options.InputJCRFile != "")
                 {
-                    // Values are available here
                     if (options.Verbose)
+                    {
                         Console.WriteLine("Arquivo JCR Impact Factor: {0}", options.InputJCRFile);
+                    }
                     lm.UpdateJCRImpactFactorDataBase(options.InputJCRFile);
                     return;
                 }
@@ -60,9 +78,18 @@ namespace LattesExtractor
                     lm.ImportFolder = options.FromFolder;
                 }
 
+                if (options.UseNewRestService)
+                {
+                    lm.UseNewCNPqRestService = options.UseNewRestService;
+                }
+
+                if (options.CSVCurriculumVitaeNumberList != null)
+                {
+                    lm.CSVCurriculumVitaeNumberList = options.CSVCurriculumVitaeNumberList;
+                }
+
                 lm.Extract();
             }
-
         }
 
         public static void AddValue(string key, string value)
@@ -74,6 +101,12 @@ namespace LattesExtractor
 
         class Options
         {
+            [Option('n', "usenewrestservice", DefaultValue = false, HelpText = "Será utilizado o serviço REST do CNPq no lugar do WebService")]
+            public bool UseNewRestService { get; set; }
+
+            [Option('c', "cvcsvlist", Required = false, HelpText = "Arquivo CSV para importar a lista de currículos para download")]
+            public string CSVCurriculumVitaeNumberList { get; set; }
+
             [Option('f', "fromfolder", Required = false, HelpText = "Directório contendo os arquivos XML (caso seja informado serão considerados apenas os curriculos já existentes na pasta, não será feita busca no Lattes)")]
             public string FromFolder { get; set; }
 

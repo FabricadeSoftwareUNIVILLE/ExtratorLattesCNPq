@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>LattesExtractor</RootNamespace>
     <AssemblyName>LattesExtractor</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <Install>true</Install>
@@ -28,6 +28,7 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -108,7 +109,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controller\LoadCurriculumVitaeNumberController.cs" />
+    <Compile Include="Controller\DownloadFromRestServiceCurriculumVitaeController.cs" />
+    <Compile Include="Controller\LoadCurriculumVitaeNumberFromCSVController.cs" />
+    <Compile Include="Controller\LoadCurriculumVitaeNumberFromOleDbController.cs" />
     <Compile Include="Controller\LoadJCRTableController.cs" />
     <Compile Include="Controller\LoadQualisTableController.cs" />
     <Compile Include="DAO\JCRDAOService.cs" />
@@ -230,7 +233,8 @@
     <Compile Include="Entities\Database\VinculoAtuacaoProfissional.cs">
       <DependentUpon>LattesDatabase.tt</DependentUpon>
     </Compile>
-    <Compile Include="Service\DownloadCurriculumVitaeService.cs" />
+    <Compile Include="Collections\Channel.cs" />
+    <Compile Include="Service\DownloadCurriculumVitaeWebService.cs" />
     <Compile Include="LattesModule.cs" />
     <Compile Include="Entities\Xml\LMPLCurriculo.cs" />
     <Compile Include="Program.cs" />
@@ -242,7 +246,7 @@
     </Compile>
     <Compile Include="DAO\ProfessorDAOService.cs" />
     <Compile Include="Controller\CurriculumVitaeProcessorController.cs" />
-    <Compile Include="Controller\DownloadCurriculumVitaeController.cs" />
+    <Compile Include="Controller\DownloadFromWebServiceCurriculumVitaeController.cs" />
     <Compile Include="Controller\ImportCurriculumVitaeFromFolderController.cs" />
     <Compile Include="Controller\LoadFromTempDirectory.cs" />
     <Compile Include="Utils.cs" />
@@ -264,6 +268,10 @@
     <None Include="packages.config" />
     <None Include="Properties\app.manifest" />
     <None Include="resources\Consulta_Webqualis.csv" />
+    <None Include="resources\csv_list_sample.csv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="resources\help.csv" />
     <None Include="resources\IDs_Curriculos.local.xls">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -312,8 +320,54 @@
     <Content Include="resources\dblattes_creation_script.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="resources\sample\0373518097057669.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\1005662551597228.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\1249410597196545.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\1441223439317345.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\2707676882754005.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\4158431052286991.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\4647569783371880.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\4988507019104479.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\5112671646704936.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\5984138138332842.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\8355499954192153.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\8646874340523442.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\9212716558220512.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\9652429155976938.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\sample\9815721279098341.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="LattesExtractor.log4net">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>

@@ -1,41 +1,44 @@
-using LattesExtractor.Entities.Database;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Threading;
-using LattesExtractor.Service;
-using log4net;
 using LattesExtractor.Entities;
-using ICSharpCode.SharpZipLib.Core;
-using ICSharpCode.SharpZipLib.Zip;
+using LattesExtractor.Collections;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace LattesExtractor.Controller
 {
     class LoadFromTempDirectory
     {
-        private static readonly ILog Logger = LogManager.GetLogger(typeof(LoadFromTempDirectory).Name);
+        private LattesModule _lattesModule;
+        private string _tempDirectory = null;
+        private Channel<CurriculoEntry> _channel = null;
 
-        public static void LoadCurriculums(LattesModule lattesModule)
+        public LoadFromTempDirectory(LattesModule lattesModule, string tempDirectory, Channel<CurriculoEntry> channel)
         {
-            bool exists = false;
-            foreach(string filename in Directory.EnumerateFiles(lattesModule.TempDirectory))
+            _lattesModule = lattesModule;
+            _tempDirectory = tempDirectory;
+            _channel = channel;
+        }
+
+        public bool HasPendingResumes()
+        {
+            return Directory.GetFiles(this._tempDirectory).Length > 0;
+        }
+
+        public void LoadCurriculums(ManualResetEvent doneEvent)
+        {
+            try
             {
-                string numeroCurriculo = filename.Substring(lattesModule.TempDirectory.Length + 1);
-                numeroCurriculo = numeroCurriculo.Substring(0, numeroCurriculo.Length - 4);
-                lattesModule.AddCurriculumVitaeForProcess(new CurriculoEntry
+                foreach (string filename in Directory.EnumerateFiles(this._tempDirectory))
                 {
-                    NumeroCurriculo = numeroCurriculo,
-                });
-
-                exists = true;
+                    string numeroCurriculo = filename.Substring(this._tempDirectory.Length + 1);
+                    numeroCurriculo = numeroCurriculo.Substring(0, numeroCurriculo.Length - 4);
+                    _channel.Send(new CurriculoEntry { NumeroCurriculo = numeroCurriculo });
+                }
             }
-
-            if (exists)
+            finally
             {
-                Logger.Info(String.Format("Foram encontrados XMLs pendentes na pasta '{0}' !'", lattesModule.TempDirectory));
-                return;
+                doneEvent.Set();
             }
-
         }
     }
 }

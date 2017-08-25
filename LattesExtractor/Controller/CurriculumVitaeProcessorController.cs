@@ -10,124 +10,106 @@ using System.Threading;
 using LattesExtractor.Entities.Xml;
 using LattesExtractor.DAO;
 using log4net;
+using LattesExtractor.Collections;
 
 namespace LattesExtractor.Controller
 {
     class CurriculumVitaeProcessorController
     {
-        private LattesModule lattesModule = null;
-        private int _sequence = 0;
-
         private static readonly ILog Logger = LogManager.GetLogger(typeof(CurriculumVitaeProcessorController).Name);
 
-        internal static void ProcessCurriculumVitaes(LattesModule lattesModule)
+        private LattesModule _lattesModule;
+        private Channel<CurriculoEntry> _curriculumVitaeForProcess;
+        private int _workItemCount = 0;
+        private XmlSerializer _curriculumVitaeUnserializer = new XmlSerializer(typeof(CurriculoVitaeXml));
+
+
+        public CurriculumVitaeProcessorController(
+            LattesModule lattesModule,
+            Channel<CurriculoEntry> curriculumVitaeForProcess
+        )
         {
-            List<Thread> threads = new List<Thread>();
-            int i = 0;
+            _lattesModule = lattesModule;
+            _curriculumVitaeForProcess = curriculumVitaeForProcess;
+        }
 
-            CurriculumVitaeProcessorController pcvt = new CurriculumVitaeProcessorController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(pcvt.ThreadRun)));
-
-            pcvt = new CurriculumVitaeProcessorController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(pcvt.ThreadRun)));
-
-            pcvt = new CurriculumVitaeProcessorController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(pcvt.ThreadRun)));
-
-            pcvt = new CurriculumVitaeProcessorController(lattesModule, i++);
-            threads.Add(new Thread(new ThreadStart(pcvt.ThreadRun)));
-
-            // inicia as threads
-            i = 0;
-            foreach (Thread t in threads)
+        public void ProcessCurriculumVitaes(ManualResetEvent doneEvent)
+        {
+            try
             {
-                t.Name = String.Format("Thread {0}", i);
-                t.Start();
+                var processDoneEvent = new ManualResetEvent(false);
+                foreach (var curriculoEntry in _curriculumVitaeForProcess.Range())
+                {
+                    Interlocked.Increment(ref _workItemCount);
+                    ThreadPool.QueueUserWorkItem(o => ProcessCurriculumVitae(curriculoEntry, processDoneEvent));
+                }
+                if (_workItemCount > 0)
+                {
+                    processDoneEvent.WaitOne();
+                }
             }
-
-            // espera os processos concluirem a execução
-            foreach (Thread t in threads)
+            finally
             {
-                t.Join();
+                doneEvent.Set();
             }
         }
 
-        public CurriculumVitaeProcessorController(LattesModule lattesModule, int seq)
+        private void ProcessCurriculumVitae(CurriculoEntry curriculoEntry, ManualResetEvent doneEvent)
         {
-            this.lattesModule = lattesModule;
-            this._sequence = seq;
-        }
-
-        public void ThreadRun()
-        {
-            XmlSerializer curriculumVitaeUnserializer = new XmlSerializer(typeof(CurriculoVitaeXml));
-
-            XmlDocument curriculumVitaeXml;
-            XDocument curriculumVitaeXDocument;
-            CurriculoVitaeXml curriculumVitae;
-
-            CurriculoEntry curriculoEntry;
-            string filename;
-
-            var lattesDatabase = new LattesDatabase();
-
-            ProfessorDAOService professorDAOService = new ProfessorDAOService(lattesDatabase);
-
-            while (lattesModule.HasNextCurriculumVitaeForProcess)
+            try
             {
-                curriculoEntry = lattesModule.GetNextCurriculumVitaeForProcess();
+                var filename = _lattesModule.GetCurriculumVitaeFileName(curriculoEntry.NumeroCurriculo);
 
-                // para ie caso da thread não conseguir pegar ie ultimo arquivo v tempo
-                if (curriculoEntry == null)
-                    continue;
-
-                filename = lattesModule.GetCurriculumVitaeFileName(curriculoEntry.NumeroCurriculo);
-                //curriculumXMLFile = new FileStream(filename, FileMode.Open);
-
-                curriculumVitaeXml = new XmlDocument();
-                //curriculumVitaeXml.Load(curriculumXMLFile);
+                var curriculumVitaeXml = new XmlDocument();
                 curriculumVitaeXml.Load(filename);
 
-                // nescessário para ie deserialize reconhecer ie Xml
+                // nescessário para o deserialize reconhecer o Xml
                 curriculumVitaeXml.DocumentElement.SetAttribute("xmlns", "http://tempuri.org/LMPLCurriculo");
 
-                curriculumVitaeXDocument = XDocument.Parse(curriculumVitaeXml.InnerXml);
+                var curriculumVitaeXDocument = XDocument.Parse(curriculumVitaeXml.InnerXml);
+                var curriculumVitae = _curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader()) as CurriculoVitaeXml;
+                curriculoEntry.NomeProfessor = curriculumVitae.DADOSGERAIS.NOMECOMPLETO;
 
-                try
-                {
-                    curriculumVitae = (CurriculoVitaeXml)curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader());
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(String.Format("Erro durante a leitura do XML:", ex.Message));
-                    Logger.Error(ex.StackTrace);
-                    if (ex.InnerException != null)
-                    {
-                        Logger.Error("Excessão Interna:");
-                        int sequencia = 1;
-                        while (ex.InnerException != null)
-                        {
-                            ex = ex.InnerException;
-                            Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.Message));
-                            Logger.Error(ex.StackTrace);
-                        }
-                    }
-                    continue;
-                }
+                var professorDAOService = new ProfessorDAOService(new LattesDatabase());
+                Logger.Debug(String.Format(
+                    "Iniciando processamento currículo {0} do Professor {1}...",
+                    curriculoEntry.NumeroCurriculo,
+                    curriculumVitae.DADOSGERAIS.NOMECOMPLETO
+                ));
 
-                // limpa ponteiros
-                curriculumVitaeXDocument = null;
-                curriculumVitaeXml = null;
-
-                Logger.Info(String.Format("Processando XML {0} do Professor {1} [Thread {2}]", curriculoEntry.NumeroCurriculo, curriculumVitae.DADOSGERAIS.NOMECOMPLETO, this._sequence));
-
-                // processa curriculo
                 if (professorDAOService.ProcessCurriculumVitaeXML(curriculumVitae, curriculoEntry))
+                {
+                    Logger.Info($"Currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO} processado com sucesso !");
                     File.Delete(filename);
-                else {
-                    lattesDatabase.Database.Connection.Close();
-                    lattesDatabase = new LattesDatabase();
-                    professorDAOService.LattesDatabase = lattesDatabase;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(String.Format(
+                    "Erro durante a leitura do XML {0}: {1}\n{2}",
+                    curriculoEntry.NumeroCurriculo,
+                    ex.Message,
+                    ex.StackTrace
+                ));
+
+                int sequencia = 1;
+                while (ex.InnerException != null)
+                {
+                    ex = ex.InnerException;
+                    Logger.Error(String.Format(
+                        "Excessão Interna [{0}]: {1}\n{2}",
+                        sequencia++,
+                        ex.Message,
+                        ex.StackTrace
+                    ));
+                }
+            }
+            finally
+            {
+                if (Interlocked.Decrement(ref _workItemCount) == 0)
+                {
+                    doneEvent.Set();
                 }
             }
         }

@@ -166,12 +166,9 @@ namespace LattesExtractor.DAO
         /// <param name="curriculumVitae"></param>
         public bool ProcessCurriculumVitaeXML(CurriculoVitaeXml cvXml, CurriculoEntry curriculumVitae)
         {
-            Professor professor = null;
             bool criarProfessor = false;
             try
             {
-                //LattesDatabase.Configuration.AutoDetectChangesEnabled = false;
-
                 if (cvXml.NUMEROIDENTIFICADOR != null && !cvXml.NUMEROIDENTIFICADOR.Equals("") && cvXml.NUMEROIDENTIFICADOR != curriculumVitae.NumeroCurriculo)
                 {
                     Logger.Error(String.Format("Curriculo {0} solicitado não corresponde ao recebido {1} !", curriculumVitae.NumeroCurriculo, cvXml.NUMEROIDENTIFICADOR));
@@ -183,9 +180,28 @@ namespace LattesExtractor.DAO
 
                 try
                 {
-                    ProcessarCache(cvXml);
+                    if (curriculumVitae.DataUltimaAtualizacao == null)
+                    {
+                        curriculumVitae.DataUltimaAtualizacao = DateTime.ParseExact(
+                            String.Format("{0} {1}", cvXml.DATAATUALIZACAO, cvXml.HORAATUALIZACAO),
+                            Utils.ParseDateFormat(cvXml.FORMATODATAATUALIZACAO) + " %Hmmss",
+                            null
+                        );
+                    }
 
-                    professor = this.ProcurarProfessorPorNumeroCurriculo(curriculumVitae.NumeroCurriculo);
+                    var professor = this.ProcurarProfessorPorNumeroCurriculo(curriculumVitae.NumeroCurriculo);
+
+                    if (professor != null && professor.DataUltimaAtualizacaoCurriculo >= curriculumVitae.DataUltimaAtualizacao)
+                    {
+                        Logger.Info(String.Format(
+                            "Currículo {0} do Professor {1} já esta na última versão.",
+                            curriculumVitae.NumeroCurriculo,
+                            curriculumVitae.NomeProfessor
+                        ));
+                        return true;
+                    }
+
+                    ProcessarCache(cvXml);
 
                     if (professor != null)
                     {
@@ -201,9 +217,6 @@ namespace LattesExtractor.DAO
                     // dados do curriculo
                     professor.NumeroCurriculo = curriculumVitae.NumeroCurriculo;
                     professor.LinkParaCurriculo = String.Format("http://lattes.cnpq.br/{0}", professor.NumeroCurriculo);
-
-                    if (curriculumVitae.DataUltimaAtualizacao == null)
-                        curriculumVitae.DataUltimaAtualizacao = DateTime.ParseExact(String.Format("{0} {1}", cvXml.DATAATUALIZACAO, cvXml.HORAATUALIZACAO), Utils.ParseDateFormat(cvXml.FORMATODATAATUALIZACAO) + " %Hmmss", null);
 
                     professor.DataUltimaAtualizacaoCurriculo = (DateTime)curriculumVitae.DataUltimaAtualizacao;
 
@@ -236,7 +249,10 @@ namespace LattesExtractor.DAO
                     ProcessarAtuacoesProfissionaisEProjetos(professor, cvXml);
 
                     if (criarProfessor)
+                    {
                         LattesDatabase.Professor.Add(professor);
+                    }
+
                     LattesDatabase.SaveChanges(); // salva registros para gerar chaves sequencias
 
                     CriarBaseDeConsulta(professor);
@@ -244,37 +260,29 @@ namespace LattesExtractor.DAO
 
                     return true;
                 }
+                catch (DbEntityValidationException ex)
+                {
+                    lock (logLocker)
+                    {
+                        Logger.Error($"Erros de Validação para o Professor {curriculumVitae.NumeroCurriculo} - {cvXml.DADOSGERAIS.NOMECOMPLETO}: {ex.Message}");
+                        foreach (var err in ex.EntityValidationErrors)
+                        {
+                            Logger.Error($" * {string.Join("\r\n", err.ValidationErrors.Select(v => v.PropertyName + "-" + v.ErrorMessage).ToArray())}");
+                        }
+                        return false;
+                    }
+                }
                 catch (Exception ex)
                 {
                     lock (logLocker)
                     {
-                        Logger.Error(String.Format("Erros para o Professor {0} - {1}",
-                            curriculumVitae.NumeroCurriculo, cvXml.DADOSGERAIS.NOMECOMPLETO));
-                        Logger.Error(ex.Message);
-
-                        if (LattesDatabase.GetValidationErrors() != null)
+                        Logger.Error($"Erros para o Professor {curriculumVitae.NumeroCurriculo} - {cvXml.DADOSGERAIS.NOMECOMPLETO}");
+                        Logger.Error($"Exceção: {ex.Message}\n{ex.StackTrace}");
+                        int sequencia = 1;
+                        while (ex.InnerException != null)
                         {
-                            Logger.Error("Erros de Validação:");
-                            foreach (DbEntityValidationResult e in LattesDatabase.GetValidationErrors())
-                            {
-                                foreach (DbValidationError err in e.ValidationErrors)
-                                {
-                                    Logger.Error(" * " + err.ErrorMessage);
-                                }
-                            }
-                        }
-
-                        Logger.Error(ex.StackTrace);
-                        if (ex.InnerException != null)
-                        {
-                            Logger.Error("Excessão Interna:");
-                            int sequencia = 1;
-                            while (ex.InnerException != null)
-                            {
-                                Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
-                                Logger.Error(ex.StackTrace);
-                                ex = ex.InnerException;
-                            }
+                            ex = ex.InnerException;
+                            Logger.Error($"Exceção Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                         }
 
                         return false;
@@ -285,19 +293,12 @@ namespace LattesExtractor.DAO
             {
                 lock (logLocker)
                 {
-                    Logger.Error(String.Format("Erros para o Currículo {0}:", curriculumVitae));
-                    Logger.Error(ex.Message);
-                    Logger.Error(ex.StackTrace);
-                    if (ex.InnerException != null)
+                    Logger.Error($"Erros para o Currículo {curriculumVitae}: {ex.Message}\n{ex.StackTrace}");
+                    int sequencia = 1;
+                    while (ex.InnerException != null)
                     {
-                        Logger.Error("Excessão Interna:");
-                        int sequencia = 1;
-                        while (ex.InnerException != null)
-                        {
-                            Logger.Error(String.Format("Excessão Interna [{0}]: {1}", sequencia++, ex.InnerException.Message));
-                            Logger.Error(ex.StackTrace);
-                            ex = ex.InnerException;
-                        }
+                        ex = ex.InnerException;
+                        Logger.Error($"Exceção Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                     }
                 }
             }
@@ -331,11 +332,11 @@ namespace LattesExtractor.DAO
                 {
                     ProjetoId = projeto.ProjetoId
                 });
-            
+
             }
-            
+
             cpp = cacheProducoesProjetos[projeto.ProjetoId];
-            
+
             if (!cpp.Producoes.Contains(cp))
                 cpp.Producoes.Add(cp);
         }
@@ -778,7 +779,7 @@ namespace LattesExtractor.DAO
                                                ExtrairAreasConhecimento(profTitular.AREASDOCONHECIMENTO),
                                                ExtrairPalavrasChave(profTitular.PALAVRASCHAVE, profTitular.SETORESDEATIVIDADE));
                     professor.BancaJulgadora.Add(banca);
-                    
+
                     RegistraCacheProducao(profTitular.SEQUENCIAPRODUCAO, "BJ", banca.NaturezaBancaJulgadora,
                         banca.AreaConhecimento.ToList(),
                         banca.PalavraChave.ToList(),
@@ -1012,7 +1013,7 @@ namespace LattesExtractor.DAO
                     banca = LattesDatabase.BancaJulgadora.Create();
 
                     banca.TipoBancaJulgadora = tipo;
-                    banca.TituloBancaJulgadora = titulo;
+                    banca.TituloBancaJulgadora = Utils.SetMaxLength(titulo, 350);
                     banca.AnoBancaJulgadora = anoBanca;
 
                     LattesDatabase.BancaJulgadora.Add(banca);
@@ -1384,7 +1385,7 @@ namespace LattesExtractor.DAO
 
                     banca.TipoBancaDeTrabalho = tipo;
                     banca.NomeDoCandidatoBancaDeTrabalho = nome;
-                    banca.TituloBancaDeTrabalho = titulo;
+                    banca.TituloBancaDeTrabalho = Utils.SetMaxLength(titulo, 350);
                     banca.AnoBancaDeTrabalho = anoBanca;
 
                     LattesDatabase.BancaDeTrabalho.Add(banca);
@@ -1417,7 +1418,8 @@ namespace LattesExtractor.DAO
                                                                           professor.NumeroCurriculo, professor.NomeProfessor));
                                 }
                             }
-                            else {
+                            else
+                            {
 
                                 orien = LattesDatabase.OrientacaoSupervisao.Create();
                                 orien.SequenciaOrientacaoSupervicao = sequencia++;
@@ -1444,7 +1446,7 @@ namespace LattesExtractor.DAO
                                                        mestrado.DETALHAMENTODEORIENTACOESCONCLUIDASPARAMESTRADO.NOMEDOCURSO,
                                                        _NIVEL_FAT_MESTRADO);
 
-                                orien.TituloOrientacaoSupervicao = mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.TITULO;
+                                orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.TITULO, 350);
                                 orien.TituloEmInglesOrientacaoSupervicao = mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.TITULOINGLES;
                                 orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.ANO);
 
@@ -1500,7 +1502,8 @@ namespace LattesExtractor.DAO
                                                                           professor.NumeroCurriculo, professor.NomeProfessor));
                                 }
                             }
-                            else {
+                            else
+                            {
                                 orien = LattesDatabase.OrientacaoSupervisao.Create();
                                 orien.SequenciaOrientacaoSupervicao = sequencia++;
 
@@ -1517,7 +1520,7 @@ namespace LattesExtractor.DAO
                                                        dout.DETALHAMENTODEORIENTACOESCONCLUIDASPARADOUTORADO.NOMEDOCURSO,
                                                        _NIVEL_FAT_DOUTORADO);
 
-                                orien.TituloOrientacaoSupervicao = dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.TITULO;
+                                orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.TITULO, 350);
                                 orien.TituloEmInglesOrientacaoSupervicao = dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.TITULOINGLES;
                                 orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.ANO);
 
@@ -1591,7 +1594,7 @@ namespace LattesExtractor.DAO
                                                        dout.DETALHAMENTODEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.NOMEDOCURSO,
                                                        _NIVEL_FAT_POS_DOUTORADO);
 
-                                orien.TituloOrientacaoSupervicao = dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.TITULO;
+                                orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.TITULO, 350);
                                 orien.TituloEmInglesOrientacaoSupervicao = dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.TITULOINGLES;
                                 orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.ANO);
 
@@ -1647,7 +1650,8 @@ namespace LattesExtractor.DAO
                                                                           professor.NumeroCurriculo, professor.NomeProfessor));
                                 }
                             }
-                            else {
+                            else
+                            {
                                 orien = LattesDatabase.OrientacaoSupervisao.Create();
                                 orien.SequenciaOrientacaoSupervicao = sequencia++;
 
@@ -1669,7 +1673,7 @@ namespace LattesExtractor.DAO
                                                        outras.DETALHAMENTODEOUTRASORIENTACOESCONCLUIDAS.NOMEDOCURSO,
                                                        _NIVEL_FAT_OUTROS);
 
-                                orien.TituloOrientacaoSupervicao = outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TITULO;
+                                orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TITULO, 350);
                                 orien.TituloEmInglesOrientacaoSupervicao = outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TITULOINGLES;
                                 orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.ANO);
 
@@ -1732,7 +1736,8 @@ namespace LattesExtractor.DAO
                                                                       professor.NumeroCurriculo, professor.NomeProfessor));
                             }
                         }
-                        else {
+                        else
+                        {
                             orien = LattesDatabase.OrientacaoSupervisao.Create();
                             orien.SequenciaOrientacaoSupervicao = sequencia++;
 
@@ -1759,7 +1764,7 @@ namespace LattesExtractor.DAO
                                                    mestrado.DETALHAMENTODAORIENTACAOEMANDAMENTODEMESTRADO.NOMECURSO,
                                                    _NIVEL_FAT_MESTRADO);
 
-                            orien.TituloOrientacaoSupervicao = mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.ANO);
 
@@ -1815,7 +1820,8 @@ namespace LattesExtractor.DAO
                                                                       professor.NumeroCurriculo, professor.NomeProfessor));
                             }
                         }
-                        else {
+                        else
+                        {
                             orien = LattesDatabase.OrientacaoSupervisao.Create();
                             orien.SequenciaOrientacaoSupervicao = sequencia++;
 
@@ -1832,7 +1838,7 @@ namespace LattesExtractor.DAO
                                                    dout.DETALHAMENTODAORIENTACAOEMANDAMENTODEDOUTORADO.NOMECURSO,
                                                    _NIVEL_FAT_DOUTORADO);
 
-                            orien.TituloOrientacaoSupervicao = dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.ANO);
 
@@ -1906,7 +1912,7 @@ namespace LattesExtractor.DAO
                                                    dout.DETALHAMENTODAORIENTACAOEMANDAMENTODEPOSDOUTORADO.NOMECURSO,
                                                    _NIVEL_FAT_POS_DOUTORADO);
 
-                            orien.TituloOrientacaoSupervicao = dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.ANO);
 
@@ -1980,7 +1986,7 @@ namespace LattesExtractor.DAO
                                                    espec.DETALHAMENTODAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.NOMECURSO,
                                                    _NIVEL_FAT_ESPECIALIZACAO);
 
-                            orien.TituloOrientacaoSupervicao = espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.ANO);
 
@@ -2057,7 +2063,7 @@ namespace LattesExtractor.DAO
                                                    detalhes.NOMECURSO,
                                                    _NIVEL_FAT_GRADUACAO);
 
-                            orien.TituloOrientacaoSupervicao = dados.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dados.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = dados.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dados.ANO);
 
@@ -2116,7 +2122,8 @@ namespace LattesExtractor.DAO
                                                                       professor.NumeroCurriculo, professor.NomeProfessor));
                             }
                         }
-                        else {
+                        else
+                        {
                             orien = LattesDatabase.OrientacaoSupervisao.Create();
                             orien.SequenciaOrientacaoSupervicao = sequencia++;
 
@@ -2133,7 +2140,7 @@ namespace LattesExtractor.DAO
                                                    detalhes.NOMECURSO,
                                                    "Iniciação Científica");
 
-                            orien.TituloOrientacaoSupervicao = dados.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dados.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = dados.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dados.ANO);
 
@@ -2210,7 +2217,7 @@ namespace LattesExtractor.DAO
                                                    detalhes.NOMECURSO,
                                                    _NIVEL_FAT_OUTROS);
 
-                            orien.TituloOrientacaoSupervicao = dados.TITULODOTRABALHO;
+                            orien.TituloOrientacaoSupervicao = Utils.SetMaxLength(dados.TITULODOTRABALHO, 350);
                             orien.TituloEmInglesOrientacaoSupervicao = dados.TITULODOTRABALHOINGLES;
                             orien.AnoOrientacaoSupervicao = (int)Utils.ParseIntegerOrNull(dados.ANO);
 
@@ -2252,6 +2259,12 @@ namespace LattesExtractor.DAO
                         }
                     }
                 }
+            }
+
+            foreach (var o in professor.OrientacaoSupervisao)
+            {
+                o.InformacoesAdicionaisEmInglesOrientacaoSupervicao = Utils.SetMaxLength(o.InformacoesAdicionaisEmInglesOrientacaoSupervicao, 2000);
+                o.InformacoesAdicionaisOrientacaoSupervicao = Utils.SetMaxLength(o.InformacoesAdicionaisOrientacaoSupervicao, 2000);
             }
         }
 
@@ -3062,7 +3075,7 @@ namespace LattesExtractor.DAO
 
                     evento.InstituicaoEmpresa = instituicao;
                     evento.AnoEvento = anoEvento;
-                    evento.NomeEvento = nomeEvento;
+                    evento.NomeEvento = Utils.SetMaxLength(nomeEvento, 300);
                     evento.CidadeEvento = cidade;
                     evento.PaisEvento = pais;
                     evento.NaturezaEvento = natureza;
@@ -3096,7 +3109,7 @@ namespace LattesExtractor.DAO
             {
                 foreach (var trabalhoEvento in pbXml.TRABALHOSEMEVENTOS)
                 {
-                    pb = GetProducaoBibliografica(_TP_PB_TRABALHO_EVENTOS,
+                    pb = GetProducaoBibliografica(professor, _TP_PB_TRABALHO_EVENTOS,
                                                   trabalhoEvento.DADOSBASICOSDOTRABALHO.TITULODOTRABALHO,
                                                   trabalhoEvento.DADOSBASICOSDOTRABALHO.ANODOTRABALHO);
                     if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3129,7 +3142,7 @@ namespace LattesExtractor.DAO
             {
                 foreach (var artigoPublicado in pbXml.ARTIGOSPUBLICADOS)
                 {
-                    pb = GetProducaoBibliografica(_TP_PB_ARTIGO_PUBLICADO,
+                    pb = GetProducaoBibliografica(professor, _TP_PB_ARTIGO_PUBLICADO,
                                                   artigoPublicado.DADOSBASICOSDOARTIGO.TITULODOARTIGO,
                                                   artigoPublicado.DADOSBASICOSDOARTIGO.ANODOARTIGO);
                     if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3162,7 +3175,7 @@ namespace LattesExtractor.DAO
             {
                 foreach (var artigoAceitoPub in pbXml.ARTIGOSACEITOSPARAPUBLICACAO)
                 {
-                    pb = GetProducaoBibliografica(_TP_PB_ARTIGO_ACEITO_PUBLICACAO,
+                    pb = GetProducaoBibliografica(professor, _TP_PB_ARTIGO_ACEITO_PUBLICACAO,
                                                   artigoAceitoPub.DADOSBASICOSDOARTIGO.TITULODOARTIGO,
                                                   artigoAceitoPub.DADOSBASICOSDOARTIGO.ANODOARTIGO);
                     if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3197,7 +3210,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var livro in pbXml.LIVROSECAPITULOS.LIVROSPUBLICADOSOUORGANIZADOS)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_LIVRO_PUBLICADO_ORGANIZADO,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_LIVRO_PUBLICADO_ORGANIZADO,
                                                       livro.DADOSBASICOSDOLIVRO.TITULODOLIVRO,
                                                       livro.DADOSBASICOSDOLIVRO.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3230,7 +3243,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var capitulo in pbXml.LIVROSECAPITULOS.CAPITULOSDELIVROSPUBLICADOS)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_CAPTIULO_PUBLICADO_ORGANIZADO,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_CAPTIULO_PUBLICADO_ORGANIZADO,
                                                       capitulo.DADOSBASICOSDOCAPITULO.TITULODOCAPITULODOLIVRO,
                                                       capitulo.DADOSBASICOSDOCAPITULO.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3270,7 +3283,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var outra in demais.OUTRAPRODUCAOBIBLIOGRAFICA)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_OUTRA,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_OUTRA,
                                                       outra.DADOSBASICOSDEOUTRAPRODUCAO.TITULO,
                                                       outra.DADOSBASICOSDEOUTRAPRODUCAO.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3315,7 +3328,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var partitura in demais.PARTITURAMUSICAL)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_PARTITURA_MUSICAL,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_PARTITURA_MUSICAL,
                                                       partitura.DADOSBASICOSDAPARTITURA.TITULO,
                                                       partitura.DADOSBASICOSDAPARTITURA.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3348,7 +3361,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var preposfacio in demais.PREFACIOPOSFACIO)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_PREFACIO_POSFACIO,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_PREFACIO_POSFACIO,
                                                       preposfacio.DADOSBASICOSDOPREFACIOPOSFACIO.TITULO,
                                                       preposfacio.DADOSBASICOSDOPREFACIOPOSFACIO.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3381,7 +3394,7 @@ namespace LattesExtractor.DAO
                 {
                     foreach (var traducao in demais.TRADUCAO)
                     {
-                        pb = GetProducaoBibliografica(_TP_PB_TRADUCAO,
+                        pb = GetProducaoBibliografica(professor, _TP_PB_TRADUCAO,
                                                       traducao.DADOSBASICOSDATRADUCAO.TITULO,
                                                       traducao.DADOSBASICOSDATRADUCAO.ANO);
                         if (pb.AnoProducaoBibliografica > professor.DataUltimaPublicacaoCurriculo.Year)
@@ -3424,11 +3437,17 @@ namespace LattesExtractor.DAO
 
                 if (informacoesAdicionais != null)
                 {
-                    if (producaoBibliografica.InformacoesAdicionaisProducaoBibliografica == null || producaoBibliografica.InformacoesAdicionaisProducaoBibliografica == "")
-                        producaoBibliografica.InformacoesAdicionaisProducaoBibliografica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS;
+                    if (producaoBibliografica.InformacoesAdicionaisProducaoBibliografica == null ||
+                        producaoBibliografica.InformacoesAdicionaisProducaoBibliografica.Trim().Length > 0)
+                    {
+                        producaoBibliografica.InformacoesAdicionaisProducaoBibliografica = Utils.SetMaxLength(informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS, 200);
+                    }
 
-                    if (producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica == null || producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica == "")
+                    if (producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica == null ||
+                        producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica.Trim().Length > 0)
+                    {
                         producaoBibliografica.InformacoesAdicionaisEmInglesProducaoBibliografica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAISINGLES;
+                    }
                 }
 
                 if (!producaoBibliografica.DivulgacaoCeTProducaoBibliografica)
@@ -3444,7 +3463,9 @@ namespace LattesExtractor.DAO
                     producaoBibliografica.HomePageProducaoBibliografica = Utils.SetMaxLength(homePage, 300);
 
                 if (producaoBibliografica.DOIProducaoBibliografica == null || producaoBibliografica.DOIProducaoBibliografica == "")
-                    producaoBibliografica.DOIProducaoBibliografica = doi;
+                {
+                    producaoBibliografica.DOIProducaoBibliografica = Utils.SetMaxLength(doi, 55);
+                }
 
                 if (producaoBibliografica.ISBNProducaoBibliografica == null || producaoBibliografica.ISBNProducaoBibliografica == "")
                 {
@@ -3572,7 +3593,7 @@ namespace LattesExtractor.DAO
                     }
                 }
 
-                if (producaoBibliografica.PeriodicoQualis == null || 
+                if (producaoBibliografica.PeriodicoQualis == null ||
                     producaoBibliografica.PeriodicoQualis.TituloPeriodicoQualis == _NAO_INFORMADO)
                     producaoBibliografica.PeriodicoQualis = GetQualis(isnbIssn, nomePeriodico);
 
@@ -3627,9 +3648,24 @@ namespace LattesExtractor.DAO
             }
         }
 
-        private ProducaoBibliografica GetProducaoBibliografica(string tipo, string titulo, string ano)
+        private ProducaoBibliografica GetProducaoBibliografica(Professor professor, string tipo, string titulo, string ano)
         {
-            int anoTrabalho = int.Parse(ano);
+            int anoTrabalho = 1900;
+            try
+            {
+                anoTrabalho = int.Parse(ano);
+            }
+            catch (Exception exception)
+            {
+                Logger.Error(String.Format(
+                    "A Publicação \"{0}\" informado no currículo {1} do Professor {2} possui ano de publicação inválido ({3}), favor revisar o mesmo. Mensagem de erro: {4}",
+                    titulo,
+                    professor.NumeroCurriculo,
+                    professor.NomeProfessor,
+                    ano,
+                    exception.Message
+                ));
+            }
 
             lock (saveLocker)
             {
@@ -3644,7 +3680,7 @@ namespace LattesExtractor.DAO
                     producaoBibliografica = LattesDatabase.ProducaoBibliografica.Create();
 
                     producaoBibliografica.TipoProducaoBibliografica = tipo;
-                    producaoBibliografica.TituloProducaoBibliografica = titulo;
+                    producaoBibliografica.TituloProducaoBibliografica = Utils.SetMaxLength(titulo, 350);
                     producaoBibliografica.TituloEmInglesProducaoBibliografica = "";
                     producaoBibliografica.AnoProducaoBibliografica = anoTrabalho;
                     producaoBibliografica.NaturezaProducaoBibliografica = "";
@@ -3699,7 +3735,7 @@ namespace LattesExtractor.DAO
                     professor.ProducaoTecnica.Add(producaoTecnica);
                     ProcessarPatentes(producaoTecnica, cultivar.DETALHAMENTODACULTIVAR.REGISTROOUPATENTE);
 
-                    RegistraCacheProducao(cultivar.SEQUENCIAPRODUCAO, "PT", _TP_PT_CULTIVAR_REGISTRADA, 
+                    RegistraCacheProducao(cultivar.SEQUENCIAPRODUCAO, "PT", _TP_PT_CULTIVAR_REGISTRADA,
                         producaoTecnica.AreaConhecimento.ToList(),
                         producaoTecnica.PalavraChave.ToList(),
                         producaoTecnica);
@@ -4342,10 +4378,10 @@ namespace LattesExtractor.DAO
                 if (informacoesAdicionais != null)
                 {
                     if (producaoTecnica.InformacoesAdicionaisProducaoTecnica == null || producaoTecnica.InformacoesAdicionaisProducaoTecnica == "")
-                        producaoTecnica.InformacoesAdicionaisProducaoTecnica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS;
+                        producaoTecnica.InformacoesAdicionaisProducaoTecnica = Utils.SetMaxLength(informacoesAdicionais.DESCRICAOINFORMACOESADICIONAIS, 2000);
 
                     if (producaoTecnica.InformacoesAdicionaisEmInglesProducaoTecnica == null || producaoTecnica.InformacoesAdicionaisEmInglesProducaoTecnica == "")
-                        producaoTecnica.InformacoesAdicionaisEmInglesProducaoTecnica = informacoesAdicionais.DESCRICAOINFORMACOESADICIONAISINGLES;
+                        producaoTecnica.InformacoesAdicionaisEmInglesProducaoTecnica = Utils.SetMaxLength(informacoesAdicionais.DESCRICAOINFORMACOESADICIONAISINGLES, 2000);
                 }
 
                 if (producaoTecnica.PotencialInovacaoProducaoTecnica == null)
@@ -4635,7 +4671,7 @@ namespace LattesExtractor.DAO
                     pt = LattesDatabase.ProducaoTecnica.Create();
 
                     pt.TipoProducaoTecnica = tipoProducaoTecnica;
-                    pt.TituloProducaoTecnica = titulo;
+                    pt.TituloProducaoTecnica = Utils.SetMaxLength(titulo, 350);
                     pt.TituloEmInglesProducaoTecnica = "";
                     pt.AnoProducaoTecnica = anoProducao;
 
@@ -4654,7 +4690,7 @@ namespace LattesExtractor.DAO
                 if (registrosXml != null)
                 {
                     producaoTecnica.PatentiadoOuRegistradoProducaoTecnica = true;
-                    
+
                     PatenteRegistro patente = null;
                     string tipoPatente;
                     foreach (var regPat in registrosXml)
@@ -4779,19 +4815,21 @@ namespace LattesExtractor.DAO
 
                                     if (part == null)
                                     {
-                                        // adiciona v partipação do professor em questão
                                         part = LattesDatabase.ParticipacaoEmProjeto.Create();
                                         professor.ParticipacaoEmProjeto.Add(part);
                                         part.Projeto = projeto;
                                     }
 
-                                    // TODO voltar aqui
-
-                                    foreach (var partXml in pdp.EQUIPEDOPROJETO)
+                                    if (pdp.EQUIPEDOPROJETO != null)
                                     {
-                                        if (professor.NomeProfessor == partXml.NOMECOMPLETO
-                                        || professor.NumeroCurriculo.Trim() == partXml.NROIDCNPQ.Trim())
-                                            part.ResponsavelParticipacaoEmProjeto = TraduzirFlags(partXml.FLAGRESPONSAVEL.ToString());
+                                        foreach (var partXml in pdp.EQUIPEDOPROJETO)
+                                        {
+                                            if (professor.NomeProfessor == partXml.NOMECOMPLETO ||
+                                                (partXml.NROIDCNPQ != null && professor.NumeroCurriculo.Trim() == partXml.NROIDCNPQ.Trim()))
+                                            {
+                                                part.ResponsavelParticipacaoEmProjeto = TraduzirFlags(partXml.FLAGRESPONSAVEL.ToString());
+                                            }
+                                        }
                                     }
 
                                     if (pdp.FINANCIADORESDOPROJETO != null)
@@ -4826,7 +4864,7 @@ namespace LattesExtractor.DAO
                             }
                         }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Projetos: {0}", projetos);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Projetos: {0}", projetos), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4855,7 +4893,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", ccc.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Especificação: {0}", ccc.ESPECIFICACAO);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Especificação: {0}", ccc.ESPECIFICACAO), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4884,7 +4922,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", outra.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Atividade Realizada: {0}", outra.ATIVIDADEREALIZADA);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Atividade Realizada: {0}", outra.ATIVIDADEREALIZADA), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4914,10 +4952,15 @@ namespace LattesExtractor.DAO
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", tm.ANOFIM);
 
                         treinamentos = "";
-                        foreach (TREINAMENTO d in tm.TREINAMENTO)
-                            treinamentos += d.Value + ", ";
+                        if (tm.TREINAMENTO != null)
+                        {
+                            foreach (TREINAMENTO d in tm.TREINAMENTO)
+                            {
+                                treinamentos += d.Value + ", ";
+                            }
+                        }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Treinamentos Ministrados: {0}", treinamentos);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Treinamentos Ministrados: {0}", treinamentos), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4946,7 +4989,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", eu.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Atividade Realizada: {0}", eu.ATIVIDADEDEEXTENSAOREALIZADA);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Atividade Realizada: {0}", eu.ATIVIDADEDEEXTENSAOREALIZADA), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4975,7 +5018,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", se.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Serviço Realizado: {0}", se.SERVICOREALIZADO);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Serviço Realizado: {0}", se.SERVICOREALIZADO), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5004,7 +5047,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", estagio.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Estágio Realizado: {0}", estagio.ESTAGIOREALIZADO);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Estágio Realizado: {0}", estagio.ESTAGIOREALIZADO), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5033,13 +5076,18 @@ namespace LattesExtractor.DAO
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", ensino.ANOFIM);
 
                         disciplinas = "";
-                        foreach (DISCIPLINA d in ensino.DISCIPLINA)
-                            disciplinas += d.Value + ", ";
+                        if (ensino.DISCIPLINA != null)
+                        {
+                            foreach (DISCIPLINA d in ensino.DISCIPLINA)
+                            {
+                                disciplinas += d.Value + ", ";
+                            }
+                        }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Curso Ministrado: {0} - {1}; Disciplinas Ministradas: {2}",
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Curso Ministrado: {0} - {1}; Disciplinas Ministradas: {2}",
                                                                                 ensino.CODIGOCURSO,
                                                                                 ensino.NOMECURSO,
-                                                                                disciplinas);
+                                                                                disciplinas), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5099,9 +5147,9 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", dea.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = String.Format("Cargo Ou Função: {0}",
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Cargo Ou Função: {0}",
                                                                                 TraduzirCargoOuFuncao(dea.FORMATOCARGOOUFUNCAO.ToString(),
-                                                                                                      dea.CARGOOUFUNCAO));
+                                                                                                      dea.CARGOOUFUNCAO)), 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5154,7 +5202,7 @@ namespace LattesExtractor.DAO
                             else
                                 vinculo.TipoVinculoVinculoAtuacaoProfissional = TraduzirTipoVinculo(v.TIPODEVINCULO.ToString());
 
-                            vinculo.DescricaoVinculoAtuacaoProfissional = v.OUTRASINFORMACOES;
+                            vinculo.DescricaoVinculoAtuacaoProfissional = Utils.SetMaxLength(v.OUTRASINFORMACOES, 2000);
 
                             professor.VinculoAtuacaoProfissional.Add(vinculo);
                         }
@@ -5205,7 +5253,7 @@ namespace LattesExtractor.DAO
                     projeto.NomeEmInglesProjeto = nomeIngles;
 
                 if (projeto.InformacoesAdicionaisProjeto == null || projeto.InformacoesAdicionaisProjeto == "")
-                    projeto.InformacoesAdicionaisProjeto = descricao;
+                    projeto.InformacoesAdicionaisProjeto = Utils.SetMaxLength(descricao, 4000);
 
                 if (projeto.InformacoesAdicionaisEmInglesProjeto == null || projeto.InformacoesAdicionaisEmInglesProjeto == "")
                     projeto.InformacoesAdicionaisEmInglesProjeto = descricaoIngles;
@@ -6343,8 +6391,8 @@ namespace LattesExtractor.DAO
                 //premioTitulo.ProfessorId = professor.ProfessorId;
                 premioTitulo.SequenciaPremioOuTitulo = sequencia++;
                 premioTitulo.EntidadePromotoraPremioOuTitulo = premio.NOMEDAENTIDADEPROMOTORA;
-                premioTitulo.NomePremioOuTitulo = premio.NOMEDOPREMIOOUTITULO;
-                premioTitulo.NomePremioOuTituloEmIngles = premio.NOMEDOPREMIOOUTITULOINGLES;
+                premioTitulo.NomePremioOuTitulo = Utils.SetMaxLength(premio.NOMEDOPREMIOOUTITULO, 250);
+                premioTitulo.NomePremioOuTituloEmIngles = Utils.SetMaxLength(premio.NOMEDOPREMIOOUTITULOINGLES, 250);
                 premioTitulo.AnoPremioOuTitulo = (int)Utils.ParseIntegerOrNull(premio.ANODAPREMIACAO);
                 professor.PremioOuTitulo.Add(premioTitulo);
                 //LattesDatabase.PremioOuTitulo.Add(premioTitulo);
@@ -6371,22 +6419,29 @@ namespace LattesExtractor.DAO
         private void ProcessarIdiomas(Professor professor, CurriculoVitaeXml cvXml)
         {
             if (cvXml.DADOSGERAIS.IDIOMAS == null)
+            {
                 return;
+            }
 
-            IdiomasProfessor idiomasProfessor = null;
             foreach (IDIOMA idiomaXml in cvXml.DADOSGERAIS.IDIOMAS)
             {
-                idiomasProfessor = LattesDatabase.IdiomasProfessor.Create();
-                idiomasProfessor.Idioma = GetIdioma(idiomaXml.DESCRICAODOIDIOMA);
-                idiomasProfessor.Professor = professor;
-
-                idiomasProfessor.NomeIdioma = idiomasProfessor.Idioma.NomeIdioma;
-                idiomasProfessor.ProeficienciaCompreensaoProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADECOMPREENSAO.ToString());
-                idiomasProfessor.ProeficienciaEscritaProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADEESCRITA.ToString());
-                idiomasProfessor.ProeficienciaLeituraProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADELEITURA.ToString());
-                idiomasProfessor.ProeficienciaFalaProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADEFALA.ToString());
-
-                professor.IdiomasProfessor.Add(idiomasProfessor);
+                var idioma = GetIdioma(idiomaXml.DESCRICAODOIDIOMA);
+                if (professor.IdiomasProfessor.Any(ip => ip.Idioma == idioma))
+                {
+                    continue;
+                }
+                professor.IdiomasProfessor.Add(
+                    new IdiomasProfessor
+                    {
+                        Idioma = idioma,
+                        Professor = professor,
+                        NomeIdioma = idioma.NomeIdioma,
+                        ProeficienciaCompreensaoProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADECOMPREENSAO.ToString()),
+                        ProeficienciaEscritaProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADEESCRITA.ToString()),
+                        ProeficienciaLeituraProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADELEITURA.ToString()),
+                        ProeficienciaFalaProfessor = TranduzirProeficiencia(idiomaXml.PROFICIENCIADEFALA.ToString()),
+                    }
+                );
             }
         }
 
@@ -7021,7 +7076,7 @@ namespace LattesExtractor.DAO
                     enderecoP.ProfessorProfissional.Remove(professor);
                     if (enderecoP.ProfessorResidencial.Count == 0
                         && enderecoP.ProfessorProfissional.Count == 0)
-                        LattesDatabase.Endereco.Remove(enderecoP); // eu não estiver relacionado v nenhum professor, então elimina
+                        LattesDatabase.Endereco.Remove(enderecoP); // se não estiver relacionado com nenhum professor, então elimina
                 }
 
                 var enderecoR = professor.EnderecoResidencial;
@@ -7030,7 +7085,7 @@ namespace LattesExtractor.DAO
                     enderecoR.ProfessorResidencial.Remove(professor);
                     if (enderecoR.ProfessorResidencial.Count == 0
                         && enderecoR.ProfessorProfissional.Count == 0)
-                        LattesDatabase.Endereco.Remove(enderecoR); // eu não estiver relacionado v nenhum professor, então elimina
+                        LattesDatabase.Endereco.Remove(enderecoR); // se não estiver relacionado com nenhum professor, então elimina
                 }
 
                 var formacoes = professor.FormacaoAcademicaTitulacao.ToArray();
@@ -7216,17 +7271,24 @@ namespace LattesExtractor.DAO
 
             cacheCursos.Clear();
 
-            foreach (var ic in cvXml.DADOSCOMPLEMENTARES.INFORMACOESADICIONAISCURSOS)
+            if (cvXml.DADOSCOMPLEMENTARES.INFORMACOESADICIONAISCURSOS != null)
             {
-                if (!cacheCursos.ContainsKey(ic.CODIGOCURSO))
+                foreach (var ic in cvXml.DADOSCOMPLEMENTARES.INFORMACOESADICIONAISCURSOS)
                 {
-                    cc = new CacheCurso();
-                    cc.codigo = ic.CODIGOCURSO;
-                    cc.area = GetAreaConhecimento(ic.NOMEGRANDEAREADOCONHECIMENTO.ToString(),
-                                                  ic.NOMEDAAREADOCONHECIMENTO,
-                                                  ic.NOMEDASUBAREADOCONHECIMENTO,
-                                                  ic.NOMEDAESPECIALIDADE);
-                    cacheCursos.Add(cc.codigo, cc);
+                    if (!cacheCursos.ContainsKey(ic.CODIGOCURSO))
+                    {
+                        cc = new CacheCurso
+                        {
+                            codigo = ic.CODIGOCURSO,
+                            area = GetAreaConhecimento(
+                                ic.NOMEGRANDEAREADOCONHECIMENTO.ToString(),
+                                ic.NOMEDAAREADOCONHECIMENTO,
+                                ic.NOMEDASUBAREADOCONHECIMENTO,
+                                ic.NOMEDAESPECIALIDADE
+                            )
+                        };
+                        cacheCursos.Add(cc.codigo, cc);
+                    }
                 }
             }
         }
