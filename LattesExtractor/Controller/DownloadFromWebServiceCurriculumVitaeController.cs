@@ -43,7 +43,7 @@ namespace LattesExtractor.Controller
             finally
             {
                 doneEvent.Set();
-                Logger.Info(String.Format("Download terminou"));
+                Logger.Info("Download terminou");
             }
         }
 
@@ -53,10 +53,7 @@ namespace LattesExtractor.Controller
             {
                 if (curriculumVitae.NumeroCurriculo == null || curriculumVitae.NumeroCurriculo.Trim().Length == 0)
                 {
-                    Logger.Error(String.Format(
-                        "O número do curríuculo Lattes do professor {0} não foi encontrado",
-                        curriculumVitae.NomeProfessor
-                    ));
+                    Logger.Error($"O número do curríuculo Lattes do professor {curriculumVitae.NomeProfessor} não foi encontrado");
                     return;
                 }
 
@@ -88,20 +85,15 @@ namespace LattesExtractor.Controller
 
                 if (curriculumVitae.NomeProfessor == null || curriculumVitae.NomeProfessor.Trim().Length == 0)
                 {
-                    Logger.Info(String.Format("Curriculo {0} baixado", curriculumVitae.NumeroCurriculo));
+                    Logger.Info($"Curriculo {curriculumVitae.NumeroCurriculo} baixado");
                     return;
                 }
 
-                Logger.Info(String.Format("Curriculo {0} - {1} baixado", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
+                Logger.Info($"Curriculo {curriculumVitae.NumeroCurriculo} - {curriculumVitae.NomeProfessor} baixado");
             }
             catch (Exception exception)
             {
-                Logger.Error(String.Format(
-                    "Erro ao buscar o currículo {0}, mensagem: {1}\n{2}",
-                    curriculumVitae.NumeroCurriculo,
-                    exception.Message,
-                    exception.StackTrace
-                ));
+                Logger.Error($"Erro ao buscar o currículo {curriculumVitae.NumeroCurriculo}, mensagem: {exception.Message}\n{exception.StackTrace}");
             }
         }
     }

@@ -71,11 +71,7 @@ namespace LattesExtractor.Controller
                 curriculoEntry.NomeProfessor = curriculumVitae.DADOSGERAIS.NOMECOMPLETO;
 
                 var professorDAOService = new ProfessorDAOService(new LattesDatabase());
-                Logger.Debug(String.Format(
-                    "Iniciando processamento currículo {0} do Professor {1}...",
-                    curriculoEntry.NumeroCurriculo,
-                    curriculumVitae.DADOSGERAIS.NOMECOMPLETO
-                ));
+                Logger.Debug($"Iniciando processamento currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO}...");
 
                 if (professorDAOService.ProcessCurriculumVitaeXML(curriculumVitae, curriculoEntry))
                 {
@@ -86,23 +82,13 @@ namespace LattesExtractor.Controller
             }
             catch (Exception ex)
             {
-                Logger.Error(String.Format(
-                    "Erro durante a leitura do XML {0}: {1}\n{2}",
-                    curriculoEntry.NumeroCurriculo,
-                    ex.Message,
-                    ex.StackTrace
-                ));
+                Logger.Error($"Erro durante a leitura do XML {curriculoEntry.NumeroCurriculo}: {ex.Message}\n{ex.StackTrace}");
 
                 int sequencia = 1;
                 while (ex.InnerException != null)
                 {
                     ex = ex.InnerException;
-                    Logger.Error(String.Format(
-                        "Excessão Interna [{0}]: {1}\n{2}",
-                        sequencia++,
-                        ex.Message,
-                        ex.StackTrace
-                    ));
+                    Logger.Error($"Excessão Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                 }
             }
             finally

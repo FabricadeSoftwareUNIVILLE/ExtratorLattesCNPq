@@ -31,13 +31,17 @@ namespace LattesExtractor.Service
 
             if (curriculumVitae.NumeroCurriculo == null || curriculumVitae.NumeroCurriculo == "")
             {
-                Logger.Info(String.Format("Buscando Número do Currículo do Professor {0}", curriculumVitae.NomeProfessor));
+                Logger.Info(
+                    $"Buscando Número do Currículo do Professor {curriculumVitae.NomeProfessor}"
+                );
                 curriculumVitae.NumeroCurriculo = ws.getIdentificadorCNPq(curriculumVitae.CPF, curriculumVitae.NomeProfessor, curriculumVitae.DataNascimento);
 
                 if (curriculumVitae.NumeroCurriculo == null || curriculumVitae.NumeroCurriculo == "" || curriculumVitae.NumeroCurriculo.Contains("ERRO"))
                     return null;
 
-                Logger.Info(String.Format("Número do Currículo do Professor {0} encontrado: {1}", curriculumVitae.NomeProfessor, curriculumVitae.NumeroCurriculo));
+                Logger.Info(
+                    $"Número do Currículo do Professor {curriculumVitae.NomeProfessor} encontrado: {curriculumVitae.NumeroCurriculo}"
+                );
             }
 
             // verificar se a data de atualizacao do CV é maior que a do sistema
@@ -64,7 +68,9 @@ namespace LattesExtractor.Service
 
             if (zip == null || zip.Length == 0)
             {
-                Logger.Error(String.Format("Aconteceu um erro ao tentar buscar o currículo de Número {0}, favor verificar o mesmo", curriculumVitae.NumeroCurriculo));
+                Logger.Error(
+                    $"Aconteceu um erro ao tentar buscar o currículo de Número {curriculumVitae.NumeroCurriculo}, favor verificar o mesmo"
+                );
                 return null;
             }
 
@@ -87,7 +93,7 @@ namespace LattesExtractor.Service
         {
             var db = new LattesDatabase();
             var p = db.Professor.FirstOrDefault(prof => prof.NumeroCurriculo == numeroCurriculo);
-            
+
             if (p == null)
             {
                 return null;

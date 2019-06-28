@@ -38,13 +38,13 @@ namespace LattesExtractor.Controller
             {
                 if (!Directory.Exists(_importFolder))
                 {
-                    Logger.Info(String.Format("Pasta de trabalho não foi encontrado ({0})", _importFolder));
+                    Logger.Info($"Pasta de trabalho não foi encontrado ({_importFolder})");
                     return;
                 }
 
                 if (Directory.GetFiles(_importFolder).Length == 0)
                 {
-                    throw new Exception(String.Format("Não foram encontrados currículos na pasta {0} !", _importFolder));
+                    throw new Exception($"Não foram encontrados currículos na pasta {_importFolder} !");
                 }
 
                 var unzipDoneEvent = new ManualResetEvent(false);
@@ -100,12 +100,7 @@ namespace LattesExtractor.Controller
             }
             catch (ZipException exception)
             {
-                Logger.Error(String.Format(
-                    "Erro ao importar currículo {2}: {0}\n{1}",
-                    exception.Message,
-                    exception.StackTrace,
-                    curriculumVitae.NumeroCurriculo
-                ));
+                Logger.Error($"Erro ao importar currículo {curriculumVitae.NumeroCurriculo}: {exception.Message}\n{exception.StackTrace}");
             }
             finally
             {

@@ -72,7 +72,7 @@ namespace LattesExtractor.Controller
                 {
                     doneEvent.Set();
                 }
-                Logger.Info(String.Format("Download terminou"));
+                Logger.Info("Download terminou");
             }
         }
 
@@ -100,10 +100,7 @@ namespace LattesExtractor.Controller
 
                 if (response.CodRhCript == null || response.CodRhCript.Trim().Length == 0)
                 {
-                    Logger.Error(String.Format(
-                        "Não foi possível baixar o currículo de número {0}",
-                        curriculumVitae.NumeroCurriculo
-                    ));
+                    Logger.Error($"Não foi possível baixar o currículo de número {curriculumVitae.NumeroCurriculo}");
                     return;
                 }
 
@@ -111,7 +108,7 @@ namespace LattesExtractor.Controller
 
                 if (NeedsToBeUpdated(curriculumVitae, response) == false)
                 {
-                    Logger.Info(String.Format("Currículo {0} - {1} já esta atualizado.", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
+                    Logger.Info($"Currículo {curriculumVitae.NumeroCurriculo} - {curriculumVitae.NomeProfessor} já esta atualizado.");
                     return;
                 }
 
@@ -119,21 +116,17 @@ namespace LattesExtractor.Controller
 
                 if (curriculumVitae.NomeProfessor == null || curriculumVitae.NomeProfessor.Trim().Length == 0)
                 {
-                    Logger.Info(String.Format("Curriculo {0} baixado", curriculumVitae.NumeroCurriculo));
+                    Logger.Info($"Curriculo {curriculumVitae.NumeroCurriculo} baixado");
                     return;
                 }
 
-                Logger.Info(String.Format("Curriculo {0} - {1} baixado", curriculumVitae.NumeroCurriculo, curriculumVitae.NomeProfessor));
+                Logger.Info($"Curriculo {curriculumVitae.NumeroCurriculo} - {curriculumVitae.NomeProfessor} baixado");
             }
             catch (WebException exception)
             {
-                Logger.Error(String.Format(
-                    "Erro ao realizar requisão do Currículo {2} (Tentativas Sobrando {3}): {0}\n{1}",
-                    exception.Message,
-                    exception.StackTrace,
-                    curriculumVitae.NumeroCurriculo,
-                    retryMessage.PendingRetries
-                ));
+                Logger.Error(
+                    $"Erro ao realizar requisão do Currículo {curriculumVitae.NumeroCurriculo} (Tentativas Sobrando {retryMessage.PendingRetries}): {exception.Message}\n{exception.StackTrace}"
+                );
                 retryMessage.PendingRetries--;
                 if (retryMessage.PendingRetries > 0)
                 {
@@ -156,11 +149,7 @@ namespace LattesExtractor.Controller
         private void DownloadXml(CurriculoEntry curriculumVitae, MetadataResponse response, WebClient wc)
         {
             var link = String.Format(_urlDownloadXml, response.CodRhCript);
-            Logger.Debug(String.Format(
-                "Currículo {0} marcado para download ({1})...",
-                curriculumVitae.NumeroCurriculo,
-                link
-            ));
+            Logger.Debug($"Currículo {curriculumVitae.NumeroCurriculo} marcado para download ({link})...");
             var stream = wc.OpenRead(link);
 
             if (File.Exists(_lattesModule.GetCurriculumVitaeFileName(curriculumVitae.NumeroCurriculo)))
@@ -197,7 +186,7 @@ namespace LattesExtractor.Controller
             }
 
             var dataAtualizacaoLattes = DateTime.ParseExact(
-                String.Format("{0} {1}", response.Document.DataAtualizacao, horaAtualizacao),
+                $"{response.Document.DataAtualizacao} {horaAtualizacao}",
                 "ddMMyyyy %Hmmss",
                 null
             );

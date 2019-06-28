@@ -150,7 +150,7 @@ namespace LattesExtractor
                 var loadFromTempDirectory = new LoadFromTempDirectory(this, TempDirectory, CurriculumVitaeForProcess);
                 if (loadFromTempDirectory.HasPendingResumes())
                 {
-                    Logger.Info(String.Format("Foram encontrados XMLs pendentes na pasta '{0}' !'", TempDirectory));
+                    Logger.Info($"Foram encontrados XMLs pendentes na pasta '{TempDirectory}' !'");
                     QueueThreadGetCurriculumVitae(loadFromTempDirectory.LoadCurriculums);
                     return;
                 }
@@ -158,7 +158,7 @@ namespace LattesExtractor
 
             if (ImportFolder != null)
             {
-                Logger.Info(String.Format("Lendo Currículos do diretório '{0}'...", ImportFolder));
+                Logger.Info($"Lendo Currículos do diretório '{ImportFolder}'...");
                 var importFromFolder = new ImportCurriculumVitaeFromFolderController(
                     this,
                     ImportFolder, 
@@ -258,14 +258,14 @@ namespace LattesExtractor
 
         private void ShowException(Exception ex)
         {
-            Logger.Error(String.Format("Erros durante a execução: {0}\n{2}", ex.Message, ex.StackTrace));
+            Logger.Error($"Erros durante a execução: {ex.Message}\n{ex.StackTrace}");
             if (ex.InnerException != null)
             {
                 int sequencia = 1;
                 while (ex.InnerException != null)
                 {
                     ex = ex.InnerException;
-                    Logger.Error(String.Format("Excessão Interna [{0}]: {1}\n{2}", sequencia++, ex.Message, ex.StackTrace));
+                    Logger.Error($"Excessão Interna [{sequencia++}]: {ex.Message}\n{ex.StackTrace}");
                 }
             }
         }
@@ -286,7 +286,7 @@ namespace LattesExtractor
 
         public string GetCurriculumVitaeFileName(string curriculumVitaeNumber)
         {
-            return String.Format("{0}{1}{2}.xml", this.TempDirectory, Path.DirectorySeparatorChar, curriculumVitaeNumber);
+            return $"{this.TempDirectory}{Path.DirectorySeparatorChar}{curriculumVitaeNumber}.xml";
         }
     }
 }
