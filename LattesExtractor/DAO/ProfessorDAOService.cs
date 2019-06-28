@@ -171,7 +171,7 @@ namespace LattesExtractor.DAO
             {
                 if (cvXml.NUMEROIDENTIFICADOR != null && !cvXml.NUMEROIDENTIFICADOR.Equals("") && cvXml.NUMEROIDENTIFICADOR != curriculumVitae.NumeroCurriculo)
                 {
-                    Logger.Error(String.Format("Curriculo {0} solicitado não corresponde ao recebido {1} !", curriculumVitae.NumeroCurriculo, cvXml.NUMEROIDENTIFICADOR));
+                    Logger.Error($"Curriculo {curriculumVitae.NumeroCurriculo} solicitado não corresponde ao recebido {cvXml.NUMEROIDENTIFICADOR} !");
                     return false;
                 }
 
@@ -183,7 +183,7 @@ namespace LattesExtractor.DAO
                     if (curriculumVitae.DataUltimaAtualizacao == null)
                     {
                         curriculumVitae.DataUltimaAtualizacao = DateTime.ParseExact(
-                            String.Format("{0} {1}", cvXml.DATAATUALIZACAO, cvXml.HORAATUALIZACAO),
+                            $"{cvXml.DATAATUALIZACAO} {cvXml.HORAATUALIZACAO}",
                             Utils.ParseDateFormat(cvXml.FORMATODATAATUALIZACAO) + " %Hmmss",
                             null
                         );
@@ -193,11 +193,7 @@ namespace LattesExtractor.DAO
 
                     if (professor != null && professor.DataUltimaAtualizacaoCurriculo >= curriculumVitae.DataUltimaAtualizacao)
                     {
-                        Logger.Info(String.Format(
-                            "Currículo {0} do Professor {1} já esta na última versão.",
-                            curriculumVitae.NumeroCurriculo,
-                            curriculumVitae.NomeProfessor
-                        ));
+                        Logger.Info($"Currículo {curriculumVitae.NumeroCurriculo} do Professor {curriculumVitae.NomeProfessor} já esta na última versão.");
                         return true;
                     }
 
@@ -216,7 +212,7 @@ namespace LattesExtractor.DAO
 
                     // dados do curriculo
                     professor.NumeroCurriculo = curriculumVitae.NumeroCurriculo;
-                    professor.LinkParaCurriculo = String.Format("http://lattes.cnpq.br/{0}", professor.NumeroCurriculo);
+                    professor.LinkParaCurriculo = $"http://lattes.cnpq.br/{professor.NumeroCurriculo}";
 
                     professor.DataUltimaAtualizacaoCurriculo = (DateTime)curriculumVitae.DataUltimaAtualizacao;
 
@@ -939,15 +935,15 @@ namespace LattesExtractor.DAO
                         switch (tipo)
                         {
                             case "ACADEMICO":
-                                natureza = String.Format("{0} (Acadêmico)", natureza);
+                                natureza = $"{natureza} (Acadêmico)";
                                 break;
                             case "PROFISSIONALIZANTE":
-                                natureza = String.Format("{0} (Profissionalizante)", natureza);
+                                natureza = $"{natureza} (Profissionalizante)";
                                 break;
                             case "NAO_INFORMADO":
                                 break;
                             default:
-                                natureza = String.Format("{0} ({1})", natureza, tipo);
+                                natureza = $"{natureza} ({tipo})";
                                 break;
                         }
                     }
@@ -1304,15 +1300,15 @@ namespace LattesExtractor.DAO
                         switch (tipo)
                         {
                             case "ACADEMICO":
-                                natureza = String.Format("{0} (Acadêmico)", natureza);
+                                natureza = $"{natureza} (Acadêmico)";
                                 break;
                             case "PROFISSIONALIZANTE":
-                                natureza = String.Format("{0} (Profissionalizante)", natureza);
+                                natureza = $"{natureza} (Profissionalizante)";
                                 break;
                             case "NAO_INFORMADO":
                                 break;
                             default:
-                                natureza = String.Format("{0} ({1})", natureza, tipo);
+                                natureza = $"{natureza} ({tipo})";
                                 break;
                         }
                     }
@@ -1413,9 +1409,9 @@ namespace LattesExtractor.DAO
                             {
                                 lock (logLocker)
                                 {
-                                    Logger.Error(String.Format("A Orientação ou Supervisão Concluída de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                          mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.TITULO,
-                                                                          professor.NumeroCurriculo, professor.NomeProfessor));
+                                    Logger.Error(
+                                        $"A Orientação ou Supervisão Concluída de nome \"{mestrado.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAMESTRADO.TITULO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                    );
                                 }
                             }
                             else
@@ -1497,9 +1493,9 @@ namespace LattesExtractor.DAO
                             {
                                 lock (logLocker)
                                 {
-                                    Logger.Error(String.Format("A Orientação ou Supervisão Concluída de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                          dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.TITULO,
-                                                                          professor.NumeroCurriculo, professor.NomeProfessor));
+                                    Logger.Error(
+                                        $"A Orientação ou Supervisão Concluída de nome \"{dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARADOUTORADO.TITULO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                    );
                                 }
                             }
                             else
@@ -1571,9 +1567,9 @@ namespace LattesExtractor.DAO
                             {
                                 lock (logLocker)
                                 {
-                                    Logger.Error(String.Format("A Orientação ou Supervisão Concluída de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                          dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.TITULO,
-                                                                          professor.NumeroCurriculo, professor.NomeProfessor));
+                                    Logger.Error(
+                                        $"A Orientação ou Supervisão Concluída de nome \"{dout.DADOSBASICOSDEORIENTACOESCONCLUIDASPARAPOSDOUTORADO.TITULO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                    );
                                 }
                             }
                             else
@@ -1645,9 +1641,9 @@ namespace LattesExtractor.DAO
                             {
                                 lock (logLocker)
                                 {
-                                    Logger.Error(String.Format("A Orientação ou Supervisão Concluída de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                          outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TITULO,
-                                                                          professor.NumeroCurriculo, professor.NomeProfessor));
+                                    Logger.Error(
+                                        $"A Orientação ou Supervisão Concluída de nome \"{outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TITULO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                    );
                                 }
                             }
                             else
@@ -1660,9 +1656,7 @@ namespace LattesExtractor.DAO
 
                                 if (outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TIPO != null
                                     && outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TIPO != "")
-                                    orien.NaturezaOrientacaoSupervicao = String.Format("{0} ({1})",
-                                                                                       orien.NaturezaOrientacaoSupervicao,
-                                                                                       outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TIPO);
+                                    orien.NaturezaOrientacaoSupervicao = $"{orien.NaturezaOrientacaoSupervicao} ({outras.DADOSBASICOSDEOUTRASORIENTACOESCONCLUIDAS.TIPO})";
 
                                 orien.InstituicaoEmpresa = GetInstituicaoEmpresa(outras.DETALHAMENTODEOUTRASORIENTACOESCONCLUIDAS.CODIGOINSTITUICAO,
                                                                                  outras.DETALHAMENTODEOUTRASORIENTACOESCONCLUIDAS.NOMEDAINSTITUICAO);
@@ -1731,9 +1725,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{mestrado.DADOSBASICOSDAORIENTACAOEMANDAMENTODEMESTRADO.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -1815,9 +1809,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEDOUTORADO.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -1889,9 +1883,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{dout.DADOSBASICOSDAORIENTACAOEMANDAMENTODEPOSDOUTORADO.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -1963,9 +1957,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{espec.DADOSBASICOSDAORIENTACAOEMANDAMENTODEAPERFEICOAMENTOESPECIALIZACAO.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -2040,9 +2034,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      dados.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{dados.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -2117,9 +2111,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      dados.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{dados.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -2194,9 +2188,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("A Orientação ou Supervisão Em Andamento de nome \"{0}\" {1} - {2} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência",
-                                                                      dados.TITULODOTRABALHO,
-                                                                      professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"A Orientação ou Supervisão Em Andamento de nome \"{dados.TITULODOTRABALHO}\" {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Ocorrência, somente serão considerados Orientações/Supervições com Ano de Ocorrência"
+                                );
                             }
                         }
                         else
@@ -2375,9 +2369,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partCongresso.DETALHAMENTODAPARTICIPACAOEMCONGRESSO == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partCongresso.DADOSBASICOSDAPARTICIPACAOEMCONGRESSO.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partCongresso.DADOSBASICOSDAPARTICIPACAOEMCONGRESSO.TITULO}\" do Professor(a) {professor.NomeProfessor} - {professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2441,9 +2435,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partFeira.DETALHAMENTODAPARTICIPACAOEMFEIRA == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partFeira.DADOSBASICOSDAPARTICIPACAOEMFEIRA.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partFeira.DADOSBASICOSDAPARTICIPACAOEMFEIRA.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2507,9 +2501,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partSeminario.DETALHAMENTODAPARTICIPACAOEMSEMINARIO == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partSeminario.DADOSBASICOSDAPARTICIPACAOEMSEMINARIO.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partSeminario.DADOSBASICOSDAPARTICIPACAOEMSEMINARIO.TITULO}\" do Professor(a) {professor.NomeProfessor} - {professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2573,9 +2567,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partSimposio.DETALHAMENTODAPARTICIPACAOEMSIMPOSIO == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partSimposio.DADOSBASICOSDAPARTICIPACAOEMSIMPOSIO.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partSimposio.DADOSBASICOSDAPARTICIPACAOEMSIMPOSIO.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2639,9 +2633,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partOficina.DETALHAMENTODAPARTICIPACAOEMOFICINA == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partOficina.DADOSBASICOSDAPARTICIPACAOEMOFICINA.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partOficina.DADOSBASICOSDAPARTICIPACAOEMOFICINA.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2705,9 +2699,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partEncontro.DETALHAMENTODAPARTICIPACAOEMENCONTRO == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partEncontro.DADOSBASICOSDAPARTICIPACAOEMENCONTRO.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partEncontro.DADOSBASICOSDAPARTICIPACAOEMENCONTRO.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2771,9 +2765,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partExposicao.DETALHAMENTODAPARTICIPACAOEMEXPOSICAO == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partExposicao.DADOSBASICOSDAPARTICIPACAOEMEXPOSICAO.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partExposicao.DADOSBASICOSDAPARTICIPACAOEMEXPOSICAO.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2837,9 +2831,9 @@ namespace LattesExtractor.DAO
                     {
                         if (partOlimpiada.DETALHAMENTODAPARTICIPACAOEMOLIMPIADA == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  partOlimpiada.DADOSBASICOSDAPARTICIPACAOEMOLIMPIADA.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{partOlimpiada.DADOSBASICOSDAPARTICIPACAOEMOLIMPIADA.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -2903,9 +2897,9 @@ namespace LattesExtractor.DAO
                     {
                         if (outras.DETALHAMENTODEOUTRASPARTICIPACOESEMEVENTOSCONGRESSOS == null)
                         {
-                            Logger.Error(String.Format("Não foram informados os detalhes da Participação de Evento \"{0}\" do Professor(a) {1} ({2})",
-                                                                  outras.DADOSBASICOSDEOUTRASPARTICIPACOESEMEVENTOSCONGRESSOS.TITULO,
-                                                                  professor.NomeProfessor, professor.NumeroCurriculo));
+                            Logger.Error(
+                                $"Não foram informados os detalhes da Participação de Evento \"{outras.DADOSBASICOSDEOUTRASPARTICIPACOESEMEVENTOSCONGRESSOS.TITULO}\" do Professor(a) {professor.NomeProfessor} ({professor.NumeroCurriculo})"
+                            );
                         }
                         else
                         {
@@ -3657,14 +3651,9 @@ namespace LattesExtractor.DAO
             }
             catch (Exception exception)
             {
-                Logger.Error(String.Format(
-                    "A Publicação \"{0}\" informado no currículo {1} do Professor {2} possui ano de publicação inválido ({3}), favor revisar o mesmo. Mensagem de erro: {4}",
-                    titulo,
-                    professor.NumeroCurriculo,
-                    professor.NomeProfessor,
-                    ano,
-                    exception.Message
-                ));
+                Logger.Error(
+                    $"A Publicação \"{titulo}\" informado no currículo {professor.NumeroCurriculo} do Professor {professor.NomeProfessor} possui ano de publicação inválido ({ano}), favor revisar o mesmo. Mensagem de erro: {exception.Message}"
+                );
             }
 
             lock (saveLocker)
@@ -4788,8 +4777,9 @@ namespace LattesExtractor.DAO
                                 {
                                     lock (logLocker)
                                     {
-                                        Logger.Error(String.Format("O Projeto \"{0}\" do Professor {1} - {2} não possui Ano de Início, somente serão considerados projetos com Ano de Início",
-                                                                                pdp.NOMEDOPROJETO, professor.NumeroCurriculo, professor.NomeProfessor));
+                                        Logger.Error(
+                                            $"O Projeto \"{pdp.NOMEDOPROJETO}\" do Professor {professor.NumeroCurriculo} - {professor.NomeProfessor} não possui Ano de Início, somente serão considerados projetos com Ano de Início"
+                                        );
                                     }
                                 }
                                 else
@@ -4864,7 +4854,7 @@ namespace LattesExtractor.DAO
                             }
                         }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Projetos: {0}", projetos), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Projetos: {projetos}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4893,7 +4883,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", ccc.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Especificação: {0}", ccc.ESPECIFICACAO), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Especificação: {ccc.ESPECIFICACAO}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4922,7 +4912,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", outra.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Atividade Realizada: {0}", outra.ATIVIDADEREALIZADA), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Atividade Realizada: {outra.ATIVIDADEREALIZADA}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4960,7 +4950,7 @@ namespace LattesExtractor.DAO
                             }
                         }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Treinamentos Ministrados: {0}", treinamentos), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Treinamentos Ministrados: {treinamentos}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -4989,7 +4979,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", eu.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Atividade Realizada: {0}", eu.ATIVIDADEDEEXTENSAOREALIZADA), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Atividade Realizada: {eu.ATIVIDADEDEEXTENSAOREALIZADA}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5018,7 +5008,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", se.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Serviço Realizado: {0}", se.SERVICOREALIZADO), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength($"Serviço Realizado: {se.SERVICOREALIZADO}", 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5047,7 +5037,7 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", estagio.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Estágio Realizado: {0}", estagio.ESTAGIOREALIZADO), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength("Estágio Realizado: " + estagio.ESTAGIOREALIZADO, 2000);
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5084,10 +5074,10 @@ namespace LattesExtractor.DAO
                             }
                         }
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Curso Ministrado: {0} - {1}; Disciplinas Ministradas: {2}",
-                                                                                ensino.CODIGOCURSO,
-                                                                                ensino.NOMECURSO,
-                                                                                disciplinas), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(
+                            $"Curso Ministrado: {ensino.CODIGOCURSO} - {ensino.NOMECURSO}; Disciplinas Ministradas: {disciplinas}", 
+                            2000
+                        );
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5147,9 +5137,10 @@ namespace LattesExtractor.DAO
                         else
                             ativProf.DataTerminoAtividadeProfissional = Utils.ParseMonthAndYear("12", dea.ANOFIM);
 
-                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(String.Format("Cargo Ou Função: {0}",
-                                                                                TraduzirCargoOuFuncao(dea.FORMATOCARGOOUFUNCAO.ToString(),
-                                                                                                      dea.CARGOOUFUNCAO)), 2000);
+                        ativProf.InformacoesAdicionaisAtividadeProfissional = Utils.SetMaxLength(
+                            "Cargo Ou Função: " + TraduzirCargoOuFuncao(dea.FORMATOCARGOOUFUNCAO.ToString(), dea.CARGOOUFUNCAO), 
+                            2000
+                        );
 
                         professor.AtividadeProfissional.Add(ativProf);
                     }
@@ -5164,8 +5155,9 @@ namespace LattesExtractor.DAO
                         {
                             lock (logLocker)
                             {
-                                Logger.Error(String.Format("O vínculo profissional do Professor {1} - {2} com a empresa \"{0}\" não possui Ano de Início, somente serão considerados vínculos com Ano de Início",
-                                                                        ie.NomeInstituicaoEmpresa, professor.NumeroCurriculo, professor.NomeProfessor));
+                                Logger.Error(
+                                    $"O vínculo profissional do Professor {professor.NumeroCurriculo} - {professor.NomeProfessor} com a empresa \"{ie.NomeInstituicaoEmpresa}\" não possui Ano de Início, somente serão considerados vínculos com Ano de Início"
+                                );
                             }
                         }
                         else
