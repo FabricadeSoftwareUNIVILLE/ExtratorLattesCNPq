@@ -22,7 +22,7 @@ GO
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.000')) BEGIN 
 	CREATE TABLE [dbo].[AgenciaFinanciadora](
 		[AgenciaFinanciadoraId] [int] IDENTITY(1,1) NOT NULL,
-		[NomeAgenciaFinanciadora] [varchar](500) NULL,
+		[NomeAgenciaFinanciadora] [varchar](200) NULL,
 	 CONSTRAINT [PK_AgenciaFinanciadora] PRIMARY KEY CLUSTERED 
 	(
 		[AgenciaFinanciadoraId] ASC
@@ -488,7 +488,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[PaisEvento] [varchar](50) NULL,
 		[NomeEvento] [varchar](300) NULL,
 		[InstituicaoEmpresaId] [int] NULL,
-		[CidadeEvento] [varchar](500) NULL,
+		[CidadeEvento] [varchar](100) NULL,
 		[NaturezaEvento] [char](15) NULL,
 	 CONSTRAINT [PK_Evento] PRIMARY KEY CLUSTERED 
 	(
@@ -710,7 +710,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 	CREATE TABLE [dbo].[InstituicaoEmpresa](
 		[InstituicaoEmpresaId] [int] IDENTITY(1,1) NOT NULL,
 		[NomeInstituicaoEmpresa] [varchar](300) NULL,
-		[SiglaInstituicaoEmpresa] [varchar](100) NULL,
+		[SiglaInstituicaoEmpresa] [varchar](25) NULL,
 		[EnsinoInstituicaoEmpresa] [bit] NULL,
 		[PaisInstituicaoEmpresa] [varchar](50) NULL,
 	 CONSTRAINT [PK_InstituicaoEmpresa] PRIMARY KEY CLUSTERED 
@@ -739,8 +739,8 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[ProfessorId] [int] NOT NULL,
 		[SequenciaLinhaDePesquisa] [int] NOT NULL,
 		[PalavraChaveId] [int] NOT NULL,
-		[TituloLinhaDePesquisa] [varchar](1000) NOT NULL,
-		[ObjetivosLinhaDePesquisa] [varchar](5000) NOT NULL,
+		[TituloLinhaDePesquisa] [varchar](250) NOT NULL,
+		[ObjetivosLinhaDePesquisa] [varchar](2000) NOT NULL,
 		[AtivaLinhaDePesquisa] [bit] NOT NULL,
 	 CONSTRAINT [PK_LinhaDePesquisa] PRIMARY KEY CLUSTERED 
 	(
@@ -796,14 +796,14 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[ProfessorId] [int] NOT NULL,
 		[SequenciaOrientacaoSupervicao] [int] NOT NULL,
 		[TipoOrientacaoSupervicao] [varchar](25) NOT NULL,
-		[NaturezaOrientacaoSupervicao] [varchar](500) NULL,
+		[NaturezaOrientacaoSupervicao] [varchar](100) NULL,
 		[TituloOrientacaoSupervicao] [varchar](350) NOT NULL,
 		[AnoOrientacaoSupervicao] [numeric](4, 0) NOT NULL,
 		[PaisOrientacaoSupervicao] [varchar](50) NULL,
 		[IdiomaId] [int] NULL,
 		[HomePageOrientacaoSupervicao] [varchar](300) NULL,
 		[DOIOrientacaoSupervicao] [char](55) NULL,
-		[TituloEmInglesOrientacaoSupervicao] [varchar](1750) NULL,
+		[TituloEmInglesOrientacaoSupervicao] [varchar](350) NULL,
 		[NomeOrientandoOrientacaoSupervicao] [varchar](200) NULL,
 		[InstituicaoEmpresaId] [int] NULL,
 		[TemBolsaOrientacaoSupervicao] [bit] NULL,
@@ -1002,7 +1002,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[IdiomaId] [int] NULL,
 		[TituloParticipacaoEvento] [varchar](400) NULL,
 		[TituloEmInglesParticipacaoEvento] [varchar](400) NULL,
-		[InformacoesAdicionaisParticipacaoEvento] [varchar](5000) NULL,
+		[InformacoesAdicionaisParticipacaoEvento] [varchar](2000) NULL,
 		[InformacoesAdicionaisEmInglesParticipacaoEvento] [varchar](2000) NULL,
 		[MeioDivulgacaoParticipacaoEvento] [varchar](50) NULL,
 		[HomePageParticipacaoEvento] [varchar](300) NULL,
@@ -1266,7 +1266,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[PotencialInovacaoProducaoTecnica] [bit] NULL,
 		[InformacoesAdicionaisProducaoTecnica] [varchar](2000) NULL,
 		[PatentiadoOuRegistradoProducaoTecnica] [bit] NULL,
-		[NaturezaProducaoTecnica] [varchar](500) NULL,
+		[NaturezaProducaoTecnica] [varchar](100) NULL,
 		[AgenciaFinanciadoraId] [int] NULL,
 		[InformacoesAdicionaisEmInglesProducaoTecnica] [varchar](2000) NULL,
 		[TituloEmInglesProducaoTecnica] [varchar](350) NULL,
@@ -2539,7 +2539,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 	CREATE TABLE [dbo].[JCR](
 		[JCRId] [int] IDENTITY(1,1) NOT NULL,
 		[Rank] [int] NOT NULL,
-		[NomePeriodicoJCR] [varchar](1500) NOT NULL,
+		[NomePeriodicoJCR] [varchar](300) NOT NULL,
 		[NomeAbreviadoPeriodioJCR] [varchar](100) NOT NULL,
 		[ISSNJCR] [char](8) NOT NULL,
 		[NumeroCitacoesJCR] [int] NULL,
@@ -2566,7 +2566,7 @@ GO
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.001'))
 	ALTER TABLE [dbo].ProducaoBibliografica ADD
 		JCRId int NULL,
-		NomePeriodicoProducaoBibliografica varchar(500) NULL
+		NomePeriodicoProducaoBibliografica varchar(300) NULL
 GO
 
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.001'))
@@ -3190,8 +3190,8 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		LinhaDePesquisaId int NOT NULL IDENTITY (1, 1),
 		ProfessorId int NOT NULL,
 		PalavraChaveId int NOT NULL,
-		TituloLinhaDePesquisa varchar(1000) NOT NULL,
-		ObjetivosLinhaDePesquisa varchar(5000) NOT NULL,
+		TituloLinhaDePesquisa varchar(250) NOT NULL,
+		ObjetivosLinhaDePesquisa varchar(2000) NOT NULL,
 		AtivaLinhaDePesquisa bit NOT NULL
 		)  ON [PRIMARY]
 	ALTER TABLE dbo.Tmp_LinhaDePesquisa SET (LOCK_ESCALATION = TABLE)
@@ -3296,14 +3296,14 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		ProfessorId int NOT NULL,
 		SequenciaOrientacaoSupervicao int NOT NULL,
 		TipoOrientacaoSupervicao varchar(25) NOT NULL,
-		NaturezaOrientacaoSupervicao varchar(500) NULL,
+		NaturezaOrientacaoSupervicao varchar(100) NULL,
 		TituloOrientacaoSupervicao varchar(350) NOT NULL,
 		AnoOrientacaoSupervicao numeric(4, 0) NOT NULL,
 		PaisOrientacaoSupervicao varchar(50) NULL,
 		IdiomaId int NULL,
 		HomePageOrientacaoSupervicao varchar(300) NULL,
 		DOIOrientacaoSupervicao char(55) NULL,
-		TituloEmInglesOrientacaoSupervicao varchar(1750) NULL,
+		TituloEmInglesOrientacaoSupervicao varchar(350) NULL,
 		NomeOrientandoOrientacaoSupervicao varchar(200) NULL,
 		InstituicaoEmpresaId int NULL,
 		TemBolsaOrientacaoSupervicao bit NULL,
@@ -3658,7 +3658,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		IdiomaId int NULL,
 		TituloParticipacaoEvento varchar(400) NULL,
 		TituloEmInglesParticipacaoEvento varchar(400) NULL,
-		InformacoesAdicionaisParticipacaoEvento varchar(5000) NULL,
+		InformacoesAdicionaisParticipacaoEvento varchar(2000) NULL,
 		InformacoesAdicionaisEmInglesParticipacaoEvento varchar(2000) NULL,
 		MeioDivulgacaoParticipacaoEvento varchar(50) NULL,
 		HomePageParticipacaoEvento varchar(300) NULL,
@@ -4531,4 +4531,53 @@ GO
 
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.002'))
 	INSERT INTO ControleVersaoBanco (VersaoBanco, DataAtualizacao) VALUES('01.002', GETDATE())
+GO
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+
+IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.003')) BEGIN
+	BEGIN TRANSACTION
+
+		alter table ProducaoBibliografica alter column InformacoesAdicionaisEmInglesProducaoBibliografica varchar(5000);
+
+		alter table ProducaoBibliografica alter column TituloEmInglesProducaoBibliografica varchar(1750);
+
+		alter table AgenciaFinanciadora alter column NomeAgenciaFinanciadora varchar(500);
+
+		alter table Evento alter column CidadeEvento varchar(500);
+
+		alter table LinhaDePesquisa alter column ObjetivosLinhaDePesquisa varchar(5000);
+
+		alter table LinhaDePesquisa alter column TituloLinhaDePesquisa varchar(1000);
+
+		alter table ParticipacaoEvento alter column InformacoesAdicionaisParticipacaoEvento varchar(5000);
+
+		alter table OrientacaoSupervisao alter column TituloEmInglesOrientacaoSupervicao varchar(1750);
+
+		alter table InstituicaoEmpresa alter column SiglaInstituicaoEmpresa varchar(100);
+
+		alter table ProducaoTecnica alter column NaturezaProducaoTecnica varchar(500);
+
+		alter table ProducaoBibliografica alter column NomePeriodicoProducaoBibliografica varchar(500);
+
+		alter table OrientacaoSupervisao alter column NaturezaOrientacaoSupervicao varchar(500);
+
+		alter table JCR alter column NomePeriodicoJCR varchar(1500);	
+
+	COMMIT
+	
+END
+GO
+
+IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.003'))
+	INSERT INTO ControleVersaoBanco (VersaoBanco, DataAtualizacao) VALUES('01.003', GETDATE())
 GO
