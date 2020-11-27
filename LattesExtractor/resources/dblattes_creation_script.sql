@@ -22,7 +22,7 @@ GO
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.000')) BEGIN 
 	CREATE TABLE [dbo].[AgenciaFinanciadora](
 		[AgenciaFinanciadoraId] [int] IDENTITY(1,1) NOT NULL,
-		[NomeAgenciaFinanciadora] [varchar](200) NULL,
+		[NomeAgenciaFinanciadora] [varchar](500) NULL,
 	 CONSTRAINT [PK_AgenciaFinanciadora] PRIMARY KEY CLUSTERED 
 	(
 		[AgenciaFinanciadoraId] ASC
@@ -488,7 +488,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[PaisEvento] [varchar](50) NULL,
 		[NomeEvento] [varchar](300) NULL,
 		[InstituicaoEmpresaId] [int] NULL,
-		[CidadeEvento] [varchar](100) NULL,
+		[CidadeEvento] [varchar](500) NULL,
 		[NaturezaEvento] [char](15) NULL,
 	 CONSTRAINT [PK_Evento] PRIMARY KEY CLUSTERED 
 	(
@@ -710,7 +710,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 	CREATE TABLE [dbo].[InstituicaoEmpresa](
 		[InstituicaoEmpresaId] [int] IDENTITY(1,1) NOT NULL,
 		[NomeInstituicaoEmpresa] [varchar](300) NULL,
-		[SiglaInstituicaoEmpresa] [varchar](25) NULL,
+		[SiglaInstituicaoEmpresa] [varchar](100) NULL,
 		[EnsinoInstituicaoEmpresa] [bit] NULL,
 		[PaisInstituicaoEmpresa] [varchar](50) NULL,
 	 CONSTRAINT [PK_InstituicaoEmpresa] PRIMARY KEY CLUSTERED 
@@ -739,8 +739,8 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[ProfessorId] [int] NOT NULL,
 		[SequenciaLinhaDePesquisa] [int] NOT NULL,
 		[PalavraChaveId] [int] NOT NULL,
-		[TituloLinhaDePesquisa] [varchar](250) NOT NULL,
-		[ObjetivosLinhaDePesquisa] [varchar](2000) NOT NULL,
+		[TituloLinhaDePesquisa] [varchar](1000) NOT NULL,
+		[ObjetivosLinhaDePesquisa] [varchar](5000) NOT NULL,
 		[AtivaLinhaDePesquisa] [bit] NOT NULL,
 	 CONSTRAINT [PK_LinhaDePesquisa] PRIMARY KEY CLUSTERED 
 	(
@@ -796,14 +796,14 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[ProfessorId] [int] NOT NULL,
 		[SequenciaOrientacaoSupervicao] [int] NOT NULL,
 		[TipoOrientacaoSupervicao] [varchar](25) NOT NULL,
-		[NaturezaOrientacaoSupervicao] [varchar](100) NULL,
+		[NaturezaOrientacaoSupervicao] [varchar](500) NULL,
 		[TituloOrientacaoSupervicao] [varchar](350) NOT NULL,
 		[AnoOrientacaoSupervicao] [numeric](4, 0) NOT NULL,
 		[PaisOrientacaoSupervicao] [varchar](50) NULL,
 		[IdiomaId] [int] NULL,
 		[HomePageOrientacaoSupervicao] [varchar](300) NULL,
 		[DOIOrientacaoSupervicao] [char](55) NULL,
-		[TituloEmInglesOrientacaoSupervicao] [varchar](350) NULL,
+		[TituloEmInglesOrientacaoSupervicao] [varchar](1750) NULL,
 		[NomeOrientandoOrientacaoSupervicao] [varchar](200) NULL,
 		[InstituicaoEmpresaId] [int] NULL,
 		[TemBolsaOrientacaoSupervicao] [bit] NULL,
@@ -1002,7 +1002,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[IdiomaId] [int] NULL,
 		[TituloParticipacaoEvento] [varchar](400) NULL,
 		[TituloEmInglesParticipacaoEvento] [varchar](400) NULL,
-		[InformacoesAdicionaisParticipacaoEvento] [varchar](2000) NULL,
+		[InformacoesAdicionaisParticipacaoEvento] [varchar](5000) NULL,
 		[InformacoesAdicionaisEmInglesParticipacaoEvento] [varchar](2000) NULL,
 		[MeioDivulgacaoParticipacaoEvento] [varchar](50) NULL,
 		[HomePageParticipacaoEvento] [varchar](300) NULL,
@@ -1266,7 +1266,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		[PotencialInovacaoProducaoTecnica] [bit] NULL,
 		[InformacoesAdicionaisProducaoTecnica] [varchar](2000) NULL,
 		[PatentiadoOuRegistradoProducaoTecnica] [bit] NULL,
-		[NaturezaProducaoTecnica] [varchar](100) NULL,
+		[NaturezaProducaoTecnica] [varchar](500) NULL,
 		[AgenciaFinanciadoraId] [int] NULL,
 		[InformacoesAdicionaisEmInglesProducaoTecnica] [varchar](2000) NULL,
 		[TituloEmInglesProducaoTecnica] [varchar](350) NULL,
@@ -2539,7 +2539,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 	CREATE TABLE [dbo].[JCR](
 		[JCRId] [int] IDENTITY(1,1) NOT NULL,
 		[Rank] [int] NOT NULL,
-		[NomePeriodicoJCR] [varchar](300) NOT NULL,
+		[NomePeriodicoJCR] [varchar](1500) NOT NULL,
 		[NomeAbreviadoPeriodioJCR] [varchar](100) NOT NULL,
 		[ISSNJCR] [char](8) NOT NULL,
 		[NumeroCitacoesJCR] [int] NULL,
@@ -2566,7 +2566,7 @@ GO
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.001'))
 	ALTER TABLE [dbo].ProducaoBibliografica ADD
 		JCRId int NULL,
-		NomePeriodicoProducaoBibliografica varchar(300) NULL
+		NomePeriodicoProducaoBibliografica varchar(500) NULL
 GO
 
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.001'))
@@ -3190,8 +3190,8 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		LinhaDePesquisaId int NOT NULL IDENTITY (1, 1),
 		ProfessorId int NOT NULL,
 		PalavraChaveId int NOT NULL,
-		TituloLinhaDePesquisa varchar(250) NOT NULL,
-		ObjetivosLinhaDePesquisa varchar(2000) NOT NULL,
+		TituloLinhaDePesquisa varchar(1000) NOT NULL,
+		ObjetivosLinhaDePesquisa varchar(5000) NOT NULL,
 		AtivaLinhaDePesquisa bit NOT NULL
 		)  ON [PRIMARY]
 	ALTER TABLE dbo.Tmp_LinhaDePesquisa SET (LOCK_ESCALATION = TABLE)
@@ -3296,14 +3296,14 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		ProfessorId int NOT NULL,
 		SequenciaOrientacaoSupervicao int NOT NULL,
 		TipoOrientacaoSupervicao varchar(25) NOT NULL,
-		NaturezaOrientacaoSupervicao varchar(100) NULL,
+		NaturezaOrientacaoSupervicao varchar(500) NULL,
 		TituloOrientacaoSupervicao varchar(350) NOT NULL,
 		AnoOrientacaoSupervicao numeric(4, 0) NOT NULL,
 		PaisOrientacaoSupervicao varchar(50) NULL,
 		IdiomaId int NULL,
 		HomePageOrientacaoSupervicao varchar(300) NULL,
 		DOIOrientacaoSupervicao char(55) NULL,
-		TituloEmInglesOrientacaoSupervicao varchar(350) NULL,
+		TituloEmInglesOrientacaoSupervicao varchar(1750) NULL,
 		NomeOrientandoOrientacaoSupervicao varchar(200) NULL,
 		InstituicaoEmpresaId int NULL,
 		TemBolsaOrientacaoSupervicao bit NULL,
@@ -3658,7 +3658,7 @@ IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '
 		IdiomaId int NULL,
 		TituloParticipacaoEvento varchar(400) NULL,
 		TituloEmInglesParticipacaoEvento varchar(400) NULL,
-		InformacoesAdicionaisParticipacaoEvento varchar(2000) NULL,
+		InformacoesAdicionaisParticipacaoEvento varchar(5000) NULL,
 		InformacoesAdicionaisEmInglesParticipacaoEvento varchar(2000) NULL,
 		MeioDivulgacaoParticipacaoEvento varchar(50) NULL,
 		HomePageParticipacaoEvento varchar(300) NULL,
