@@ -22,7 +22,8 @@ namespace LattesExtractor.Controller
         private Channel<CurriculoEntry> _curriculumVitaeForProcess;
         private int _workItemCount = 0;
         private XmlSerializer _curriculumVitaeUnserializer = new XmlSerializer(typeof(CurriculoVitaeXml));
-
+        // Max 100 items in queue
+        private static readonly Semaphore WorkLimiter = new Semaphore(100, 100);
 
         public CurriculumVitaeProcessorController(
             LattesModule lattesModule,
@@ -41,6 +42,8 @@ namespace LattesExtractor.Controller
                 foreach (var curriculoEntry in _curriculumVitaeForProcess.Range())
                 {
                     Interlocked.Increment(ref _workItemCount);
+                    // Get one of the 100 "allowances" to add to the queue.
+                    WorkLimiter.WaitOne();
                     ThreadPool.QueueUserWorkItem(o => ProcessCurriculumVitae(curriculoEntry, processDoneEvent));
                 }
                 if (_workItemCount > 0)
@@ -56,21 +59,21 @@ namespace LattesExtractor.Controller
 
         private void ProcessCurriculumVitae(CurriculoEntry curriculoEntry, ManualResetEvent doneEvent)
         {
+            XmlDocument curriculumVitaeXml = new XmlDocument();
             try
             {
                 var filename = _lattesModule.GetCurriculumVitaeFileName(curriculoEntry.NumeroCurriculo);
 
-                var curriculumVitaeXml = new XmlDocument();
                 curriculumVitaeXml.Load(filename);
 
                 // nescessário para o deserialize reconhecer o Xml
                 curriculumVitaeXml.DocumentElement.SetAttribute("xmlns", "http://tempuri.org/LMPLCurriculo");
 
-                var curriculumVitaeXDocument = XDocument.Parse(curriculumVitaeXml.InnerXml);
-                var curriculumVitae = _curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader()) as CurriculoVitaeXml;
+                XDocument curriculumVitaeXDocument = XDocument.Parse(curriculumVitaeXml.InnerXml);
+                CurriculoVitaeXml curriculumVitae = _curriculumVitaeUnserializer.Deserialize(curriculumVitaeXDocument.CreateReader()) as CurriculoVitaeXml;
                 curriculoEntry.NomeProfessor = curriculumVitae.DADOSGERAIS.NOMECOMPLETO;
 
-                var professorDAOService = new ProfessorDAOService(new LattesDatabase());
+                ProfessorDAOService professorDAOService = new ProfessorDAOService(new LattesDatabase());
                 Logger.Debug($"Iniciando processamento currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO}...");
 
                 if (professorDAOService.ProcessCurriculumVitaeXML(curriculumVitae, curriculoEntry))
@@ -78,7 +81,7 @@ namespace LattesExtractor.Controller
                     Logger.Info($"Currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO} processado com sucesso !");
                     File.Delete(filename);
                 }
-
+                
             }
             catch (Exception ex)
             {
@@ -97,6 +100,8 @@ namespace LattesExtractor.Controller
                 {
                     doneEvent.Set();
                 }
+                // Allow another add to the queue
+                WorkLimiter.Release();
             }
         }
     }
