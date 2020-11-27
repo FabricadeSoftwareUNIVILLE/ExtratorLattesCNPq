@@ -81,8 +81,7 @@ namespace LattesExtractor.Controller
                     Logger.Info($"Currículo {curriculoEntry.NumeroCurriculo} do Professor {curriculumVitae.DADOSGERAIS.NOMECOMPLETO} processado com sucesso !");
                     File.Delete(filename);
                 }
-                
-            }
+           }
             catch (Exception ex)
             {
                 Logger.Error($"Erro durante a leitura do XML {curriculoEntry.NumeroCurriculo}: {ex.Message}\n{ex.StackTrace}");
