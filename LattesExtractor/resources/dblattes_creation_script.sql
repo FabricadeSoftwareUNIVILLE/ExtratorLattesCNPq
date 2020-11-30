@@ -4532,3 +4532,52 @@ GO
 IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.002'))
 	INSERT INTO ControleVersaoBanco (VersaoBanco, DataAtualizacao) VALUES('01.002', GETDATE())
 GO
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+
+IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.003')) BEGIN
+	BEGIN TRANSACTION
+
+		alter table ProducaoBibliografica alter column InformacoesAdicionaisEmInglesProducaoBibliografica varchar(5000);
+
+		alter table ProducaoBibliografica alter column TituloEmInglesProducaoBibliografica varchar(1750);
+
+		alter table AgenciaFinanciadora alter column NomeAgenciaFinanciadora varchar(500);
+
+		alter table Evento alter column CidadeEvento varchar(500);
+
+		alter table LinhaDePesquisa alter column ObjetivosLinhaDePesquisa varchar(5000);
+
+		alter table LinhaDePesquisa alter column TituloLinhaDePesquisa varchar(1000);
+
+		alter table ParticipacaoEvento alter column InformacoesAdicionaisParticipacaoEvento varchar(5000);
+
+		alter table OrientacaoSupervisao alter column TituloEmInglesOrientacaoSupervicao varchar(1750);
+
+		alter table InstituicaoEmpresa alter column SiglaInstituicaoEmpresa varchar(100);
+
+		alter table ProducaoTecnica alter column NaturezaProducaoTecnica varchar(500);
+
+		alter table ProducaoBibliografica alter column NomePeriodicoProducaoBibliografica varchar(500);
+
+		alter table OrientacaoSupervisao alter column NaturezaOrientacaoSupervicao varchar(500);
+
+		alter table JCR alter column NomePeriodicoJCR varchar(1500);	
+
+	COMMIT
+	
+END
+GO
+
+IF (NOT EXISTS(SELECT VersaoBanco FROM ControleVersaoBanco WHERE VersaoBanco = '01.003'))
+	INSERT INTO ControleVersaoBanco (VersaoBanco, DataAtualizacao) VALUES('01.003', GETDATE())
+GO
